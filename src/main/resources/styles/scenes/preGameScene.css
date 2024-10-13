@@ -1,5 +1,5 @@
 .root {
-    -fx-background-image: url('/images/background/pre_game.jpeg');
+    -fx-background-image: url('/public/images/background/pre_game.jpeg');
     -fx-background-size: cover;
 }
 

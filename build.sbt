@@ -1,4 +1,6 @@
-val scala3Version = "3.4.0"
+import sbt.Keys.libraryDependencies
+
+val scala3Version = "3.5.1"
 
 val setJavaFXVersion = settingKey[Seq[ModuleID]]("Sets the JavaFX version and classifier based on the system architecture")
 
@@ -39,14 +41,19 @@ lazy val root = project
       "org.scalafx" %% "scalafx" % "22.0.0-R33" excludeAll(
         ExclusionRule(organization = "org.openjfx")
         ),
-      "net.codingwell" %% "scala-guice" % "7.0.0",
+      guice,
+      "net.codingwell" %% "scala-guice" % "6.0.0",
+      "com.google.inject" % "guice" % "6.0.0",
       "org.scala-lang.modules" %% "scala-xml" % "2.3.0",
-      "com.typesafe.play" %% "play-json" % "2.10.5"
+      "com.typesafe.play" %% "play-json" % "2.10.5",
+      "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
     ) ++ setJavaFXVersion.value),
     assembly / assemblyJarName := "SkullKing.jar",
     assembly / mainClass := Some("de.htwg.se.skullking.SkullKing"),
+
     assemblyMergeStrategy in assembly := {
       case PathList("META-INF", _*) => MergeStrategy.discard
       case _                        => MergeStrategy.first
     }
-  )
+
+  ).enablePlugins(PlayScala)

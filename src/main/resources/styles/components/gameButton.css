@@ -1,6 +1,6 @@
 
 Button {
-    -fx-background-image: url("/images/components/GameButton/wood2.png");
+    -fx-background-image: url("/public/images/components/GameButton/wood2.png");
     -fx-background-size: stretch;
     -fx-min-width: 20;
     -fx-text-fill: #fff;

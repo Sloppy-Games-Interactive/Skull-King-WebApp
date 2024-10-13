@@ -1,6 +1,6 @@
 .root {
     -fx-background-color: linear-gradient(rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%);
-    -fx-background-image: url("/images/background/pirate_town.jpeg");
+    -fx-background-image: url("/public/images/background/pirate_town.jpeg");
     -fx-background-size: cover;
 }
 

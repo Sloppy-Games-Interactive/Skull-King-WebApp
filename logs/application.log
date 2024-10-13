@@ -1,0 +1,214 @@
+2024-10-13 17:55:49 [1;31mERROR[0;39m [36mplay.api.http.DevHttpErrorHandler[0;39m [35m[0;39m 
+
+! @876bp8ac0 - Internal server error, for (GET) [/new-game] ->
+ 
+play.api.PlayException: Execution exception[[CreationException: Unable to create injector, see the following errors:
+
+1) [Guice/MissingConstructor]: No injectable constructor for type controllers.TuiController.
+
+class controllers.TuiController does not have a @Inject annotated constructor or a no-arg constructor.
+
+Requested by:
+1  : controllers.TuiController.class(TuiController.scala:10)
+     at router.Routes.<init>(Routes.scala:32)
+      \_ for 4th parameter TuiController_2
+     at RoutesProvider$.bindingsFromConfiguration(BuiltinModule.scala:146):
+Binding(class router.Routes to self)
+      \_ installed by: Modules$OverrideModule -> GuiceableModuleConversions$$anon$4
+
+Learn more:
+  https://github.com/google/guice/wiki/MISSING_CONSTRUCTOR
+
+1 error
+
+======================
+Full classname legend:
+======================
+GuiceableModuleConversions$$anon$4: "play.api.inject.guice.GuiceableModuleConversions$$anon$4"
+Modules$OverrideModule:             "com.google.inject.util.Modules$OverrideModule"
+RoutesProvider$:                    "play.api.inject.RoutesProvider$"
+========================
+End of classname legend:
+========================
+]]
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException$$anonfun$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.reload(DevServerStart.scala:265)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.get(DevServerStart.scala:190)
+	at play.core.server.PekkoHttpServer.handleRequest(PekkoHttpServer.scala:320)
+	at play.core.server.PekkoHttpServer.$anonfun$3(PekkoHttpServer.scala:224)
+	at org.apache.pekko.stream.impl.fusing.MapAsyncUnordered$$anon$31.onPush(Ops.scala:1443)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreter.processPush(GraphInterpreter.scala:555)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreter.processEvent(GraphInterpreter.scala:506)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreter.execute(GraphInterpreter.scala:400)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreterShell.runBatch(ActorGraphInterpreter.scala:662)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreterShell$AsyncInput.execute(ActorGraphInterpreter.scala:532)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreterShell.processEvent(ActorGraphInterpreter.scala:637)
+	at org.apache.pekko.stream.impl.fusing.ActorGraphInterpreter.org$apache$pekko$stream$impl$fusing$ActorGraphInterpreter$$processEvent(ActorGraphInterpreter.scala:813)
+	at org.apache.pekko.stream.impl.fusing.ActorGraphInterpreter$$anon$2.applyOrElse(ActorGraphInterpreter.scala:831)
+	at org.apache.pekko.actor.Actor.aroundReceive(Actor.scala:547)
+	at org.apache.pekko.actor.Actor.aroundReceive$(Actor.scala:481)
+	at org.apache.pekko.stream.impl.fusing.ActorGraphInterpreter.aroundReceive(ActorGraphInterpreter.scala:729)
+	at org.apache.pekko.actor.ActorCell.receiveMessage(ActorCell.scala:590)
+	at org.apache.pekko.actor.ActorCell.invoke(ActorCell.scala:557)
+	at org.apache.pekko.dispatch.Mailbox.processMailbox(Mailbox.scala:280)
+	at org.apache.pekko.dispatch.Mailbox.run(Mailbox.scala:241)
+	at org.apache.pekko.dispatch.Mailbox.exec(Mailbox.scala:253)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:507)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1458)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:2034)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:189)
+Caused by: com.google.inject.CreationException: Unable to create injector, see the following errors:
+
+1) [Guice/MissingConstructor]: No injectable constructor for type controllers.TuiController.
+
+class controllers.TuiController does not have a @Inject annotated constructor or a no-arg constructor.
+
+Requested by:
+1  : controllers.TuiController.class(TuiController.scala:10)
+     at router.Routes.<init>(Routes.scala:32)
+      \_ for 4th parameter TuiController_2
+     at RoutesProvider$.bindingsFromConfiguration(BuiltinModule.scala:146):
+Binding(class router.Routes to self)
+      \_ installed by: Modules$OverrideModule -> GuiceableModuleConversions$$anon$4
+
+Learn more:
+  https://github.com/google/guice/wiki/MISSING_CONSTRUCTOR
+
+1 error
+
+======================
+Full classname legend:
+======================
+GuiceableModuleConversions$$anon$4: "play.api.inject.guice.GuiceableModuleConversions$$anon$4"
+Modules$OverrideModule:             "com.google.inject.util.Modules$OverrideModule"
+RoutesProvider$:                    "play.api.inject.RoutesProvider$"
+========================
+End of classname legend:
+========================
+
+	at com.google.inject.internal.Errors.throwCreationExceptionIfErrorsExist(Errors.java:589)
+	at com.google.inject.internal.InternalInjectorCreator.initializeStatically(InternalInjectorCreator.java:163)
+	at com.google.inject.internal.InternalInjectorCreator.build(InternalInjectorCreator.java:110)
+	at com.google.inject.Guice.createInjector(Guice.java:87)
+	at com.google.inject.Guice.createInjector(Guice.java:78)
+	at play.api.inject.guice.GuiceBuilder.injector(GuiceInjectorBuilder.scala:200)
+	at play.api.inject.guice.GuiceApplicationBuilder.build(GuiceApplicationBuilder.scala:176)
+	at play.api.inject.guice.GuiceApplicationLoader.load(GuiceApplicationLoader.scala:21)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.$anonfun$1(DevServerStart.scala:233)
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:22)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.reload(DevServerStart.scala:234)
+	... 24 common frames omitted
+2024-10-13 17:56:26 [1;31mERROR[0;39m [36mplay.api.http.DevHttpErrorHandler[0;39m [35m[0;39m 
+
+! @876bp8ac0 - Internal server error, for (GET) [/new-game] ->
+ 
+play.api.PlayException: Execution exception[[CreationException: Unable to create injector, see the following errors:
+
+1) [Guice/MissingConstructor]: No injectable constructor for type controllers.TuiController.
+
+class controllers.TuiController does not have a @Inject annotated constructor or a no-arg constructor.
+
+Requested by:
+1  : controllers.TuiController.class(TuiController.scala:10)
+     at router.Routes.<init>(Routes.scala:32)
+      \_ for 4th parameter TuiController_2
+     at RoutesProvider$.bindingsFromConfiguration(BuiltinModule.scala:146):
+Binding(class router.Routes to self)
+      \_ installed by: Modules$OverrideModule -> GuiceableModuleConversions$$anon$4
+
+Learn more:
+  https://github.com/google/guice/wiki/MISSING_CONSTRUCTOR
+
+1 error
+
+======================
+Full classname legend:
+======================
+GuiceableModuleConversions$$anon$4: "play.api.inject.guice.GuiceableModuleConversions$$anon$4"
+Modules$OverrideModule:             "com.google.inject.util.Modules$OverrideModule"
+RoutesProvider$:                    "play.api.inject.RoutesProvider$"
+========================
+End of classname legend:
+========================
+]]
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException$$anonfun$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.reload(DevServerStart.scala:265)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.get(DevServerStart.scala:190)
+	at play.core.server.PekkoHttpServer.handleRequest(PekkoHttpServer.scala:320)
+	at play.core.server.PekkoHttpServer.$anonfun$3(PekkoHttpServer.scala:224)
+	at org.apache.pekko.stream.impl.fusing.MapAsyncUnordered$$anon$31.onPush(Ops.scala:1443)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreter.processPush(GraphInterpreter.scala:555)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreter.processEvent(GraphInterpreter.scala:506)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreter.execute(GraphInterpreter.scala:400)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreterShell.runBatch(ActorGraphInterpreter.scala:662)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreterShell$AsyncInput.execute(ActorGraphInterpreter.scala:532)
+	at org.apache.pekko.stream.impl.fusing.GraphInterpreterShell.processEvent(ActorGraphInterpreter.scala:637)
+	at org.apache.pekko.stream.impl.fusing.ActorGraphInterpreter.org$apache$pekko$stream$impl$fusing$ActorGraphInterpreter$$processEvent(ActorGraphInterpreter.scala:813)
+	at org.apache.pekko.stream.impl.fusing.ActorGraphInterpreter$$anon$2.applyOrElse(ActorGraphInterpreter.scala:831)
+	at org.apache.pekko.actor.Actor.aroundReceive(Actor.scala:547)
+	at org.apache.pekko.actor.Actor.aroundReceive$(Actor.scala:481)
+	at org.apache.pekko.stream.impl.fusing.ActorGraphInterpreter.aroundReceive(ActorGraphInterpreter.scala:729)
+	at org.apache.pekko.actor.ActorCell.receiveMessage(ActorCell.scala:590)
+	at org.apache.pekko.actor.ActorCell.invoke(ActorCell.scala:557)
+	at org.apache.pekko.dispatch.Mailbox.processMailbox(Mailbox.scala:280)
+	at org.apache.pekko.dispatch.Mailbox.run(Mailbox.scala:241)
+	at org.apache.pekko.dispatch.Mailbox.exec(Mailbox.scala:253)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:507)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1458)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:2034)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:189)
+Caused by: com.google.inject.CreationException: Unable to create injector, see the following errors:
+
+1) [Guice/MissingConstructor]: No injectable constructor for type controllers.TuiController.
+
+class controllers.TuiController does not have a @Inject annotated constructor or a no-arg constructor.
+
+Requested by:
+1  : controllers.TuiController.class(TuiController.scala:10)
+     at router.Routes.<init>(Routes.scala:32)
+      \_ for 4th parameter TuiController_2
+     at RoutesProvider$.bindingsFromConfiguration(BuiltinModule.scala:146):
+Binding(class router.Routes to self)
+      \_ installed by: Modules$OverrideModule -> GuiceableModuleConversions$$anon$4
+
+Learn more:
+  https://github.com/google/guice/wiki/MISSING_CONSTRUCTOR
+
+1 error
+
+======================
+Full classname legend:
+======================
+GuiceableModuleConversions$$anon$4: "play.api.inject.guice.GuiceableModuleConversions$$anon$4"
+Modules$OverrideModule:             "com.google.inject.util.Modules$OverrideModule"
+RoutesProvider$:                    "play.api.inject.RoutesProvider$"
+========================
+End of classname legend:
+========================
+
+	at com.google.inject.internal.Errors.throwCreationExceptionIfErrorsExist(Errors.java:589)
+	at com.google.inject.internal.InternalInjectorCreator.initializeStatically(InternalInjectorCreator.java:163)
+	at com.google.inject.internal.InternalInjectorCreator.build(InternalInjectorCreator.java:110)
+	at com.google.inject.Guice.createInjector(Guice.java:87)
+	at com.google.inject.Guice.createInjector(Guice.java:78)
+	at play.api.inject.guice.GuiceBuilder.injector(GuiceInjectorBuilder.scala:200)
+	at play.api.inject.guice.GuiceApplicationBuilder.build(GuiceApplicationBuilder.scala:176)
+	at play.api.inject.guice.GuiceApplicationLoader.load(GuiceApplicationLoader.scala:21)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.$anonfun$1(DevServerStart.scala:233)
+	at play.utils.Threads$.withContextClassLoader(Threads.scala:22)
+	at play.core.server.DevServerStart$DevServerApplicationProvider$1.reload(DevServerStart.scala:234)
+	... 24 common frames omitted
+2024-10-13 17:57:34 [34mINFO [0;39m [36mp.a.http.HttpErrorHandlerExceptions[0;39m [35m[0;39m Registering exception handler: guice-provision-exception-handler
+2024-10-13 17:57:34 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-10-13 17:57:34 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
