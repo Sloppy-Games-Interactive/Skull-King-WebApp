@@ -34,3 +34,5 @@ metals.sbt
 .idea
 .idea_modules
 /.worksheet/
+
+/logs
