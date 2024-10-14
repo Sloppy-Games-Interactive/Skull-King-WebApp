@@ -5,8 +5,13 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index()
+POST     /new-game                   controllers.TuiController.newGame
+POST     /set-player-limit           controllers.TuiController.setPlayerLimit
+POST     /set-player-name            controllers.TuiController.setPlayerName
+POST     /set-prediction            controllers.TuiController.setPrediction
+POST     /play-card                  controllers.TuiController.playCard
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /new-game                   controllers.TuiController.newGame()
