@@ -12,6 +12,7 @@ import play.api.libs.json.JsObject
 
 import scala.io.StdIn.readLine
 import scala.language.postfixOps
+import scala.util.{Try, Success, Failure}
 
 @Singleton
 class GameController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
@@ -35,48 +36,66 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
-    val limit = request.body.asJson.get("limit").as[String]
-    parser.parsePlayerLimit(limit) match
+    val limit = Try[String](request.body.asJson.get("limit").as[String])
+
+    limit match {
+      case Success(l) => parser.parsePlayerLimit(l)
+      case Failure(f) => None
+    } match {
+      case None => BadRequest("Invalid limit")
       case Some(l) =>
         controller.setPlayerLimit(l)
         Ok(controller.state.toJson)
-      case None => BadRequest("Invalid limit")
-    Ok(controller.state.toJson)
+    }
   }
 
   def setPlayerName = Action { implicit request: Request[AnyContent] =>
-    val name = request.body.asJson.get("name").as[String]
-    parser.parsePlayerName(name) match
+    val name = Try[String](request.body.asJson.get("name").as[String])
+
+    name match {
+      case Success(n) => parser.parsePlayerName(n)
+      case Failure(f) => None
+    } match {
+      case None => BadRequest("Invalid name")
       case Some(n) =>
         controller.addPlayer(n)
         Ok(controller.state.toJson)
-      case None => BadRequest("Invalid name")
+    }
   }
 
   def setPrediction = Action { implicit request: Request[AnyContent] =>
-    val prediction = request.body.asJson.get("prediction").as[String]
-    controller.state.activePlayer match
+    val prediction = Try[String](request.body.asJson.get("prediction").as[String])
+
+    controller.state.activePlayer match {
+      case None => BadRequest("No active player")
       case Some(player) =>
-        parser.parsePrediction(prediction, controller.state.round) match
+        prediction match {
+          case Success(p) => parser.parsePrediction(p, controller.state.round)
+          case Failure(f) => None
+        } match {
+          case None => BadRequest("Invalid prediction")
           case Some(pred) =>
             controller.setPrediction(player, pred)
             Ok(controller.state.toJson)
-          case None => BadRequest("Invalid prediction")
-
-      case None => BadRequest("No active player")
-
+        }
+    }
   }
 
   def playCard = Action { implicit request: Request[AnyContent] =>
-    val card = request.body.asJson.get("card").as[String]
-    controller.state.activePlayer match
+    val card = Try[String](request.body.asJson.get("card").as[String])
+    controller.state.activePlayer match {
+      case None => BadRequest("No active player")
       case Some(player) =>
-        parser.parseCardPlay(card, player) match
+        card match {
+          case Success(c) => parser.parseCardPlay(c, player)
+          case Failure(f) => None
+        } match {
+          case None => BadRequest("Invalid card")
           case Some(c) =>
             controller.playCard(player, c)
             Ok(controller.state.toJson)
-          case None => BadRequest("Invalid card")
-      case None => BadRequest("No active player")
+        }
+    }
   }
 
   def loadGame = Action { implicit request: Request[AnyContent] =>
