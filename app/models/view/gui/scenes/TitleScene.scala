@@ -36,7 +36,7 @@ case class TitleScene(
   private val loadGameBtn: Button = new GameButton(large) {
     text = "Load Game"
     onAction = () => {
-      controller.loadGame
+      controller.loadGame()
     }
   }
 

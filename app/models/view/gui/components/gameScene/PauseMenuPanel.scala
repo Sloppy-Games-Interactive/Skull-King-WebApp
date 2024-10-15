@@ -62,14 +62,14 @@ class PauseMenuPanel(
       text = "Save Game"
       onAction = () => {
         toggleClick()
-        controller.saveGame
+        controller.saveGame()
       }
     },
     new GameButton(medium) {
       text = "Load Game"
       onAction = () => {
         toggleClick()
-        controller.loadGame
+        controller.loadGame()
       }
     },
     new GameButton(medium) {

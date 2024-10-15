@@ -35,7 +35,6 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
   private var settingsScene: SettingsScene = uninitialized
   private var gameScene: GameScene = uninitialized
 
-
   private val windowWidth = 1440
   private val windowHeight = 960
 
@@ -56,7 +55,6 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
       onClickSettingsButton = () => stage.setScene(settingsScene),
       onClickQuitButton = () => controller.quit
     )
-//    titleScene.cursor = customCursor
 
     settingsScene = SettingsScene(
       controller = controller,
@@ -64,15 +62,6 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
       windowHeight = windowHeight,
       onClickBackButton = () => stage.setScene(titleScene)
     )
-//    settingsScene.cursor = customCursor
-
-    preGameScene = PreGameScene(
-      controller = controller,
-      windowWidth = windowWidth,
-      windowHeight = windowHeight,
-      onClickStartGameButton = () => stage.setScene(gameScene),
-    )
-//    preGameScene.cursor = customCursor
 
     gameScene = GameScene(
       controller = controller,
@@ -80,7 +69,6 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
       windowHeight = windowHeight,
       onClickQuitBtn = () => stage.setScene(titleScene)
     )
-//    gameScene.cursor = customCursor
 
     stage = new JFXApp3.PrimaryStage {
       resizable = false
@@ -100,6 +88,7 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
   override def update(event: ObservableEvent): Unit = {
     event match {
       case ControllerEvents.Quit => Platform.exit()
+      case ControllerEvents.NewGame => showPreGameScene()
       case ControllerEvents.PlayerAdded =>{
         if Phase.PrepareTricks == controller.state.phase then
           showGameScene()
@@ -117,8 +106,14 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
   }
 
   private def showPreGameScene(): Unit = {
+    preGameScene = PreGameScene(
+      controller = controller,
+      windowWidth = windowWidth,
+      windowHeight = windowHeight,
+      onClickStartGameButton = () => stage.setScene(gameScene),
+    )
+
     Platform.runLater(() => stage.setScene(preGameScene))
   }
-
 }
 

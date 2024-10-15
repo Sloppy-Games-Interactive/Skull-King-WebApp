@@ -5,15 +5,16 @@ import play.api.*
 import play.api.mvc.*
 import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.controller.ControllerComponent.IController
+import de.htwg.se.skullking.model.StateComponent.GameStateDeserializer
 import de.htwg.se.skullking.view.tui.{Parser, Tui}
 import de.htwg.se.skullking.view.gui.Gui
+import play.api.libs.json.JsObject
 
 import scala.io.StdIn.readLine
 import scala.language.postfixOps
 
 @Singleton
 class GameController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
-
   val controller: IController = summon[IController]
   val tui = Tui(controller)
   val gui = Gui(controller)
@@ -21,9 +22,12 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   val parser = new Parser
 
   new Thread(() => {
-    println("Starting Skullking GUI")
     gui.main(Array.empty)
   }).start()
+
+  def index() = Action { implicit request: Request[AnyContent] =>
+    Ok(controller.state.toJson)
+  }
 
   def newGame = Action { implicit request: Request[AnyContent] =>
     controller.newGame
@@ -75,4 +79,25 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
       case None => BadRequest("No active player")
   }
 
+  def loadGame = Action { implicit request: Request[AnyContent] =>
+    val stateJson = request.body.asJson
+
+    val stateToLoad = stateJson match
+      case Some(json) => Some(GameStateDeserializer.fromJson(json.as[JsObject]))
+      case None => None
+
+    controller.loadGame(stateToLoad)
+    Ok(controller.state.toJson)
+  }
+  
+  def saveGame = Action { implicit request: Request[AnyContent] =>
+    val stateJson = request.body.asJson
+
+    val stateToSave = stateJson match
+      case Some(json) => Some(GameStateDeserializer.fromJson(json.as[JsObject]))
+      case None => None
+
+    controller.saveGame()
+    Ok(controller.state.toJson)
+  }
 }

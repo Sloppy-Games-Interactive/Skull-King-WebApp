@@ -25,9 +25,9 @@ trait IController() extends Observable {
   
   def setPrediction(player: IPlayer, prediction: Int): Unit
   
-  def saveGame: Unit
+  def saveGame(saveState: Option[IGameState] = None): Unit
   
-  def loadGame: Unit
+  def loadGame(loadState: Option[IGameState] = None): Unit
   
   def quit: Unit
 }

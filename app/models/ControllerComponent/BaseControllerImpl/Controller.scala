@@ -63,21 +63,30 @@ class Controller(using var state: IGameState) extends IController {
     handleState()
   }
 
-  def saveGame: Unit = {
-    summon[IFileIO].save(state)
+  def saveGame(saveState: Option[IGameState] = None): Unit = {
+    val stateToSave = saveState match {
+      case Some(s) => s
+      case None => state
+    }
+    
+    summon[IFileIO].save(stateToSave)
     notifyObservers(ControllerEvents.SaveGame)
     handleState()
   }
   
-  def loadGame: Unit = {
-    state = summon[IFileIO].load
-    undoManager.doStep(new LoadGameCommand(this, state))
+  def loadGame(loadState: Option[IGameState] = None): Unit = {
+    val stateToLoad = loadState match {
+      case Some(s) => s
+      case None => summon[IFileIO].load
+    }
+
+    undoManager.doStep(new LoadGameCommand(this, stateToLoad))
     notifyObservers(ControllerEvents.LoadGame)
     handleState()
   }
   
   def quit: Unit = {
-    // TODO: implement save game state to file
+    saveGame()
     notifyObservers(ControllerEvents.Quit)
   }
 }
