@@ -43,12 +43,12 @@ case class GameState(
   }
 
   private def prepareRound: GameState = {
-    val updatedPlayers = setFirstActive(players).map(_.resetHand.resetPrediction)
+    val updatedPlayers = players.map(_.resetHand.resetPrediction.setActive(false))
 
     this.copy(
         round = round + 1,
         deck = summon[IDeckFactory](DeckContent.specials).shuffle(),
-        players = updatedPlayers
+        players = updatedPlayers.head.setActive(true) :: updatedPlayers.tail
       ).dealCards
       .changePhase(Phase.PrepareTricks)
   }
@@ -69,10 +69,10 @@ case class GameState(
       case p => p
     }
 
-    nextActive(updatedPlayers) match {
-      case Some(nextPlayer) => this.copy(players = setNextActive(updatedPlayers))
-      case None => this.copy(players = updatedPlayers).startTrick
-    }
+    if updatedPlayers.forall(_.prediction.isDefined) then
+      this.copy(players = determineRoundStartPlayer(updatedPlayers, round)).startTrick
+    else
+      this.copy(players = setNextPlayerActive(updatedPlayers))
   }
 
   private def startTrick: GameState = {
@@ -81,7 +81,7 @@ case class GameState(
     this.copy(
       lastTrickWinner = lastWinner,
       tricks = summon[ITrick] :: tricks,
-      players = setFirstActive(players)
+      players = determineTrickStartPlayer(players, round, lastWinner)
     ).changePhase(Phase.PlayTricks)
   }
 
@@ -100,7 +100,7 @@ case class GameState(
 
         this.copy(
           tricks = tricks.updated(0, updatedTrick),
-          players = setNextActive(updatedPlayers)
+          players = rotateToNextActivePlayer(updatedPlayers)
         )
       }
     }.getOrElse(this)
@@ -154,11 +154,32 @@ case class GameState(
     }
   }
 
-  private def setFirstActive(players: List[IPlayer]): List[IPlayer] = {
-    players.head.setActive(true) :: players.tail.map(_.setActive(false))
+  private def determineRoundStartPlayer(players: List[IPlayer], roundNumber: Int): List[IPlayer] = {
+    val activePlayerIndex = (roundNumber - 1) % players.length
+    players.zipWithIndex.map {
+      case (p, i) if i == activePlayerIndex => p.setActive(true)
+      case (p, _) => p.setActive(false)
+    }
   }
 
-  private def setNextActive(players: List[IPlayer]): List[IPlayer] = {
+  private def determineTrickStartPlayer(players: List[IPlayer], roundNumber: Int, lastWinner: Option[IPlayer]): List[IPlayer] = {
+    lastWinner match {
+      case Some(winner) => players.map {
+        case p if p.name == winner.name => p.setActive(true)
+        case p => p.setActive(false)
+      }
+      case None => determineRoundStartPlayer(players, roundNumber)
+    }
+  }
+
+  private def rotateToNextActivePlayer(players: List[IPlayer]): List[IPlayer] = {
+    if players.last.active then
+      players.head.setActive(true) :: players.tail.map(_.setActive(false))
+    else
+      setNextPlayerActive(players)
+  }
+
+  private def setNextPlayerActive(players: List[IPlayer]): List[IPlayer] = {
     val nextPlayer = nextActive(players)
     players.map {
       case p if nextPlayer.isDefined && p.name == nextPlayer.get.name => p.setActive(true)
