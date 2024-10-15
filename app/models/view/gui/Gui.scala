@@ -14,17 +14,17 @@ import scalafx.scene.{ImageCursor, Scene}
 import scala.compiletime.uninitialized
 
 object Styles {
-  val mainCss: String = getClass.getResource("/styles/main.css").toExternalForm
-  val gameSceneCss: String = getClass.getResource("/styles/scenes/gameScene.css").toExternalForm
-  val titleSceneCss: String = getClass.getResource("/styles/scenes/titleScene.css").toExternalForm
-  val preGameSceneCss: String = getClass.getResource("/styles/scenes/preGameScene.css").toExternalForm
-  val settingsSceneCss: String = getClass.getResource("/styles/scenes/settingsScene.css").toExternalForm
+  val mainCss: String = getClass.getResource("/models/view/gui/resources/styles/main.css").toExternalForm
+  val gameSceneCss: String = getClass.getResource("/models/view/gui/resources/styles/scenes/gameScene.css").toExternalForm
+  val titleSceneCss: String = getClass.getResource("/models/view/gui/resources/styles/scenes/titleScene.css").toExternalForm
+  val preGameSceneCss: String = getClass.getResource("/models/view/gui/resources/styles/scenes/preGameScene.css").toExternalForm
+  val settingsSceneCss: String = getClass.getResource("/models/view/gui/resources/styles/scenes/settingsScene.css").toExternalForm
   
   // components
-  val gameButtonCss: String = getClass.getResource("/styles/components/gameButton.css").toExternalForm
-  val playerListRowCss: String = getClass.getResource("/styles/components/playerListRow.css").toExternalForm
-  val panelCss: String = getClass.getResource("/styles/components/panel.css").toExternalForm
-  val PauseMenuPanelCss: String = getClass.getResource("/styles/components/pauseMenu.css").toExternalForm
+  val gameButtonCss: String = getClass.getResource("/models/view/gui/resources/styles/components/gameButton.css").toExternalForm
+  val playerListRowCss: String = getClass.getResource("/models/view/gui/resources/styles/components/playerListRow.css").toExternalForm
+  val panelCss: String = getClass.getResource("/models/view/gui/resources/styles/components/panel.css").toExternalForm
+  val PauseMenuPanelCss: String = getClass.getResource("/models/view/gui/resources/styles/components/pauseMenu.css").toExternalForm
 }
 
 class Gui(controller: IController) extends JFXApp3 with Observer {
@@ -42,7 +42,7 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
   private val minWindowWidth = 500
   private val minWindowHeight = 300
 
-  Font.loadFont(getClass.getResourceAsStream("/fonts/Pieces_of_Eight.ttf"), 50)
+  Font.loadFont(getClass.getResourceAsStream("/models/view/gui/resources/fonts/Pieces_of_Eight.ttf"), 50)
 
   override def start(): Unit = {
     val customCursorImage = new Image("/images/cursor.png")
@@ -88,7 +88,7 @@ class Gui(controller: IController) extends JFXApp3 with Observer {
       scene = titleScene
       minWidth = minWindowWidth
       minHeight = minWindowHeight
-      icons. += (new Image(getClass.getResourceAsStream("/images/icon.png")))
+      icons. += (new Image(getClass.getResourceAsStream("/models/view/gui/resources/images/icon.png")))
 
       // override close button function
       onCloseRequest = () => {

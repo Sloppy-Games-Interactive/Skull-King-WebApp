@@ -6,7 +6,7 @@ import de.htwg.se.skullking.model.CardComponent.CardBaseImpl.{CardFactory, Joker
 import de.htwg.se.skullking.model.CardComponent.{ICardFactory, IJokerCard}
 import de.htwg.se.skullking.model.DeckComponent.DeckBaseImpl.{Deck, DeckFactory}
 import de.htwg.se.skullking.model.DeckComponent.{IDeck, IDeckFactory}
-import de.htwg.se.skullking.model.FileIOComponent.FileIOXmlImp.FileIO
+import de.htwg.se.skullking.model.FileIOComponent.FileIOJsonImpl.FileIO
 import de.htwg.se.skullking.model.FileIOComponent.IFileIO
 import de.htwg.se.skullking.model.PlayerComponent.PlayerBaseImpl.{Hand, HandFactory, PlayerFactory}
 import de.htwg.se.skullking.model.PlayerComponent.{IHand, IHandFactory, IPlayerFactory}
