@@ -1,9 +1,0 @@
-.root {
-    -fx-background-image: url("/public/images/background/settings.jpeg");
-    -fx-background-size: cover;
-}
-
-HBox, VBox {
-    -fx-alignment: center;
-    -fx-spacing: 10;
-}

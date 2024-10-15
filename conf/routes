@@ -5,11 +5,11 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index()
-POST     /new-game                   controllers.TuiController.newGame
-POST     /set-player-limit           controllers.TuiController.setPlayerLimit
-POST     /set-player-name            controllers.TuiController.setPlayerName
-POST     /set-prediction            controllers.TuiController.setPrediction
-POST     /play-card                  controllers.TuiController.playCard
+POST     /new-game                   controllers.GameController.newGame
+POST     /set-player-limit           controllers.GameController.setPlayerLimit
+POST     /set-player-name            controllers.GameController.setPlayerName
+POST     /set-prediction            controllers.GameController.setPrediction
+POST     /play-card                  controllers.GameController.playCard
 
 
 # Map static resources from the /public folder to the /assets URL path
