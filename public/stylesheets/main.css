@@ -1,0 +1,68 @@
+@font-face {
+    font-family: "Pieces of Eight";
+    src: url("/assets/fonts/Pieces_of_Eight.ttf");
+}
+
+@font-face {
+    font-family: "Freebooter";
+    src: url("/assets/fonts/Freebooter.ttf");
+}
+
+body {
+    font-size: 16px;
+    font-family: "Freebooter", serif
+}
+
+.title-font {
+    font-family: "Pieces of Eight", serif;
+}
+
+.bg-settings::before {
+    background-image: url("/assets/images/background/settings.jpeg");
+}
+
+.bg-pre-game::before {
+    background-image: url("/assets/images/background/pre_game.jpeg");
+}
+
+.bg-tavern::before {
+    background-image: url("/assets/images/background/tavern.jpeg");
+}
+
+.bg-town::before {
+    background-image: url("/assets/images/background/pirate_town.jpeg");
+}
+
+.bg-settings::before,
+.bg-pre-game::before,
+.bg-town::before,
+.bg-tavern::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    transform: scale(1.1);
+    filter: brightness(0.95) blur(5px);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.bg-wood-panel {
+    background-image: url("/assets/images/components/panel/pre_game_panel.png");
+    background-size: stretch;
+}
+
+.panel {
+    width: 100vw;
+    height: 100vh;
+
+    max-width: 1200px;
+    max-height: 800px;
+
+    overflow-y: scroll;
+}

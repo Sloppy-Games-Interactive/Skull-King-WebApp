@@ -1,0 +1,11 @@
+.route-get {
+    background: theme('colors.green.600');
+}
+
+.route-post {
+    background: theme('colors.cyan.600');
+}
+
+.route-delete {
+    background: #dc2626;
+}

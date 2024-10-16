@@ -4,11 +4,13 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.GameController.index()
+GET      /                           controllers.GameController.index
+GET      /rules                      controllers.GameController.rules
+GET      /status                     controllers.GameController.status
 POST     /new-game                   controllers.GameController.newGame
 POST     /set-player-limit           controllers.GameController.setPlayerLimit
 POST     /set-player-name            controllers.GameController.setPlayerName
-POST     /set-prediction            controllers.GameController.setPrediction
+POST     /set-prediction             controllers.GameController.setPrediction
 POST     /play-card                  controllers.GameController.playCard
 POST     /save-game                  controllers.GameController.saveGame
 POST     /load-game                  controllers.GameController.loadGame

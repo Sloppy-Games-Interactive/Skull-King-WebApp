@@ -10,7 +10,6 @@ import de.htwg.se.skullking.view.tui.{Parser, Tui}
 import de.htwg.se.skullking.view.gui.Gui
 import play.api.libs.json.JsObject
 
-import scala.io.StdIn.readLine
 import scala.language.postfixOps
 import scala.util.{Try, Success, Failure}
 
@@ -26,8 +25,16 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
     gui.main(Array.empty)
   }).start()
 
-  def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(controller.state.toJson)
+  def index = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.index())
+  }
+
+  def rules = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.rules())
+  }
+
+  def status = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.status(controller.state))
   }
 
   def newGame = Action { implicit request: Request[AnyContent] =>

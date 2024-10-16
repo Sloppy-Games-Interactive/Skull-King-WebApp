@@ -1,5 +1,35 @@
 @()
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@display(method: String, path: String, description: String) = {
+  <tr>
+    <td class="text-white p-4 route-@method.toLowerCase()">@method.toUpperCase()</td>
+    <td class="p-4">@path</td>
+    <td class="p-4">@description</td>
+  </tr>
+}
+
+@main("Skull King™️", "bg-town") {
+  <h1 class="title-font text-9xl text-center mt-4 mb-6 text-white drop-shadow">SkullKing</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Path</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      @display("get", "/", "")
+      @display("get", "/rules", "")
+      @display("get", "/status", "")
+      @display("post", "/new-game", "")
+      @display("post", "/set-player-limit", "")
+      @display("post", "/set-player-name", "")
+      @display("post", "/set-prediction", "")
+      @display("post", "/play-card", "")
+      @display("post", "/save-game", "")
+      @display("post", "/load-game", "")
+    </tbody>
+  </table>
 }

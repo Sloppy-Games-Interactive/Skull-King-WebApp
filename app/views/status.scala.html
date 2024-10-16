@@ -1,0 +1,36 @@
+@import de.htwg.se.skullking.model.StateComponent.IGameState
+
+@(state: IGameState)
+
+@main("Skull King™️", "bg-pre-game") {
+    <h1>Game Status</h1>
+    @*// table*@
+
+    <div class="flex justify-center align-center">
+        <div class="bg-wood-panel panel">
+            @*<div class="panel-header p-6"></div>*@
+            <div class="panel-body p-6">
+                <table>
+                    <tr>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Prediction</th>
+                        <th>Hand</th>
+                        <th>Active</th>
+                    </tr>
+                    @for(player <- state.players.toArray) {
+                        <tr>
+                            <td>@player.name</td>
+                            <td>@player.score</td>
+                            <td>@player.prediction</td>
+                            <td>@player.hand</td>
+                            <td>@player.active</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+}

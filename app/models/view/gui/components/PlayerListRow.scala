@@ -5,7 +5,7 @@ import de.htwg.se.skullking.model.trick.TrickComponent.ITrick
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Label
 import scalafx.scene.effect.InnerShadow
-import scalafx.scene.image.ImageView
+import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.Priority.Always
 import scalafx.scene.layout.{HBox, Pane, Region}
 import scalafx.scene.paint.Color
@@ -21,7 +21,8 @@ class PlayerListRow (player: IPlayer, tricks: List[ITrick]) extends HBox{
   private val prediction = player.prediction.getOrElse(0)
 
   alignment = Pos.CenterLeft
-  private val imageView = new ImageView("/images/icon.png") {
+  private val imageView = new ImageView {
+    image = new Image("/images/icon.png")
     fitHeight = 90
     fitWidth = 90
   }

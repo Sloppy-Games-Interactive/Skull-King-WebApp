@@ -55,5 +55,4 @@ lazy val root = project
       case PathList("META-INF", _*) => MergeStrategy.discard
       case _                        => MergeStrategy.first
     }
-
   ).enablePlugins(PlayScala)
