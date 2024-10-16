@@ -3,15 +3,18 @@ package controllers
 import javax.inject.*
 import play.api.*
 import play.api.mvc.*
+
 import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.controller.ControllerComponent.IController
 import de.htwg.se.skullking.model.StateComponent.GameStateDeserializer
+import de.htwg.se.skullking.util.RoutesUtil
 import de.htwg.se.skullking.view.tui.{Parser, Tui}
 import de.htwg.se.skullking.view.gui.Gui
 import play.api.libs.json.JsObject
 
 import scala.language.postfixOps
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
+
 
 @Singleton
 class GameController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
@@ -25,8 +28,9 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
     gui.main(Array.empty)
   }).start()
 
-  def index = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+  def index = Action {
+    val routes = RoutesUtil.getRoutes
+    Ok(views.html.index(routes))
   }
 
   def rules = Action { implicit request: Request[AnyContent] =>

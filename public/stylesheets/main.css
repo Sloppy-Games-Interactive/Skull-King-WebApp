@@ -9,7 +9,7 @@
 }
 
 body {
-    font-size: 16px;
+    /*font-size: 16px;*/
     font-family: "Freebooter", serif
 }
 
@@ -46,7 +46,7 @@ body {
     width: 100vw;
     height: 100vh;
     transform: scale(1.1);
-    filter: brightness(0.95) blur(5px);
+    filter: brightness(0.95) /*blur(5px)*/;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
