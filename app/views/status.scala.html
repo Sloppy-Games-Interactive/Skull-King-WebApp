@@ -3,33 +3,35 @@
 @(state: IGameState)
 
 @main("Skull King™️", "bg-pre-game") {
-    <h1>Game Status</h1>
-    @*// table*@
+    <div class="text-white">
+        <h1 class="w-fit text-9xl text-center bg-gray-800 bg-opacity-50 mx-auto my-5 text-white backdrop-blur-xl px-8 rounded-2xl">Game Status</h1>
+        @*// table*@
 
-    <div class="flex justify-center align-center">
-        <div class="bg-wood-panel panel">
-            @*<div class="panel-header p-6"></div>*@
-            <div class="panel-body p-6">
-                <table>
-                    <tr>
-                        <th>Player</th>
-                        <th>Score</th>
-                        <th>Prediction</th>
-                        <th>Hand</th>
-                        <th>Active</th>
-                    </tr>
+        <div class="w-4/5 h-full overflow-scroll shadow-md rounded-2xl bg-clip-border mx-auto mb-10">
+                <table class="w-full text-left table-auto min-w-max bg-gray-800 bg-opacity-50 text-white font-arial backdrop-blur-xl ">
+                    <thead class="text-left">
+                        <tr class="bg-gray-900">
+                            <th class="py-2 px-4">Player</th>
+                            <th class="py-2 px-4">Score</th>
+                            <th class="py-2 px-4">Prediction</th>
+                            <th class="py-2 px-4">Hand</th>
+                            <th class="py-2 px-4">Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     @for(player <- state.players.toArray) {
                         <tr>
-                            <td>@player.name</td>
-                            <td>@player.score</td>
-                            <td>@player.prediction</td>
-                            <td>@player.hand</td>
-                            <td>@player.active</td>
+                            <td class="py-2 px-4">@player.name</td>
+                            <td class="py-2 px-4">@player.score</td>
+                            <td class="py-2 px-4">@player.prediction</td>
+                            <td class="py-2 px-4">@player.hand</td>
+                            <td class="py-2 px-4">@player.active</td>
                         </tr>
                     }
+                    </tbody>
                 </table>
-            </div>
         </div>
+
     </div>
 
 

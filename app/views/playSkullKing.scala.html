@@ -1,0 +1,125 @@
+@* cant name file play.scala.html because it is a reserved keyword *@
+@import de.htwg.se.skullking.model.StateComponent.IGameState
+@import helper._
+
+@main("Play Skull King™️", "bg-pre-game") {
+    <h1>Play Skull King</h1>
+    <button id="new-game-button">Start New Game</button>
+    <div id="game-container" class="w-4/5 mx-auto">
+        <!-- Hier wird das Spiel gerendert -->
+    </div>
+
+    <script>
+
+        function update() {
+            fetch('/status', {
+                headers: { 'Content-Type': 'application/json' }
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        const container = document.getElementById('game-container');
+                        if (data.players.length === 0) {
+                            container.innerHTML = `
+            <input type="number" id="player-limit" placeholder="Enter the player limit">
+            <button onclick="setPlayerLimit()">Set Player Limit</button>
+        `;
+                        } else if (data.players.length < data.playerLimit) {
+                            container.innerHTML = `
+            <input type="text" id="player-name" placeholder="Enter your name">
+            <button onclick="addPlayer()">Add Player</button>
+        `;
+                        } else {
+                            container.innerHTML = renderGame(data);
+                        }
+                    });
+        }
+
+        // Function to render the game state
+        function renderGame(gameState) {
+            return `<h1>Game Status</h1>
+            <div class="h-full overflow-scroll shadow-md rounded-2xl bg-clip-border mx-auto mb-10">
+                <table class="w-full text-left table-auto min-w-max bg-gray-800 bg-opacity-50 text-white font-arial backdrop-blur-xl">
+                    <thead class="text-left">
+                        <tr class="bg-gray-900">
+                            <th class="py-2 px-4">Player</th>
+                            <th class="py-2 px-4">Score</th>
+                            <th class="py-2 px-4">Prediction</th>
+                            <th class="py-2 px-4">Hand</th>
+                            <th class="py-2 px-4">Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${gameState.players.map(player => `
+                            <tr>
+                                <td class="py-2 px-4">${player.name}</td>
+                                <td class="py-2 px-4">${player.score}</td>
+                                <td class="py-2 px-4">${player.prediction}</td>
+                                <td class="py-2 px-4">${player.hand.cards.map(
+                                    card => `${card.value} of ${card.suit}`
+                                ).join(', ')}</td>
+                                <td class="py-2 px-4">${player.active}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+`;
+        }
+
+        function addPlayer() {
+            fetch('/set-player-name', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: document.getElementById('player-name').value
+                })
+            }).then(() => {
+                update(); // Update the game state after adding a player
+            });
+        }
+
+        function setPlayerLimit() {
+            fetch('/set-player-limit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ limit: document.getElementById('player-limit').value })
+            }).then(response => response.json())
+                    .then(data => {
+                        if (data.phase === 'PrepareGame' && data.players.length < data.playerLimit) {
+                            document.getElementById('game-container').innerHTML = `
+                  <input type="text" id="player-name" placeholder="Enter your name">
+                  <button onclick="addPlayer()">Add Player</button>
+              `;
+                        } else {
+                            update(); // Only update if the player limit is reached or the phase changes
+                        }
+                    });
+        }
+
+        // Fetch the current game state when the page loads
+        window.onload = function() {
+            update();
+        };
+
+        // Event listener for the new game button
+        document.getElementById('new-game-button').addEventListener('click', function () {
+            fetch('/new-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    // Include any data you need to send to the server
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                update()
+                console.log(data);
+                //document.getElementById('game-container').innerHTML = renderGame(data);
+            });
+        });
+    </script>
+}

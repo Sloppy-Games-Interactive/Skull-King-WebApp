@@ -38,7 +38,10 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def status = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.status(controller.state))
+    request.contentType match {
+      case Some("application/json") => Ok(controller.state.toJson)
+      case _ => Ok(views.html.status(controller.state))
+    }
   }
 
   def newGame = Action { implicit request: Request[AnyContent] =>
@@ -129,5 +132,9 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
 
     controller.saveGame()
     Ok(controller.state.toJson)
+  }
+
+  def play = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.playSkullKing())
   }
 }

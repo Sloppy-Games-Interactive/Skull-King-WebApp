@@ -10,6 +10,8 @@ GET      /                           controllers.GameController.index
 
 GET      /rules                      controllers.GameController.rules
 GET      /status                     controllers.GameController.status
+## Play the game
+GET      /play                      controllers.GameController.play
 ## Start a new game
 POST     /new-game                   controllers.GameController.newGame
 POST     /set-player-limit           controllers.GameController.setPlayerLimit
