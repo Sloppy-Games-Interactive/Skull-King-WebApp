@@ -3,13 +3,21 @@
 @import helper._
 
 @main("Play Skull King™️", "bg-pre-game") {
-    <h1>Play Skull King</h1>
-    <button id="new-game-button">Start New Game</button>
+    <div class="w-full mx-auto text-center">
+    <button id="new-game-button" class="mx-auto bg-gray-900 rounded-2xl p-3 text-white my-6">Start New Game</button>
     <div id="game-container" class="w-4/5 mx-auto">
         <!-- Hier wird das Spiel gerendert -->
     </div>
+    </div>
 
     <script>
+
+        function addPlayerHtml () {
+            return `
+            <input type="text" id="player-name" class="rounded-2xl p-3 my-6" placeholder="Enter your name">
+            <button onclick="addPlayer()" class="mx-auto bg-gray-900 rounded-2xl p-3 text-white my-6">Add Player</button>
+        `;
+        }
 
         function update() {
             fetch('/status', {
@@ -20,14 +28,11 @@
                         const container = document.getElementById('game-container');
                         if (data.players.length === 0) {
                             container.innerHTML = `
-            <input type="number" id="player-limit" placeholder="Enter the player limit">
-            <button onclick="setPlayerLimit()">Set Player Limit</button>
+            <input type="number" id="player-limit" class="rounded-2xl p-3 my-6 text-black" placeholder="Enter the player limit">
+            <button onclick="setPlayerLimit()" class="mx-auto bg-gray-900 rounded-2xl p-3 text-white my-6">Set Player Limit</button>
         `;
                         } else if (data.players.length < data.playerLimit) {
-                            container.innerHTML = `
-            <input type="text" id="player-name" placeholder="Enter your name">
-            <button onclick="addPlayer()">Add Player</button>
-        `;
+                            container.innerHTML = addPlayerHtml();
                         } else {
                             container.innerHTML = renderGame(data);
                         }
@@ -36,7 +41,7 @@
 
         // Function to render the game state
         function renderGame(gameState) {
-            return `<h1>Game Status</h1>
+            return `
             <div class="h-full overflow-scroll shadow-md rounded-2xl bg-clip-border mx-auto mb-10">
                 <table class="w-full text-left table-auto min-w-max bg-gray-800 bg-opacity-50 text-white font-arial backdrop-blur-xl">
                     <thead class="text-left">
@@ -63,7 +68,44 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="w-full mx-auto bg-gray-800 bg-opacity-50 text-white rounded-2xl p-8 backdrop-blur-xl mb-10">
+                <h2>Current Phase: ${gameState.phase}</h2>
+                <div class="mx-auto w-4/5">
+                    <input class="w-full rounded-2xl p-3 my-6 text-black" type="number" id="prediction" placeholder="Enter your prediction">
+                    <button onclick="setPrediction()" class="w-full bg-gray-900 rounded-2xl p-3 text-white my-6">Set Prediction</button>
+                </div>
+                <div class="mx-auto w-4/5">
+                    <input class="w-full rounded-2xl p-3 my-6 text-black" type="text" id="card" placeholder="Enter your card">
+                    <button onclick="playCard()" class="w-full bg-gray-900 rounded-2xl p-3 text-white my-6">Play Card</button>
+                </div>
+            </div>
+
 `;
+        }
+
+        function setPrediction() {
+            fetch('/set-prediction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prediction: document.getElementById('prediction').value
+                })
+            }).then(() => {
+                update(); // Update the game state after setting a prediction
+            });
+        }
+
+        function playCard() {
+            fetch('/play-card', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    card: document.getElementById('card').value
+                })
+            }).then(() => {
+                update(); // Update the game state after playing a card
+            });
         }
 
         function addPlayer() {
@@ -88,10 +130,7 @@
             }).then(response => response.json())
                     .then(data => {
                         if (data.phase === 'PrepareGame' && data.players.length < data.playerLimit) {
-                            document.getElementById('game-container').innerHTML = `
-                  <input type="text" id="player-name" placeholder="Enter your name">
-                  <button onclick="addPlayer()">Add Player</button>
-              `;
+                            document.getElementById('game-container').innerHTML = addPlayerHtml();
                         } else {
                             update(); // Only update if the player limit is reached or the phase changes
                         }

@@ -18,6 +18,14 @@
 
     </head>
     <body class="@bodyClass text-4xl">
+        <header class="bg-gray-800 bg-opacity-50 text-white text-center py-4 backdrop-blur-xl underline rounded-2xl m-6">
+        <nav>
+            <a href="/" class="hover:text-gray-400 p-10">Home</a>
+            <a href="/status" class="hover:text-gray-400 p-10">Status</a>
+            <a href="/play" class="hover:text-gray-400 p-10">Play</a>
+            <a href="rules" class="hover:text-gray-400 p-10">Rules</a>
+        </nav>
+        </header>
         @* And here's where we render the `Html` object containing
          * the page content. *@
         @content
