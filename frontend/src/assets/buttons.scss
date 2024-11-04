@@ -1,0 +1,26 @@
+.wood-btn {
+  background: url('images/components/GameButton/wood2.png') no-repeat center center;
+
+  //TODO fix this mess
+  //background-size: 100% 100%; // 100% 100% to ignore aspect ratio, but turns image into a blurry mess
+  background-size: cover; // cover to keep aspect ratio, but cuts off edges
+
+  color: #fff;
+  padding: .3em 1em;
+  line-height: 1.15;
+  vertical-align: middle;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+
+  // TODO fix shadow
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  transition: background 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    // TODO fix shadow
+    filter: brightness(0.95);
+    transform: scale(1.05);
+  }
+}
+
