@@ -19,8 +19,13 @@
 
   &:hover {
     // TODO fix shadow
-    filter: brightness(0.95);
+    filter: brightness(1.1);
     transform: scale(1.05);
+  }
+
+  &.disabled {
+    pointer-events: none;
+    filter: brightness(0.6);
   }
 }
 
