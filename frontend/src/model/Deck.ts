@@ -1,17 +1,17 @@
-interface DeckInterface {
-    cards: CardInterface[];
+import type {JsonRepresentation} from "@/model/Serializable";
 
-    toJSON(): object;
+export interface DeckInterface {
+    cards: CardInterface[];
 }
 
-class Deck implements DeckInterface {
-    public readonly cards: CardInterface[];
+export class Deck implements DeckInterface {
+    readonly cards: CardInterface[];
 
-    constructor(cards: CardInterface[]) {
+    constructor({cards}: JsonRepresentation<DeckInterface>) {
         this.cards = cards;
     }
 
-    toJSON(): object {
+    toJSON(): JsonRepresentation<DeckInterface> {
         return {
             cards: this.cards
         };

@@ -1,4 +1,9 @@
-interface GameStateInterface {
+import type {PlayerInterface} from "@/model/Player";
+import type {JsonRepresentation} from "@/model/Serializable";
+import type {TrickInterface} from "@/model/Trick";
+import type {DeckInterface} from "@/model/Deck";
+
+export interface GameStateInterface {
     round: number;
     phase: string;
     playerLimit: number;
@@ -6,11 +11,9 @@ interface GameStateInterface {
     players: PlayerInterface[];
     deck: DeckInterface;
     tricks: TrickInterface[];
-
-    toJSON(): object;
 }
 
-class GameState implements GameStateInterface {
+export class GameState implements GameStateInterface {
   public readonly round: number;
   public readonly phase: string;
   public readonly playerLimit: number;
@@ -19,7 +22,7 @@ class GameState implements GameStateInterface {
   public readonly deck: DeckInterface;
   public readonly tricks: TrickInterface[];
 
-  constructor(round: number, phase: string, playerLimit: number, roundLimit: number, players: PlayerInterface[], deck: DeckInterface, tricks: TrickInterface[]) {
+  constructor({round, phase, playerLimit, roundLimit, players, deck, tricks}: JsonRepresentation<GameStateInterface>) {
     this.round = round;
     this.phase = phase;
     this.playerLimit = playerLimit;
@@ -29,7 +32,7 @@ class GameState implements GameStateInterface {
     this.tricks = tricks;
   }
 
-  toJSON(): object {
+  toJSON(): JsonRepresentation<GameStateInterface> {
     return {
       round: this.round,
       phase: this.phase,
@@ -39,12 +42,5 @@ class GameState implements GameStateInterface {
       deck: this.deck,
       tricks: this.tricks
     };
-  }
-}
-
-class GameStateDeserializer {
-  static fromJson(json: string): GameStateInterface {
-    const obj = JSON.parse(json);
-    return new GameState(obj.round, obj.phase, obj.playerLimit, obj.roundLimit, obj.players, obj.deck, obj.tricks);
   }
 }

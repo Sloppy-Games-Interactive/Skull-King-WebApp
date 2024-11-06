@@ -41,13 +41,13 @@ abstract class BaseApiService {
 }
 
 // TODO add response parsing etc
-class ApiService extends BaseApiService {
+export class ApiService extends BaseApiService {
   constructor() {
     super('localhost:9000');
   }
 
   async getStatus() {
-    return await this.get('/status');
+    const state = await this.get('/status');
   }
 
   async newGame() {
