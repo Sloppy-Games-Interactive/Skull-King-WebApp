@@ -122,6 +122,7 @@ trait IJokerCard extends ISpecialCard {
 }
 
 trait ICardFactory {
+  def apply(card: String): Option[ICard]
   def apply(suit: Suit, value: Int): ICard
   def apply(suit: Suit): ICard
   def apply(as: JokerBehaviour): IJokerCard

@@ -51,18 +51,18 @@
 }
 
 @font-face {
-  font-family: "Pieces of Eight";
-  src: url("/fonts/Pieces_of_Eight.ttf");
+  font-family: 'Pieces of Eight';
+  src: url('/fonts/Pieces_of_Eight.ttf');
 }
 
 @font-face {
-  font-family: "Freebooter";
-  src: url("/fonts/Freebooter.ttf");
+  font-family: 'Freebooter';
+  src: url('/fonts/Freebooter.ttf');
 }
 
 :root {
-  --body-font-family: "Freebooter", serif;
-  --title-font-family: "Pieces of Eight", serif;
+  --body-font-family: 'Freebooter', serif;
+  --title-font-family: 'Pieces of Eight', serif;
 }
 
 *,
@@ -89,26 +89,26 @@ body {
 }
 
 .bg-settings::before {
-  background-image: url("/images/background/settings.jpeg");
+  background-image: url('/images/background/settings.jpeg');
 }
 
 .bg-pre-game::before {
-  background-image: url("/images/background/pre_game.jpeg");
+  background-image: url('/images/background/pre_game.jpeg');
 }
 
 .bg-tavern::before {
-  background-image: url("/images/background/tavern.jpeg");
+  background-image: url('/images/background/tavern.jpeg');
 }
 
 .bg-town::before {
-  background-image: url("/images/background/pirate_town.jpeg");
+  background-image: url('/images/background/pirate_town.jpeg');
 }
 
 .bg-settings::before,
 .bg-pre-game::before,
 .bg-town::before,
 .bg-tavern::before {
-  content: "";
+  content: '';
   position: fixed;
   left: 0;
   right: 0;

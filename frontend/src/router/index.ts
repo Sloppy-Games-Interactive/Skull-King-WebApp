@@ -8,7 +8,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       meta: {
-        bg: 'bg-town'
+        bg: 'bg-town',
       },
       component: MainMenuView,
     },
@@ -16,7 +16,7 @@ const router = createRouter({
       path: '/new-game',
       name: 'new-game',
       meta: {
-        bg: 'bg-pre-game'
+        bg: 'bg-pre-game',
       },
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -27,14 +27,14 @@ const router = createRouter({
       path: '/settings',
       name: 'settings',
       meta: {
-        bg: 'bg-settings'
+        bg: 'bg-settings',
       },
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/SettingsView.vue'),
-    }
-  ]
+    },
+  ],
 })
 
 export default router

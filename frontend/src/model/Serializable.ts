@@ -1,8 +1,9 @@
-export type JsonRepresentation<Object> = {
+type JsonRepresentation<Object> = {
   [Key in keyof Object]: Object[Key]
-};
-
-export interface Serializable<T extends object> {
-  toJSON(): JsonRepresentation<T>;
-  fromJSON(json: JsonRepresentation<T>): JsonRepresentation<T>
 }
+
+export interface Serializable<T> {
+  toJSON(): SerializableJson<T>
+}
+
+export type SerializableJson<T> = Omit<JsonRepresentation<T>, 'toJSON'>

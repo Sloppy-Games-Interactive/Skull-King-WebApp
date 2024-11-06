@@ -41,4 +41,22 @@ object CardFactory extends ICardFactory {
   }
   
   def apply(jokerBehaviour: JokerBehaviour): JokerCard = JokerCard(jokerBehaviour)
+
+  def apply(card: String): Option[ICard] {
+    val parts = card.split(" ")
+    if (parts.length == 2) {
+      val suit = Suit.withName(parts(0))
+      val value = parts(1).toInt
+      Some(apply(suit, value))
+    } else if (parts.length == 1) {
+      val suit = Suit.withName (parts (0) )
+      Some (apply (suit) )
+    } else if (parts[1] == "as") {
+      val suit = Suit.Joker
+      val as = JokerBehaviour.withName(parts(2))
+      Some(apply(as))
+    } else {
+      None
+    }
+  }
 }

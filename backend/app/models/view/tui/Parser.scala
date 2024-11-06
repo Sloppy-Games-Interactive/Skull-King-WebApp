@@ -3,6 +3,7 @@ package de.htwg.se.skullking.view.tui
 import de.htwg.se.skullking.model.CardComponent.ICard
 import de.htwg.se.skullking.model.PlayerComponent.IPlayer
 
+import play.api.libs.json.{JsObject, Json}
 import scala.util.{Success, Try}
 
 class Parser {
@@ -42,22 +43,13 @@ class Parser {
     }
   }
 
-  def parseCardPlay(input: String, player: IPlayer): Option[ICard] = {
-    val tryPrediction = Try(input.toInt)
-
-    val oneIndexed = tryPrediction match {
-      case Success(cardIndex) if cardIndex >= 1 && cardIndex <= player.hand.count => Some(cardIndex)
+  def parseCardPlay(input: JsObject): Option[ICard] = {
+    Try(CardDeserializer.fromJson(input)) match {
+      case Success(card) => Some(card)
       case _ => {
-        println(s"Card index must be a number between 1 and ${player.hand.count}.")
+        println("Invalid card.")
         None
       }
-    }
-
-    // return zero-indexed card index, one-indexed card index is just for user convenience
-    val zeroIndexed = oneIndexed.map(_ - 1)
-    zeroIndexed match {
-      case Some(idx) if player.hand.cards.isDefinedAt(idx) => Some(player.hand.cards(idx))
-      case _ => None
     }
   }
 }

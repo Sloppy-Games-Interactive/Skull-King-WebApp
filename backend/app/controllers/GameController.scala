@@ -96,12 +96,12 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def playCard = Action { implicit request: Request[AnyContent] =>
-    val card = Try[String](request.body.asJson.get("card").as[String])
+    val card = Try[JsObject](request.body.asJson.get("card").as[JsObject])
     controller.state.activePlayer match {
       case None => BadRequest("No active player")
       case Some(player) =>
         card match {
-          case Success(c) => parser.parseCardPlay(c, player)
+          case Success(c) => parser.parseCardPlay(c)
           case Failure(f) => None
         } match {
           case None => BadRequest("Invalid card")
@@ -113,6 +113,7 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def loadGame = Action { implicit request: Request[AnyContent] =>
+    // TODO load from token
     val stateJson = request.body.asJson
 
     val stateToLoad = stateJson match
@@ -124,12 +125,7 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
   
   def saveGame = Action { implicit request: Request[AnyContent] =>
-    val stateJson = request.body.asJson
-
-    val stateToSave = stateJson match
-      case Some(json) => Some(GameStateDeserializer.fromJson(json.as[JsObject]))
-      case None => None
-
+    // TODO save with token
     controller.saveGame()
     Ok(controller.state.toJson)
   }

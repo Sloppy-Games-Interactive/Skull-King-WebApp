@@ -9,9 +9,8 @@ const bgClass = computed(() => route.meta?.bg)
 
 <template>
   <div :class="bgClass" class="w-full h-full grid items-center">
-    <RouterView/>
+    <RouterView />
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

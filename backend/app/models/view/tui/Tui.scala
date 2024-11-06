@@ -121,7 +121,7 @@ class Tui(controller: IController) extends Observer {
           case Some(prediction) => controller.setPrediction(controller.state.activePlayer.get, prediction)
           case None => prompter.promptPrediction(controller.state.activePlayer.get.name, controller.state.round)
         }
-        case PromptState.CardPlay => parser.parseCardPlay(input, controller.state.activePlayer.get) match {
+        case PromptState.CardPlay => parser.parseCardPlay(input) match {
           case Some(card) => controller.playCard(controller.state.activePlayer.get, card)
           case None => prompter.promptCardPlay(controller.state.activePlayer.get)
         }
