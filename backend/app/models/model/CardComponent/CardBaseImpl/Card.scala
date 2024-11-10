@@ -1,6 +1,7 @@
 package de.htwg.se.skullking.model.CardComponent.CardBaseImpl
 
 import de.htwg.se.skullking.model.CardComponent.*
+import scala.util.{Failure, Success, Try}
 
 abstract class Card extends ICard {
   def isSpecial: Boolean = suit.cardType match {
@@ -42,19 +43,22 @@ object CardFactory extends ICardFactory {
   
   def apply(jokerBehaviour: JokerBehaviour): JokerCard = JokerCard(jokerBehaviour)
 
-  def apply(card: String): Option[ICard] {
+  def apply(card: String): Option[ICard] = {
     val parts = card.split(" ")
-    if (parts.length == 2) {
-      val suit = Suit.withName(parts(0))
-      val value = parts(1).toInt
-      Some(apply(suit, value))
-    } else if (parts.length == 1) {
-      val suit = Suit.withName (parts (0) )
-      Some (apply (suit) )
-    } else if (parts[1] == "as") {
-      val suit = Suit.Joker
-      val as = JokerBehaviour.withName(parts(2))
-      Some(apply(as))
+
+    if (parts.length > 0) {
+      Suit.withName(parts(0)) match {
+        case Some(suit) if (parts.length == 2) =>
+          Try(parts(1).toInt) match {
+            case Success(value) => Some(apply(suit, value))
+            case _ => None
+          }
+        case Some(suit) if (parts.length == 1) => Some(apply(suit))
+        case Some(suit) if (suit == Suit.Joker && parts(1) == "as") =>
+          val as = JokerBehaviour.withName(parts(2))
+          Some(apply(as))
+        case _ => None
+      }
     } else {
       None
     }

@@ -99,36 +99,6 @@ class Tui(controller: IController) extends Observer {
       case _ => printStatusScreen()
     }
   }
-
-  def processInputLine(input: String): Unit = {
-    input match {
-      case TuiKeys.Quit.key => controller.quit
-      case TuiKeys.Undo.key => controller.undo
-      case TuiKeys.Redo.key => controller.redo
-      case TuiKeys.NewGame.key => controller.newGame
-      case TuiKeys.Save.key => controller.saveGame()
-      case TuiKeys.Load.key => controller.loadGame()
-      case _ => promptState match {
-        case PromptState.PlayerLimit => parser.parsePlayerLimit(input) match {
-          case Some(playerLimit) => controller.setPlayerLimit(playerLimit)
-          case None => prompter.promptPlayerLimit
-        }
-        case PromptState.PlayerName => parser.parsePlayerName(input) match {
-          case Some(playerName) => controller.addPlayer(playerName)
-          case None => prompter.promptPlayerName
-        }
-        case PromptState.Prediction => parser.parsePrediction(input, controller.state.round) match {
-          case Some(prediction) => controller.setPrediction(controller.state.activePlayer.get, prediction)
-          case None => prompter.promptPrediction(controller.state.activePlayer.get.name, controller.state.round)
-        }
-        case PromptState.CardPlay => parser.parseCardPlay(input) match {
-          case Some(card) => controller.playCard(controller.state.activePlayer.get, card)
-          case None => prompter.promptCardPlay(controller.state.activePlayer.get)
-        }
-        case _ => println("Invalid input.")
-      }
-    }
-  }
 }
 
 

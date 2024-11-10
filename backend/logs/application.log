@@ -1,11 +1,12 @@
-2024-10-29 10:33:00 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+2024-11-10 20:29:08 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
 
+    play.filters.csrf.CSRFFilter
     play.filters.headers.SecurityHeadersFilter
     play.filters.hosts.AllowedHostsFilter
+    play.filters.cors.CORSFilter
 
-2024-10-29 10:33:00 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
-2024-10-29 10:33:00 [31mWARN [0;39m [36mjavafx[0;39m [35m[0;39m Unsupported JavaFX configuration: classes were loaded from 'unnamed module @390357'
-2024-10-29 10:50:39 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Stopping Pekko HTTP server...
-2024-10-29 10:50:39 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Unbinding /[0:0:0:0:0:0:0:0]:9000
-2024-10-29 10:50:39 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Terminating server binding for /[0:0:0:0:0:0:0:0]:9000
-2024-10-29 10:50:39 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Running provided shutdown stop hooks
+2024-11-10 20:29:08 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
+2024-11-10 21:37:33 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Stopping Pekko HTTP server...
+2024-11-10 21:37:33 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Unbinding /[0:0:0:0:0:0:0:0]:9000
+2024-11-10 21:37:33 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Terminating server binding for /[0:0:0:0:0:0:0:0]:9000
+2024-11-10 21:37:33 [34mINFO [0;39m [36mplay.core.server.PekkoHttpServer[0;39m [35m[0;39m Running provided shutdown stop hooks

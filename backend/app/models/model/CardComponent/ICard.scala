@@ -116,6 +116,14 @@ enum JokerBehaviour {
   }
 }
 
+object JokerBehaviour {
+  def withName(name: String): JokerBehaviour = name match {
+    case "Pirate" => JokerBehaviour.Pirate
+    case "Escape" => JokerBehaviour.Escape
+    case _ => JokerBehaviour.None
+  }
+}
+
 trait IJokerCard extends ISpecialCard {
   val as: JokerBehaviour
   def playAs(behaviour: JokerBehaviour): IJokerCard

@@ -1,5 +1,6 @@
 import { GameState } from '@/model/GameState'
 import type { CardInterface } from '@/model/Card'
+import type {InjectionKey} from "vue";
 
 abstract class BaseApiService {
   private readonly baseUrl: string
@@ -44,9 +45,11 @@ abstract class BaseApiService {
   }
 }
 
+export const API_INJECTION_KEY = Symbol() as InjectionKey<ApiService>;
+
 export class ApiService extends BaseApiService {
   constructor() {
-    super('localhost:9000')
+    super('http://localhost:9000')
   }
 
   async getStatus(): Promise<GameState> {

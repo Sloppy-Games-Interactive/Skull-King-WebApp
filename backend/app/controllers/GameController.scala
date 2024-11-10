@@ -20,13 +20,8 @@ import scala.util.{Failure, Success, Try}
 class GameController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
   val controller: IController = summon[IController]
   val tui = Tui(controller)
-  val gui = Gui(controller)
 
   val parser = new Parser
-
-  new Thread(() => {
-    gui.main(Array.empty)
-  }).start()
 
   def index = Action {
     val routes = RoutesUtil.getRoutes

@@ -1,6 +1,6 @@
 package de.htwg.se.skullking.view.tui
 
-import de.htwg.se.skullking.model.CardComponent.ICard
+import de.htwg.se.skullking.model.CardComponent.{ICard, CardDeserializer}
 import de.htwg.se.skullking.model.PlayerComponent.IPlayer
 
 import play.api.libs.json.{JsObject, Json}
