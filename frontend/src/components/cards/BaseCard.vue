@@ -20,9 +20,13 @@ const props = defineProps<{
   suit: Suit
   value?: CardValue
   text?: string
+  flipped?: boolean
 }>()
 
-const classes = computed(() => props.cardType + ' ' + props.suit)
+const classes = computed(
+  () =>
+    props.cardType + ' ' + props.suit + ' ' + (props.flipped ? 'flipped' : ''),
+)
 </script>
 
 <template>
@@ -36,13 +40,10 @@ const classes = computed(() => props.cardType + ' ' + props.suit)
       </div>
     </div>
     <div class="inner">
-
       <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
 
       <div class="image"></div>
     </div>
-    <!--    <img :src="`/images/cards/${cardType}/${suit}.jpeg`">-->
-    <!--    <img src="../../../public/images/cards/cardBackside.jpeg">-->
   </div>
 </template>
 
@@ -84,7 +85,9 @@ const classes = computed(() => props.cardType + ' ' + props.suit)
     align-items: center;
     pointer-events: none;
 
-    box-shadow: inset 0px 0px 10px 0px rgb(0 0 0 / 15%), 0px 0px 10px 0px rgb(0 0 0 / 15%);
+    box-shadow:
+      inset 0px 0px 10px 0px rgb(0 0 0 / 15%),
+      0px 0px 10px 0px rgb(0 0 0 / 15%);
   }
 
   .top {
