@@ -18,6 +18,9 @@ const postPlayerLimit = async () => {
     <router-link to="/" class="btn text-5xl btn-primary wood-btn"
     >Home</router-link
     >
+    <router-link to="/play" class="btn text-5xl btn-primary wood-btn"
+    >Next</router-link
+    >
     <router-link to="/join-game" class="btn text-5xl btn-primary wood-btn"
     >Back</router-link
     >
