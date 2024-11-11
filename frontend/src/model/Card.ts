@@ -167,19 +167,13 @@ export class JokerCard extends Card implements JokerCardInterface {
 
 export class CardFactory {
   static createCard(
-    cardProps:
-      | SerializableJson<CardInterface>
-      | SerializableJson<StandardCardInterface>
-      | SerializableJson<JokerCardRepresentation>,
+    cardProps: SerializableJson<CardInterface>
   ): CardInterface {
     if (cardProps.isSpecial) {
-      if (cardProps.suit === Suit.Joker) {
-        return new JokerCard(cardProps as JokerCardRepresentation)
-      }
-      return new SpecialCard(cardProps)
+      return cardProps.suit === Suit.Joker
+        ? new JokerCard(cardProps as JokerCardRepresentation)
+        : new SpecialCard(cardProps)
     }
-    return new StandardCard(
-      cardProps as SerializableJson<StandardCardInterface>,
-    )
+    return new StandardCard(cardProps as SerializableJson<StandardCardInterface>)
   }
 }
