@@ -30,16 +30,16 @@ const classes = computed(
 </script>
 
 <template>
-  <div class="card" :class="classes">
+  <div class="card textured" :class="classes">
     <div v-if="typeof value === 'number'" class="values">
       <div class="top">
-        <div class="value">{{ props.value }}</div>
+        <div class="value textured">{{ props.value }}</div>
       </div>
       <div class="bottom">
-        <div class="value">{{ props.value }}</div>
+        <div class="value textured">{{ props.value }}</div>
       </div>
     </div>
-    <div class="inner">
+    <div class="inner textured light">
       <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
 
       <div class="image"></div>
@@ -48,9 +48,37 @@ const classes = computed(
 </template>
 
 <style scoped lang="scss">
+.textured {
+  &:before {
+    border-radius: var(--border-radius);
+    content: "";
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 182px;
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.2;
+
+    mask-image: radial-gradient(circle, transparent 0%, black 50%);
+
+  }
+  &.light {
+    &:before {
+      opacity: 0.1;
+    }
+  }
+}
+
 .card {
+  --border-radius: 30px;
+
   padding: 30px;
-  border-radius: 30px;
+  border-radius: var(--border-radius);
   width: 747px;
   height: 1122px;
   position: relative;
@@ -73,21 +101,25 @@ const classes = computed(
 
   --x-outset: -38px;
   --y-outset: -18px;
+  --border-radius: 50%;
 
   .value {
     border: 20px solid var(--card-color);
     width: 200px;
     height: 200px;
     background: var(--accent-color);
-    border-radius: 50%;
+    border-radius: var(--border-radius);
     display: inline-flex;
     justify-content: center;
     align-items: center;
     pointer-events: none;
+    position: relative;
+    overflow: hidden;
 
     box-shadow:
-      inset 0px 0px 10px 0px rgb(0 0 0 / 15%),
+      inset 0px 0px 10px 0px rgb(0 0 0 / 25%),
       0px 0px 10px 0px rgb(0 0 0 / 15%);
+    text-shadow: 1px 1px 5px rgb(0 0 0 / 60%);
   }
 
   .top {
@@ -145,7 +177,7 @@ const classes = computed(
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/standard/octopusCard.jpeg');
+    background-image: url('/images/cards/standard/octopus.jpeg');
   }
 }
 
@@ -155,17 +187,17 @@ const classes = computed(
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/standard/ParrotCard.jpeg');
+    background-image: url('/images/cards/standard/parrot.jpeg');
   }
 }
 
 .yellow {
-  --card-color: #ffd014;
-  --accent-color: #918468;
+  --card-color: #918468;
+  --accent-color: #5f543c;
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/standard/treasureChestCard.jpeg');
+    background-image: url('/images/cards/standard/treasure_chest.jpeg');
   }
 }
 
@@ -175,7 +207,7 @@ const classes = computed(
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/standard/jollyRogerCard.jpeg');
+    background-image: url('/images/cards/standard/jolly_roger.jpeg');
   }
 }
 
@@ -185,7 +217,7 @@ const classes = computed(
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/special/escapeCard.jpeg');
+    background-image: url('/images/cards/special/escape.jpeg');
   }
 }
 
@@ -195,17 +227,17 @@ const classes = computed(
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/special/jokerCard.jpeg');
+    background-image: url('/images/cards/special/joker.jpeg');
   }
 }
 
 .mermaid {
-  --card-color: #97c7c2;
+  --card-color: #7bbfb8;
   --accent-color: #385d60;
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/special/mermardeCard.jpeg');
+    background-image: url('/images/cards/special/mermaid.jpeg');
   }
 }
 
@@ -215,7 +247,7 @@ const classes = computed(
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/special/PirateCard.jpeg');
+    background-image: url('/images/cards/special/pirate.jpeg');
   }
 }
 
@@ -225,7 +257,7 @@ const classes = computed(
 
   background-color: var(--card-color);
   .image {
-    background-image: url('/images/cards/special/skullkingCard.jpeg');
+    background-image: url('/images/cards/special/skull_king.jpeg');
   }
 }
 </style>

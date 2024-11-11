@@ -45,7 +45,9 @@ const specialCard = ref('skullKing')
 
 <style scoped lang="scss">
 .card {
+  position: absolute;
   transform: scale(0.5);
+  transform-origin: center;
 }
 
 select {
