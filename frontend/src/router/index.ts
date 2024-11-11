@@ -29,9 +29,6 @@ const router = createRouter({
       meta: {
         bg: 'bg-pre-game stage-2',
       },
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/views/pre-game/JoinGameView.vue'),
     },
     {
@@ -40,10 +37,15 @@ const router = createRouter({
       meta: {
         bg: 'bg-pre-game stage-3',
       },
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/views/pre-game/GameLobbyView.vue'),
+    },
+    {
+      path: '/play',
+      name: 'play',
+      meta: {
+        bg: 'bg-tavern',
+      },
+      component: () => import('@/views/GameView.vue'),
     },
     {
       path: '/settings',
@@ -51,9 +53,6 @@ const router = createRouter({
       meta: {
         bg: 'bg-settings',
       },
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/SettingsView.vue'),
     },
   ],
