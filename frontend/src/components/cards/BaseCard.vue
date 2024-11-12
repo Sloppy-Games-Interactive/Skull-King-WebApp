@@ -30,19 +30,17 @@ const classes = computed(
 </script>
 
 <template>
-  <div class="card textured" :class="classes">
-    <div v-if="typeof value === 'number'" class="values">
-      <div class="top">
-        <div class="value textured">{{ props.value }}</div>
-      </div>
-      <div class="bottom">
-        <div class="value textured">{{ props.value }}</div>
-      </div>
+  <div class="card textured shadow-2xl" :class="classes">
+    <div v-if="typeof value === 'number'" class="values top">
+      <div class="value textured">{{ props.value }}</div>
     </div>
     <div class="inner textured light">
       <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
 
       <div class="image"></div>
+    </div>
+    <div v-if="typeof value === 'number'" class="values bottom">
+      <div class="value textured">{{ props.value }}</div>
     </div>
   </div>
 </template>
@@ -84,16 +82,11 @@ const classes = computed(
   position: relative;
 
   background: red;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: var(--title-font-family), serif;
 }
 
 .values {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
+  position: relative;
   z-index: 10;
 
   color: white;
@@ -102,40 +95,40 @@ const classes = computed(
   --x-outset: -38px;
   --y-outset: -18px;
   --border-radius: 50%;
+}
+
+.value {
+  border: 20px solid var(--card-color);
+  width: 200px;
+  height: 200px;
+  background: var(--accent-color);
+  border-radius: var(--border-radius);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  position: relative;
+  overflow: hidden;
+
+  box-shadow:
+    inset 0px 0px 10px 0px rgb(0 0 0 / 25%),
+    0px 0px 10px 0px rgb(0 0 0 / 15%);
+  text-shadow: 1px 1px 5px rgb(0 0 0 / 60%);
+}
+
+.top {
+  position: absolute;
+  top: var(--y-outset);
+  left: var(--x-outset);
+}
+
+.bottom {
+  position: absolute;
+  bottom: var(--y-outset);
+  right: var(--x-outset);
 
   .value {
-    border: 20px solid var(--card-color);
-    width: 200px;
-    height: 200px;
-    background: var(--accent-color);
-    border-radius: var(--border-radius);
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    position: relative;
-    overflow: hidden;
-
-    box-shadow:
-      inset 0px 0px 10px 0px rgb(0 0 0 / 25%),
-      0px 0px 10px 0px rgb(0 0 0 / 15%);
-    text-shadow: 1px 1px 5px rgb(0 0 0 / 60%);
-  }
-
-  .top {
-    position: absolute;
-    top: var(--y-outset);
-    left: var(--x-outset);
-  }
-
-  .bottom {
-    position: absolute;
-    bottom: var(--y-outset);
-    right: var(--x-outset);
-
-    .value {
-      transform: rotate(180deg);
-    }
+    transform: rotate(180deg);
   }
 }
 
