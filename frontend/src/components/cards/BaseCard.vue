@@ -30,7 +30,7 @@ const classes = computed(
 </script>
 
 <template>
-  <div class="card textured shadow-2xl" :class="classes">
+  <div class="card textured" :class="classes">
     <div v-if="typeof value === 'number'" class="values top">
       <div class="value textured">{{ props.value }}</div>
     </div>
@@ -109,6 +109,7 @@ const classes = computed(
   pointer-events: none;
   position: relative;
   overflow: hidden;
+  pointer-events: none;
 
   box-shadow:
     inset 0px 0px 10px 0px rgb(0 0 0 / 25%),
