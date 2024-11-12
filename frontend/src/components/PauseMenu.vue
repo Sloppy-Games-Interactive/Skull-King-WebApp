@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import WoodButton from "@/components/WoodButton.vue";
 
 const isModalOpen = ref(false)
 
@@ -13,21 +14,23 @@ function closeModal() {
 </script>
 
 <template>
-  <button @click="openModal" class="pause-button">Pause</button>
+  <WoodButton text="Pause" :func="openModal" :use-router-link="false"/>
 
   <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
-    <div class="modal-content" @click.stop>
-      <h2>Pause Menu</h2>
-      <button @click="closeModal">Close</button>
-      <!-- Add more pause menu options here -->
+    <div class="h-full w-3/4 mx-auto mt-10 md:w-1/4 md:ml-auto md:mr-10 center" @click.stop>
+      <div class="mx-auto">
+        <h1 class="text-5xl text-center text-white">Pause Menu</h1>
+        <div class="flex flex-col items-center mt-10">
+          <WoodButton text="Resume" :func="closeModal" :use-router-link="false"/>
+          <WoodButton text="Settings" url="/settings" :use-router-link="true"/>
+          <WoodButton text="Main Menu" url="/" :use-router-link="true"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.pause-button {
-  /* Style your pause button here */
-}
 
 .modal-overlay {
   position: fixed;
@@ -42,11 +45,4 @@ function closeModal() {
   backdrop-filter: blur(20px);
 }
 
-.modal-content {
-  background: saddlebrown;
-  padding: 2rem;
-  border-radius: 8px;
-
-  /* Style your modal content here */
-}
 </style>

@@ -12,11 +12,11 @@ const url = props.url ?? '#'
 
 <template>
 
-    <router-link :to="url" class="btn text-5xl btn-primary wood-btn" v-if="props.useRouterLink">
+    <router-link :to="url" class="btn text-5xl btn-primary wood-btn text-center" v-if="props.useRouterLink">
       {{ props.text }}
     </router-link>
 
-    <a @click="props.func" class="btn text-5xl btn-primary wood-btn" v-else>
+    <a @click="props.func" class="btn text-5xl btn-primary wood-btn text-center" v-else>
       {{ props.text }}
     </a>
 
