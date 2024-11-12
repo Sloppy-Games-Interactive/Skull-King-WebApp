@@ -3,6 +3,7 @@ import { inject } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/rest/api'
 import { useGameStateStore } from '@/stores/gameState'
 import router from '@/router'
+import WoodButton from "@/components/WoodButton.vue";
 
 const joinGame = (event: MouseEvent) => {
   console.log('joinGame')
@@ -26,32 +27,17 @@ const newGame = async (event: MouseEvent) => {
     </h1>
 
     <div class="grid justify-center gap-5">
-      <a @click.stop.prevent="newGame" class="btn text-5xl btn-primary wood-btn"
-        >New Game</a
-      >
+      <WoodButton text="New Game" :func="newGame" :use-router-link="false"/>
 
-      <a
-        @click.stop.prevent="joinGame"
-        class="btn text-5xl btn-primary wood-btn"
-        >Join Game</a
-      >
+      <WoodButton text="Join Game" :func="joinGame" :use-router-link="false"/>
 
-      <router-link to="/settings" class="btn text-5xl btn-primary wood-btn"
-        >Settings</router-link
-      >
+      <WoodButton text="Settings" url="/settings" :use-router-link="true"/>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@use '../assets/buttons';
-
 .title {
   font-family: var(--title-font-family), serif;
-}
-
-.btn {
-  width: 100%;
-  max-width: 400px;
 }
 </style>
