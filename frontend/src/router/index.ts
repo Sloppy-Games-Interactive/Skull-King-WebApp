@@ -55,6 +55,14 @@ const router = createRouter({
       },
       component: () => import('../views/SettingsView.vue'),
     },
+    {
+      path: '/test',
+      name: 'test',
+      meta: {
+        bg: 'bg-test',
+      },
+      component: () => import('@/views/TestView.vue'),
+    }
   ],
 })
 
