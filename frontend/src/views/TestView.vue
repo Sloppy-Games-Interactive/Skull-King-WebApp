@@ -3,6 +3,7 @@ import StandardCard from '@/components/cards/StandardCard.vue'
 import SpecialCard from '@/components/cards/SpecialCard.vue'
 import { computed, reactive, ref } from 'vue'
 import { useParallax } from '@vueuse/core'
+import PlayerStatusRow from "@/components/PlayerStatusRow.vue";
 
 const cardType = ref('standard')
 const standardCard = ref('blue')
@@ -55,6 +56,8 @@ const cardStyle = computed(() => {
       <StandardCard v-if="cardType==='standard'" :style="cardStyle" :suit="standardCard" :value="4"></StandardCard>
       <SpecialCard v-else :style="cardStyle" :suit="specialCard"></SpecialCard>
     </div>
+
+    <PlayerStatusRow score=2 profile-picture="https://media.istockphoto.com/id/816752606/photo/tv-test-card-or-test-pattern-generic.jpg?s=612x612&w=0&k=20&c=63Jcx_5bFnvBw9elRDLrLKjtDYXr70pKtUK0jXJ2_uY=" username="Test"></PlayerStatusRow>
 
   </div>
 </template>
