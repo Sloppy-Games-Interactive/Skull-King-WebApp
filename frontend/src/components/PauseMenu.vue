@@ -13,7 +13,7 @@ function closeModal() {
 </script>
 
 <template>
-  <button class="btn text-5xl btn-primary wood-btn" @click="openModal">⚙️</button>
+  <button class="btn text-5xl btn-primary wood-btn" @click="openModal">Menu</button>
 
   <transition name="slide">
     <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
@@ -48,6 +48,7 @@ function closeModal() {
 }
 
 .modal-overlay {
+  z-index: 999;
   position: fixed;
   top: 0;
   left: 0;
