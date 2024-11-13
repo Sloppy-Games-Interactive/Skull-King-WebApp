@@ -45,7 +45,7 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
-    val limit = Try[String](request.body.asJson.get("limit").as[String])
+    val limit = Try[Int](request.body.asJson.get("limit").as[Int])
 
     limit match {
       case Success(l) => parser.parsePlayerLimit(l)
@@ -73,7 +73,7 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def setPrediction = Action { implicit request: Request[AnyContent] =>
-    val prediction = Try[String](request.body.asJson.get("prediction").as[String])
+    val prediction = Try[Int](request.body.asJson.get("prediction").as[Int])
 
     controller.state.activePlayer match {
       case None => BadRequest("No active player")

@@ -7,11 +7,10 @@ import play.api.libs.json.{JsObject, Json}
 import scala.util.{Success, Try}
 
 class Parser {
-  def parsePlayerLimit(input: String): Option[Int] = {
-    val tryPlayerLimit = Try(input.toInt)
+  def parsePlayerLimit(input: Int): Option[Int] = {
 
-    tryPlayerLimit match {
-      case Success(playerLimit) if playerLimit >= 2 && playerLimit <= 9 => Some(playerLimit)
+    input match {
+      case playerLimit if playerLimit >= 2 && playerLimit <= 9 => Some(playerLimit)
       case _ => {
         println("Player count must be a number between 2 and 9.")
         None
@@ -31,11 +30,10 @@ class Parser {
     }
   }
 
-  def parsePrediction(input: String, round: Int): Option[Int] = {
-    val tryPrediction = Try(input.toInt)
+  def parsePrediction(input: Int, round: Int): Option[Int] = {
 
-    tryPrediction match {
-      case Success(prediction) if prediction >= 0 && prediction <= round => Some(prediction)
+    input match {
+      case prediction if prediction >= 0 && prediction <= round => Some(prediction)
       case _ => {
         println(s"Prediction must be a number between 0 and ${round}.")
         None
