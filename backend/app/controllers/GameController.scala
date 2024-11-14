@@ -9,7 +9,6 @@ import de.htwg.se.skullking.controller.ControllerComponent.IController
 import de.htwg.se.skullking.model.StateComponent.GameStateDeserializer
 import de.htwg.se.skullking.util.RoutesUtil
 import de.htwg.se.skullking.view.tui.{Parser, Tui}
-import de.htwg.se.skullking.view.gui.Gui
 import play.api.libs.json.JsObject
 
 import scala.language.postfixOps
