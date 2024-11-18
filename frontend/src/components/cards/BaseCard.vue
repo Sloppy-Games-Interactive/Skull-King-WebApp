@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useElementSize, useResizeObserver } from '@vueuse/core'
+import useResizeCard from '@/components/cards/resize-card'
 
 type CardType = 'standard' | 'special'
 type Suit =
@@ -27,20 +29,35 @@ const classes = computed(
   () =>
     props.cardType + ' ' + props.suit + ' ' + (props.flipped ? 'flipped' : ''),
 )
+
+const card = ref(null)
+const { height, width } = useElementSize(card)
+const availableHeight = ref(height)
+const availableWidth = ref(width)
+useResizeObserver(card, entries => {
+  const entry = entries[0]
+  const { width, height } = entry.contentRect
+  availableHeight.value = height
+  availableWidth.value = width
+})
+
+const {style} = useResizeCard(availableWidth, availableHeight)
 </script>
 
 <template>
-  <div class="card textured" :class="classes">
-    <div v-if="typeof value === 'number'" class="values top">
-      <div class="value textured">{{ props.value }}</div>
-    </div>
-    <div class="inner textured light">
-      <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
+  <div ref="card" style="width: 100%; height: 100%; display:block;">
+    <div class="card textured" :style="style" :class="classes">
+      <div v-if="typeof value === 'number'" class="values top">
+        <div class="value textured">{{ props.value }}</div>
+      </div>
+      <div class="inner textured light">
+        <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
 
-      <div class="image"></div>
-    </div>
-    <div v-if="typeof value === 'number'" class="values bottom">
-      <div class="value textured">{{ props.value }}</div>
+        <div class="image"></div>
+      </div>
+      <div v-if="typeof value === 'number'" class="values bottom">
+        <div class="value textured">{{ props.value }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -49,11 +66,11 @@ const classes = computed(
 .textured {
   &:before {
     border-radius: var(--border-radius);
-    content: "";
+    content: '';
     background-color: transparent;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
     background-repeat: repeat;
-    background-size: 182px;
+    background-size: var(--textured_background-size);
     top: 0;
     left: 0;
     position: absolute;
@@ -63,7 +80,6 @@ const classes = computed(
     opacity: 0.2;
 
     mask-image: radial-gradient(circle, transparent 0%, black 50%);
-
   }
   &.light {
     &:before {
@@ -73,12 +89,14 @@ const classes = computed(
 }
 
 .card {
-  --border-radius: 30px;
+  --border-radius: var(--card_border-radius);
 
-  padding: 30px;
+  padding: var(--card_padding);
   border-radius: var(--border-radius);
-  width: 747px;
-  height: 1122px;
+  max-width: var(--card_max-width);
+  width: 100%;
+  max-height: var(--card_max-height);
+  height: 100%;
   position: relative;
 
   background: red;
@@ -90,31 +108,32 @@ const classes = computed(
   z-index: 10;
 
   color: white;
-  font-size: 9rem;
+  font-size: var(--values_font-size);
 
-  --x-outset: -38px;
-  --y-outset: -18px;
+  --x-outset: var(--values_x-outset);
+  --y-outset: var(--values_y-outset);
   --border-radius: 50%;
 }
 
 .value {
-  border: 20px solid var(--card-color);
-  width: 200px;
-  height: 200px;
+  border: var(--value_border-width) solid var(--card-color);
+  width: var(--value_width);
+  height: var(--value_height);
   background: var(--accent-color);
   border-radius: var(--border-radius);
   display: inline-flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
+  user-select: none;
   position: relative;
   overflow: hidden;
-  pointer-events: none;
 
   box-shadow:
-    inset 0px 0px 10px 0px rgb(0 0 0 / 25%),
-    0px 0px 10px 0px rgb(0 0 0 / 15%);
-  text-shadow: 1px 1px 5px rgb(0 0 0 / 60%);
+    inset 0 0 var(--value_box-shadow-size) 0 rgb(0 0 0 / 25%),
+    0 0 var(--value_box-shadow-size) 0 rgb(0 0 0 / 15%);
+  text-shadow: var(--value_text-shadow-offset) var(--value_text-shadow-offset)
+    var(--value_text-shadow-size) rgb(0 0 0 / 60%);
 }
 
 .top {
@@ -134,7 +153,7 @@ const classes = computed(
 }
 
 .inner {
-  border-radius: 20px;
+  border-radius: var(--inner_border-radius);
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -146,9 +165,9 @@ const classes = computed(
 .text {
   position: absolute;
   bottom: 0;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  font-size: 7rem;
+  padding-top: var(--text_padding-top);
+  padding-bottom: var(--text_padding-bottom);
+  font-size: var(--text_font-size);
   width: 100%;
   text-align: center;
   color: white;
@@ -162,7 +181,7 @@ const classes = computed(
   width: 100%;
   height: 100%;
 
-  box-shadow: inset 0px 0px 20px 0px rgb(0 0 0 / 50%);
+  box-shadow: inset 0 0 var(--image_box-shadow-size) 0 rgb(0 0 0 / 50%);
 }
 
 .blue {

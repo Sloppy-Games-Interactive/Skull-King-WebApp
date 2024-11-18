@@ -1,19 +1,32 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { useParallax } from '@vueuse/core'
+import { computed, reactive, ref, watch } from 'vue'
+import { useMouseInElement, usePageLeave, useParallax, watchArray } from '@vueuse/core'
 
 const container = ref(null)
 
 const parallax = reactive(useParallax(container))
 
+const enabled = ref(false)
+
+const { isOutside } = useMouseInElement(container)
+const isPageLeft = usePageLeave();
+
+watchArray([isOutside, isPageLeft], () => {
+  enabled.value = !isOutside.value && !isPageLeft.value
+})
+
 const parallaxStyle = computed(() => {
+  const roll = enabled.value ? parallax.roll : 0
+  const tilt = enabled.value ? parallax.tilt : 0
+
   return {
-    '--rotate-x': `${parallax.roll * 100}deg`,
-    '--rotate-y': `${parallax.tilt * 100}deg`,
-    '--shine-gradient-rotation': `${60 + parallax.roll * 100}deg`,
-    '--shine-position': `${Math.max(0, parallax.tilt * 100)}% ${parallax.roll * 100}%`,
-    '--shadow-x': `${parallax.tilt * -100}px`,
-    '--shadow-y': `${parallax.roll * 100}px`,
+    'transition': enabled.value ? 'none' : 'all 0.5s',
+    '--rotate-x': `${roll * 100}deg`,
+    '--rotate-y': `${tilt * 100}deg`,
+    '--shine-gradient-rotation': `${60 + roll * 100}deg`,
+    '--shine-position': `${Math.max(0, tilt * 100)}% ${roll * 100}%`,
+    '--shadow-x': `${tilt * -100}px`,
+    '--shadow-y': `${roll * 100}px`,
   }
 })
 </script>
@@ -33,10 +46,10 @@ const parallaxStyle = computed(() => {
   justify-content: center;
 }
 
-.parallax-container > * {
+.parallax-container > * > * {
   position: absolute;
   transform-origin: center;
-  transform: scale(0.3) rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
   box-shadow: var(--shadow-x) var(--shadow-y) 40px 0 rgba(0, 0, 0, 0.5);
   //box-shadow: var(--shadow-x) var(--shadow-y) 0 50px rgba(0, 0, 0, 1); // debug shadow
 
@@ -48,14 +61,14 @@ const parallaxStyle = computed(() => {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-        var(--shine-gradient-rotation),
-        rgba(255, 255, 255, 0),
-        rgba(255, 255, 255, 0) 47%,
-        rgba(255, 255, 255, 0.05) 48%,
-        rgba(255, 255, 255, 0.11) 50%,
-        rgba(255, 255, 255, 0.05) 52%,
-        rgba(255, 255, 255, 0) 53%,
-        rgba(255, 255, 255, 0) 100%
+      var(--shine-gradient-rotation),
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0) 47%,
+      rgba(255, 255, 255, 0.05) 48%,
+      rgba(255, 255, 255, 0.11) 50%,
+      rgba(255, 255, 255, 0.05) 52%,
+      rgba(255, 255, 255, 0) 53%,
+      rgba(255, 255, 255, 0) 100%
     );
     background-size: 200% 200%;
     background-position: var(--shine-position);
