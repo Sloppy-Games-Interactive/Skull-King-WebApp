@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useElementSize, useResizeObserver } from '@vueuse/core'
+import { useElementSize, useParentElement, useResizeObserver } from '@vueuse/core'
 import useResizeCard from '@/components/cards/resize-card'
 
 type CardType = 'standard' | 'special'
@@ -30,11 +30,13 @@ const classes = computed(
     props.cardType + ' ' + props.suit + ' ' + (props.flipped ? 'flipped' : ''),
 )
 
-const card = ref(null)
-const { height, width } = useElementSize(card)
+const $parent = useParentElement()
+
+const { height, width } = useElementSize($parent)
 const availableHeight = ref(height)
 const availableWidth = ref(width)
-useResizeObserver(card, entries => {
+
+useResizeObserver($parent, entries => {
   const entry = entries[0]
   const { width, height } = entry.contentRect
   availableHeight.value = height
@@ -45,19 +47,17 @@ const {style} = useResizeCard(availableWidth, availableHeight)
 </script>
 
 <template>
-  <div ref="card" style="width: 100%; height: 100%; display:block;">
-    <div class="card textured" :style="style" :class="classes">
-      <div v-if="typeof value === 'number'" class="values top">
-        <div class="value textured">{{ props.value }}</div>
-      </div>
-      <div class="inner textured light">
-        <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
+  <div class="card textured" :style="style" :class="classes">
+    <div v-if="typeof value === 'number'" class="values top">
+      <div class="value textured">{{ props.value }}</div>
+    </div>
+    <div class="inner textured light">
+      <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
 
-        <div class="image"></div>
-      </div>
-      <div v-if="typeof value === 'number'" class="values bottom">
-        <div class="value textured">{{ props.value }}</div>
-      </div>
+      <div class="image"></div>
+    </div>
+    <div v-if="typeof value === 'number'" class="values bottom">
+      <div class="value textured">{{ props.value }}</div>
     </div>
   </div>
 </template>

@@ -1,15 +1,16 @@
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { Ref } from 'vue'
 
 export default function useResizeCard(availableWidth: Ref<number, number>, availableHeight: Ref<number, number>) {
   const targetWidth = 747;
   const targetHeight = 1122;
 
-  let scaleRatio = ref(1)
+  let scaleRatio = computed(() => Math.min((availableWidth.value / targetWidth), availableHeight.value / targetHeight))
+
+  let scaledWidth = computed(() => targetWidth * scaleRatio.value)
+  let scaledHeight = computed(() => targetHeight * scaleRatio.value)
 
   const style = computed(() => {
-    scaleRatio.value = Math.min((availableWidth.value / targetWidth), availableHeight.value / targetHeight);
-
     return {
       '--textured_background-size': `${182 * scaleRatio.value}px`,
       '--card_border-radius': `${30 * scaleRatio.value}px`,
@@ -35,6 +36,8 @@ export default function useResizeCard(availableWidth: Ref<number, number>, avail
 
   return {
     style,
-    scaleRatio
+    scaleRatio,
+    scaledHeight,
+    scaledWidth,
   }
 }

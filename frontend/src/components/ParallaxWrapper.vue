@@ -46,7 +46,7 @@ const parallaxStyle = computed(() => {
   justify-content: center;
 }
 
-.parallax-container > * > * {
+.parallax-container > * {
   position: absolute;
   transform-origin: center;
   transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
