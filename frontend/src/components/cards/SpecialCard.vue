@@ -2,29 +2,23 @@
 
 import BaseCard from '@/components/cards/BaseCard.vue'
 import { computed } from 'vue'
-
-type Suit =
-  | 'escape'
-  | 'joker'
-  | 'mermaid'
-  | 'pirate'
-  | 'skullKing'
+import {type SpecialSuit, Suit} from "@/model/Card";
 
 const props = defineProps<{
-  suit: Suit
+  suit: SpecialSuit
 }>()
 
 const cardText = computed(() => {
   switch (props.suit) {
-    case 'escape':
+    case Suit.Escape:
       return 'Escape'
-    case 'joker':
+    case Suit.Joker:
       return 'Joker'
-    case 'mermaid':
+    case Suit.Mermaid:
       return 'Mermaid'
-    case 'pirate':
+    case Suit.Pirate:
       return 'Pirate'
-    case 'skullKing':
+    case Suit.SkullKing:
       return 'Skull King'
   }
 })

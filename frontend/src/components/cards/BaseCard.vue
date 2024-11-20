@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useElementSize, useParentElement, useResizeObserver } from '@vueuse/core'
+import {
+  useElementSize,
+  useParentElement,
+  useResizeObserver,
+} from '@vueuse/core'
 import useResizeCard from '@/components/cards/resize-card'
+import { Suit } from '@/model/Card'
 
 type CardType = 'standard' | 'special'
-type Suit =
-  | 'blue'
-  | 'red'
-  | 'yellow'
-  | 'trump'
-  | 'escape'
-  | 'joker'
-  | 'mermaid'
-  | 'pirate'
-  | 'skullKing'
 
 type CardValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
 
@@ -25,9 +20,32 @@ const props = defineProps<{
   flipped?: boolean
 }>()
 
+const suitClass = computed(() => {
+  switch (props.suit) {
+    case Suit.Black:
+      return 'trump'
+    case Suit.Blue:
+      return 'blue'
+    case Suit.Red:
+      return 'red'
+    case Suit.Yellow:
+      return 'yellow'
+    case Suit.Joker:
+      return 'joker'
+    case Suit.Escape:
+      return 'escape'
+    case Suit.Mermaid:
+      return 'mermaid'
+    case Suit.Pirate:
+      return 'pirate'
+    case Suit.SkullKing:
+      return 'skullKing'
+  }
+})
+
 const classes = computed(
   () =>
-    props.cardType + ' ' + props.suit + ' ' + (props.flipped ? 'flipped' : ''),
+    props.cardType + ' ' + suitClass.value + ' ' + (props.flipped ? 'flipped' : ''),
 )
 
 const $parent = useParentElement()
@@ -43,7 +61,7 @@ useResizeObserver($parent, entries => {
   availableWidth.value = width
 })
 
-const {style} = useResizeCard(availableWidth, availableHeight)
+const { style } = useResizeCard(availableWidth, availableHeight)
 </script>
 
 <template>
@@ -124,7 +142,6 @@ const {style} = useResizeCard(availableWidth, availableHeight)
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  pointer-events: none;
   user-select: none;
   position: relative;
   overflow: hidden;
@@ -172,6 +189,7 @@ const {style} = useResizeCard(availableWidth, availableHeight)
   text-align: center;
   color: white;
   background: linear-gradient(0deg, black, transparent);
+  user-select: none;
 }
 
 .image {

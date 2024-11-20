@@ -11,7 +11,11 @@ abstract class BaseApiService {
 
   async get(path: string) {
     // TODO implement GET parameters
-    const response = await fetch(this.baseUrl + path)
+    const response = await fetch(this.baseUrl + path, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
     return await response.json()
   }
 

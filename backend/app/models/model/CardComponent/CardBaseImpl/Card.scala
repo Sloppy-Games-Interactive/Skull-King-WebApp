@@ -19,14 +19,26 @@ case class StandardCard(
   suit: Suit,
   value: Int
 ) extends Card with IStandardCard {
+  override def equals (that: Any): Boolean = that match {
+    case s: IStandardCard => s.suit == suit && s.value == value
+    case _ => false
+  }
   override def toString: String = s"${suit.readable} $value"
 }
 
 class SpecialCard(val suit: Suit) extends Card with ISpecialCard {
+  override def equals (that: Any): Boolean = that match {
+    case s: ISpecialCard => s.suit == suit
+    case _ => false
+  }
   override def toString: String = s"${suit.readable}"
 }
 
 case class JokerCard(as: JokerBehaviour = JokerBehaviour.None) extends SpecialCard(Suit.Joker) with IJokerCard {
+  override def equals (that: Any): Boolean = that match {
+    case s: IJokerCard => s.suit == suit && s.as == as
+    case _ => false
+  }
   override def toString: String = s"${super.toString} as ${as.readable}"
   def playAs(behaviour: JokerBehaviour): JokerCard = JokerCard(behaviour)
 }

@@ -1,15 +1,45 @@
 import type { Serializable, SerializableJson } from '@/model/Serializable'
 
 export enum Suit {
-  Red = '🟥',
-  Yellow = '🟡',
-  Blue = '🔷',
-  Black = '☠️',
-  Escape = '🏝️',
-  SkullKing = '💀',
-  Pirate = '🏴‍☠️',
-  Mermaid = '🧜',
-  Joker = '🃏',
+  Red = 'Red',
+  Yellow = 'Yellow',
+  Blue = 'Blue',
+  Black = 'Black',
+  Escape = 'Escape',
+  SkullKing = 'SkullKing',
+  Pirate = 'Pirate',
+  Mermaid = 'Mermaid',
+  Joker = 'Joker',
+}
+
+export type StandardSuit = Suit.Red | Suit.Blue | Suit.Black | Suit.Yellow
+export type SpecialSuit =
+  | Suit.Escape
+  | Suit.Joker
+  | Suit.Mermaid
+  | Suit.Pirate
+  | Suit.SkullKing
+
+export const STANDARD_SUITS: StandardSuit[] = [
+  Suit.Red,
+  Suit.Blue,
+  Suit.Black,
+  Suit.Yellow,
+]
+export const SPECIAL_SUITS: SpecialSuit[] = [
+  Suit.Escape,
+  Suit.Joker,
+  Suit.Mermaid,
+  Suit.Pirate,
+  Suit.SkullKing,
+]
+
+export enum CardSize {
+  mini = 'mini',
+  small = 'small',
+  medium = 'medium',
+  large = 'large',
+  xlarge = 'xlarge',
 }
 
 export enum CardType {
@@ -41,7 +71,20 @@ interface NumberRange {
   max: number
 }
 
-type CardValueNumbers = number
+export type CardValueNumbers =
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
 
 export function assertValidCardValue(
   value: number,
@@ -113,13 +156,8 @@ export abstract class Card implements CardInterface {
 export class StandardCard extends Card implements StandardCardInterface {
   readonly value: CardValueNumbers
 
-  constructor({
-    suit,
-    value,
-    isSpecial,
-    isTrump,
-  }: SerializableJson<StandardCardInterface>) {
-    super({ suit, isSpecial, isTrump })
+  constructor({ suit, value }: SerializableJson<StandardCardInterface>) {
+    super({ suit, isSpecial: false, isTrump: suit === Suit.Black })
 
     this.value = value
   }
@@ -132,7 +170,11 @@ export class StandardCard extends Card implements StandardCardInterface {
   }
 }
 
-export class SpecialCard extends Card implements SpecialCardInterface {}
+export class SpecialCard extends Card implements SpecialCardInterface {
+  constructor({ suit }: SerializableJson<SpecialCardInterface>) {
+    super({ suit, isSpecial: true, isTrump: false })
+  }
+}
 
 type JokerCardRepresentation = Omit<
   SerializableJson<JokerCardInterface>,
@@ -166,14 +208,14 @@ export class JokerCard extends Card implements JokerCardInterface {
 }
 
 export class CardFactory {
-  static createCard(
-    cardProps: SerializableJson<CardInterface>
-  ): CardInterface {
-    if (cardProps.isSpecial) {
+  static createCard(cardProps: SerializableJson<CardInterface>): CardInterface {
+    if (SPECIAL_SUITS.includes(cardProps.suit)) {
       return cardProps.suit === Suit.Joker
         ? new JokerCard(cardProps as JokerCardRepresentation)
         : new SpecialCard(cardProps)
     }
-    return new StandardCard(cardProps as SerializableJson<StandardCardInterface>)
+    return new StandardCard(
+      cardProps as SerializableJson<StandardCardInterface>,
+    )
   }
 }

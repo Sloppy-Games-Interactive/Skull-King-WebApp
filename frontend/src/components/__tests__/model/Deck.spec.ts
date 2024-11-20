@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {Deck} from '@/model/Deck'
 import type {DeckInterface} from '@/model/Deck'
-import { CardFactory, Suit, StandardCard, SpecialCard, JokerCard, JokerBehaviour } from '@/model/Card'
+import {CardFactory, Suit, StandardCard, SpecialCard, JokerCard, JokerBehaviour, type CardInterface} from '@/model/Card'
 import type {SerializableJson} from "@/model/Serializable";
 
 describe('Deck', () => {

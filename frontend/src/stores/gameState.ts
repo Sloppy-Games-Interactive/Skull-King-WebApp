@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import { ref } from "vue";
+import {computed, ref} from "vue";
 import type {GameState} from "@/model/GameState";
 import type {DeckInterface} from "@/model/Deck";
 import type {TrickInterface} from "@/model/Trick";
@@ -24,6 +24,21 @@ export const useGameStateStore = defineStore('gameState', () => {
     tricks.value = state.tricks
   }
 
+  const activePlayer = computed<PlayerInterface | undefined>(()  => {
+    for (const player of players.value) {
+      if (player.active) {
+        return player
+      }
+    }
+
+    return undefined;
+  })
+
+  const currentTrick = computed<TrickInterface | undefined>(() => {
+    return tricks.value[0] ?? undefined
+  })
+
+
   return {
     round,
     phase,
@@ -32,6 +47,8 @@ export const useGameStateStore = defineStore('gameState', () => {
     players,
     deck,
     tricks,
+    activePlayer,
+    currentTrick,
     updateGameState
   }
 })
