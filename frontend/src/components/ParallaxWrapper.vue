@@ -21,10 +21,10 @@ const parallaxStyle = computed(() => {
 
   return {
     'transition': enabled.value ? 'none' : 'all 0.5s',
-    '--rotate-x': `${roll * 100}deg`,
-    '--rotate-y': `${tilt * 100}deg`,
-    '--shine-gradient-rotation': `${60 + roll * 100}deg`,
-    '--shine-position': `${Math.max(0, tilt * 100)}% ${roll * 100}%`,
+    '--rotate-x': `${roll * 40}deg`,
+    '--rotate-y': `${tilt * 40}deg`,
+    '--shine-gradient-rotation': `${60 + roll * 60}deg`,
+    '--shine-position': `${Math.max(0, tilt * 60)}% ${roll * 60}%`,
     '--shadow-x': `${tilt * -100}px`,
     '--shadow-y': `${roll * 100}px`,
   }
