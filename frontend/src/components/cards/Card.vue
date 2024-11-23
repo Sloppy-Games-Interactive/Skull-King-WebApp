@@ -15,7 +15,8 @@ const props = defineProps<{
   size?: CardSize
 }>()
 
-const aspectRatio = 1122 / 747;
+// + 0.025 to prevent y-overflow
+const aspectRatio = 1122 / 747 + 0.025;
 
 const dimensions = computed(() => {
   switch (props.size) {

@@ -35,7 +35,6 @@ const setPrediction = async() => {
 <template>
   <button class="btn wood-btn" @click="fetchGameStateUpdate">update</button>
   <button class="btn wood-btn" @click="setPrediction">predict</button>
-  <div class="w-full h-full">
     <div class="grid grid-cols-3 md:grid-cols-6">
       <div class="col-span-3 m-4">
         <div
@@ -55,31 +54,28 @@ const setPrediction = async() => {
         <PauseMenu />
       </div>
     </div>
-
-    <div class="flex justify-center items-center">
-      <div
-        class="relative h-[500px] w-[300px] md:h-[600px] md:w-[600px] flex justify-center items-center"
-        ref="container"
-      >
-        <template v-for="stackEntry in gameState.currentTrick?.stack ?? []">
-          <Card class="absolute" :card="stackEntry.card" :size="CardSize.medium" :style="{ transform: `rotate(${getRandomRotationAngle()}deg` }"></Card>
-        </template>
-      </div>
-    </div>
-
-    <!-- hand cards -->
-    <div class="relative w-[100vw]">
-      <div class="flex justify-center -space-x-16 overflow-x-auto overflow-y-visible">
-        <template v-for="card in gameState.activePlayer?.hand?.cards ?? []">
-          <Card :card="card" :size="CardSize.medium" @click="playCard(card)"></Card>
-        </template>
-      </div>
+  <!-- table -->
+  <div class="flex justify-center items-center">
+    <div
+      class="relative h-[300px] md:h-[400px] flex justify-center items-center"
+      ref="container"
+    >
+      <template v-for="stackEntry in gameState.currentTrick?.stack ?? []">
+        <Card class="absolute" :card="stackEntry.card" :size="CardSize.medium" :style="{ transform: `rotate(${getRandomRotationAngle()}deg` }"></Card>
+      </template>
     </div>
   </div>
+  <!-- hand cards -->
+    <div class="overflow-x-auto whitespace-nowrap ">
+      <template v-for="card in gameState.activePlayer?.hand?.cards ?? []">
+        <Card class="inline-block" :card="card" :size="CardSize.medium" @click="playCard(card)"></Card>
+      </template>
+    </div>
 </template>
 
 <style scoped lang="scss">
 @use 'src/assets/buttons';
+
 select {
   color: black;
   width: auto;
