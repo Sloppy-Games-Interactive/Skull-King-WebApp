@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import {GameState} from '@/model/GameState'
-import type {GameStateInterface} from '@/model/GameState'
-import { Suit, StandardCard, SpecialCard, JokerCard, JokerBehaviour } from '@/model/Card'
-import { Deck } from '@/model/Deck'
-import { Trick } from '@/model/Trick'
-import {Player} from "@/model/Player";
-import type {SerializableJson} from "@/model/Serializable";
+import {GameState} from '@/core/model/GameState'
+import type {GameStateInterface} from '@/core/model/GameState'
+import { Suit, StandardCard, SpecialCard, JokerCard, JokerBehaviour } from '@/core/model/Card'
+import { Deck } from '@/core/model/Deck'
+import { Trick } from '@/core/model/Trick'
+import {Player} from "@/core/model/Player";
+import type {SerializableJson} from "@/core/model/Serializable";
 
 describe('GameState', () => {
   it('creates a GameState with valid properties', () => {

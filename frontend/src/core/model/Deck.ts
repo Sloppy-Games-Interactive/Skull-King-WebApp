@@ -1,5 +1,5 @@
-import type { Serializable, SerializableJson } from '@/model/Serializable'
-import { CardFactory, type CardInterface } from '@/model/Card'
+import type { Serializable, SerializableJson } from '@/core/model/Serializable'
+import { CardFactory, type CardInterface } from '@/core/model/Card'
 
 export interface DeckInterface extends Serializable<DeckInterface> {
   cards: CardInterface[]

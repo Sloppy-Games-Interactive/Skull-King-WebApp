@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import {Deck} from '@/model/Deck'
-import type {DeckInterface} from '@/model/Deck'
-import {CardFactory, Suit, StandardCard, SpecialCard, JokerCard, JokerBehaviour, type CardInterface} from '@/model/Card'
-import type {SerializableJson} from "@/model/Serializable";
+import {Deck} from '@/core/model/Deck'
+import type {DeckInterface} from '@/core/model/Deck'
+import {CardFactory, Suit, StandardCard, SpecialCard, JokerCard, JokerBehaviour, type CardInterface} from '@/core/model/Card'
+import type {SerializableJson} from "@/core/model/Serializable";
 
 describe('Deck', () => {
   it('creates a Deck with valid StandardCard properties', () => {

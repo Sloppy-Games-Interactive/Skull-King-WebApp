@@ -1,5 +1,5 @@
-import { GameState } from '@/model/GameState'
-import type { CardInterface } from '@/model/Card'
+import { GameState } from '@/core/model/GameState'
+import type { CardInterface } from '@/core/model/Card'
 import type {InjectionKey} from "vue";
 
 abstract class BaseApiService {

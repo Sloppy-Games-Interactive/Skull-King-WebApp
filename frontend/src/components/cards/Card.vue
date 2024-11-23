@@ -5,10 +5,14 @@ import {
   type SpecialCard as SpecialCardType,
   type StandardSuit,
   CardSize,
-} from '@/model/Card'
-import StandardCard from '@/components/cards/StandardCard.vue'
-import SpecialCard from '@/components/cards/SpecialCard.vue'
+} from '@/core/model/Card'
+import VStandardCard from '@/components/cards/StandardCard.vue'
+import VSpecialCard from "@/components/cards/SpecialCard.vue";
 import { computed } from 'vue'
+
+defineOptions({
+  name: 'VCard'
+})
 
 const props = defineProps<{
   card: StandardCardType | SpecialCardType
@@ -63,8 +67,8 @@ const style = computed(() => {
 
 <template>
   <div :style="style">
-    <SpecialCard v-if="props.card.isSpecial" :suit="props.card.suit as SpecialSuit" />
-    <StandardCard
+    <VSpecialCard v-if="props.card.isSpecial" :suit="props.card.suit as SpecialSuit" />
+    <VStandardCard
       v-else
       :suit="props.card.suit as StandardSuit"
       :value="(props.card as StandardCardType).value"

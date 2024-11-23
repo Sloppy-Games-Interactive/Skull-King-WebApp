@@ -1,7 +1,7 @@
 import {describe, it, expect, vi} from 'vitest'
-import { ApiService } from '@/rest/api'
-import { GameState } from '@/model/GameState'
-import type { CardInterface } from '@/model/Card'
+import { ApiService } from '@/core/rest/api'
+import { GameState } from '@/core/model/GameState'
+import type { CardInterface } from '@/core/model/Card'
 
 describe('ApiService', () => {
   it('fetches game status successfully', async () => {

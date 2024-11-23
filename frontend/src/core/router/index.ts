@@ -53,7 +53,7 @@ const router = createRouter({
       meta: {
         bg: 'bg-settings',
       },
-      component: () => import('../views/SettingsView.vue'),
+      component: () => import('../../views/SettingsView.vue'),
     },
     {
       path: '/test',

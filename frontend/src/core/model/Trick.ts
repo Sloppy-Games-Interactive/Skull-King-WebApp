@@ -1,6 +1,6 @@
-import { Player, type PlayerInterface } from '@/model/Player'
-import { CardFactory, type CardInterface } from '@/model/Card'
-import type { Serializable, SerializableJson } from '@/model/Serializable'
+import { Player, type PlayerInterface } from '@/core/model/Player'
+import { CardFactory, type CardInterface } from '@/core/model/Card'
+import type { Serializable, SerializableJson } from '@/core/model/Serializable'
 
 export interface TrickInterface extends Serializable<TrickInterface> {
   stack: TrickElementInterface[]

@@ -5,8 +5,12 @@ import {
   useParentElement,
   useResizeObserver,
 } from '@vueuse/core'
-import useResizeCard from '@/components/cards/resize-card'
-import { Suit } from '@/model/Card'
+import useResizeCard from '@/composables/resize-card'
+import { Suit } from '@/core/model/Card'
+
+defineOptions({
+  name: 'VBaseCard'
+})
 
 type CardType = 'standard' | 'special'
 

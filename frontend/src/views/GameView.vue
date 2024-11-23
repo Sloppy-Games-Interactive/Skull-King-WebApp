@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import PauseMenu from '@/components/PauseMenu.vue'
-import Card from '@/components/cards/Card.vue'
-import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
-import { useGameStateStore } from '@/stores/gameState'
-import {type CardInterface, CardSize} from '@/model/Card'
-import {inject} from "vue";
-import {API_INJECTION_KEY, ApiService} from "@/rest/api";
+import VPauseMenu from '@/components/PauseMenu.vue'
+import VCard from '@/components/cards/Card.vue'
+import VPlayerStatusRow from '@/components/PlayerStatusRow.vue'
+import {useGameStateStore} from '@/core/stores/gameState'
+import {type CardInterface, CardSize} from '@/core/model/Card'
+import {inject, ref} from "vue";
+import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
+import CardList from "@/components/cards/CardList.vue";
+import {useEventBus} from "@vueuse/core";
+import {EventName, GameStateBus, GameStateEvent} from "@/core/event-bus";
+import VPredictOverlay from "@/components/PredictOverlay.vue";
 
 const gameState = useGameStateStore()
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const fetchGameStateUpdate = async () => {
+  console.log("UPDATE")
   const state = await api.getStatus()
   gameState.updateGameState(state);
 }
@@ -33,27 +38,29 @@ const setPrediction = async() => {
 </script>
 
 <template>
-  <button class="btn wood-btn" @click="fetchGameStateUpdate">update</button>
+  <VPredictOverlay></VPredictOverlay>
+
+  <button class="btn wood-btn" @click="fetchGameStateUpdate" id="update">update</button>
   <button class="btn wood-btn" @click="setPrediction">predict</button>
-    <div class="grid grid-cols-3 md:grid-cols-6">
-      <div class="col-span-3 m-4">
-        <div
-          v-for="player in gameState.players"
-          :key="player.name"
-          class="hidden sm:block"
-        >
-          <PlayerStatusRow
-            class="m-9"
-            :username="player.name"
-            :score="player.score"
-            profile-picture="https://media.istockphoto.com/id/816752606/photo/tv-test-card-or-test-pattern-generic.jpg?s=612x612&w=0&k=20&c=63Jcx_5bFnvBw9elRDLrLKjtDYXr70pKtUK0jXJ2_uY="
-          />
-        </div>
-      </div>
-      <div class="mr-10 mt-10 ml-auto col-end-6 lg:col-end-7">
-        <PauseMenu />
+  <div class="grid grid-cols-3 md:grid-cols-6">
+    <div class="col-span-3 m-4">
+      <div
+        v-for="player in gameState.players"
+        :key="player.name"
+        class="hidden sm:block"
+      >
+        <VPlayerStatusRow
+          class="m-9"
+          :username="player.name"
+          :score="player.score"
+          profile-picture="https://media.istockphoto.com/id/816752606/photo/tv-test-card-or-test-pattern-generic.jpg?s=612x612&w=0&k=20&c=63Jcx_5bFnvBw9elRDLrLKjtDYXr70pKtUK0jXJ2_uY="
+        />
       </div>
     </div>
+    <div class="mr-10 mt-10 ml-auto col-end-6 lg:col-end-7">
+      <VPauseMenu />
+    </div>
+  </div>
   <!-- table -->
   <div class="flex justify-center items-center">
     <div
@@ -61,16 +68,20 @@ const setPrediction = async() => {
       ref="container"
     >
       <template v-for="stackEntry in gameState.currentTrick?.stack ?? []">
-        <Card class="absolute" :card="stackEntry.card" :size="CardSize.medium" :style="{ transform: `rotate(${getRandomRotationAngle()}deg` }"></Card>
+        <VCard
+          class="absolute"
+          :card="stackEntry.card"
+          :size="CardSize.medium"
+          :style="{ transform: `rotate(${getRandomRotationAngle()}deg` }"
+        ></VCard>
       </template>
     </div>
   </div>
   <!-- hand cards -->
-    <div class="overflow-x-auto whitespace-nowrap ">
-      <template v-for="card in gameState.activePlayer?.hand?.cards ?? []">
-        <Card class="inline-block" :card="card" :size="CardSize.medium" @click="playCard(card)"></Card>
-      </template>
-    </div>
+  <CardList
+    :cards="gameState.activePlayer?.hand?.cards ?? []"
+    :on-click="playCard"
+  />
 </template>
 
 <style scoped lang="scss">

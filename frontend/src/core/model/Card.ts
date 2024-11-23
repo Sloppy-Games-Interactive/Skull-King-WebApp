@@ -1,4 +1,4 @@
-import type { Serializable, SerializableJson } from '@/model/Serializable'
+import type { Serializable, SerializableJson } from '@/core/model/Serializable'
 
 export enum Suit {
   Red = 'Red',
@@ -33,6 +33,25 @@ export const SPECIAL_SUITS: SpecialSuit[] = [
   Suit.Pirate,
   Suit.SkullKing,
 ]
+
+export function isStandardSuit(suit: Suit | unknown): suit is StandardSuit {
+  return (
+    suit === Suit.Red ||
+    suit === Suit.Blue ||
+    suit === Suit.Black ||
+    suit === Suit.Yellow
+  )
+}
+
+export function isSpecialSuit(suit: Suit | unknown): suit is SpecialSuit {
+  return (
+    suit === Suit.Escape ||
+    suit === Suit.Joker ||
+    suit === Suit.Mermaid ||
+    suit === Suit.Pirate ||
+    suit === Suit.SkullKing
+  )
+}
 
 export enum CardSize {
   mini = 'mini',
@@ -209,7 +228,7 @@ export class JokerCard extends Card implements JokerCardInterface {
 
 export class CardFactory {
   static createCard(cardProps: SerializableJson<CardInterface>): CardInterface {
-    if (SPECIAL_SUITS.includes(cardProps.suit)) {
+    if (isSpecialSuit(cardProps.suit)) {
       return cardProps.suit === Suit.Joker
         ? new JokerCard(cardProps as JokerCardRepresentation)
         : new SpecialCard(cardProps)

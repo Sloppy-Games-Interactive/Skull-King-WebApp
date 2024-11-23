@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {inject, ref} from "vue";
-import {API_INJECTION_KEY, ApiService} from "@/rest/api";
-import {useGameStateStore} from "@/stores/gameState";
-import router from "@/router";
+import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
+import {useGameStateStore} from "@/core/stores/gameState";
+import router from "@/core/router";
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore();

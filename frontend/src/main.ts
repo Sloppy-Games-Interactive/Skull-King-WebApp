@@ -4,8 +4,8 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
-import router from './router'
-import {API_INJECTION_KEY, ApiService} from "@/rest/api";
+import router from './core/router'
+import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
 
 const app = createApp(App)
 

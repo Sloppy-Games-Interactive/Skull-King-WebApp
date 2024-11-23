@@ -2,6 +2,10 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useMouseInElement, usePageLeave, useParallax, watchArray } from '@vueuse/core'
 
+defineOptions({
+  name: 'VParallaxWrapper'
+})
+
 const container = ref(null)
 
 const parallax = reactive(useParallax(container))

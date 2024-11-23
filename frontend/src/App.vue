@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { RouterView, useRoute } from 'vue-router'
 import {computed} from 'vue'
+import {useGameStateChangeHandler} from "@/composables/gamestate-change-handler";
 
 const route = useRoute()
+
+useGameStateChangeHandler()
 
 const bgClass = computed(() => route.meta?.bg)
 </script>

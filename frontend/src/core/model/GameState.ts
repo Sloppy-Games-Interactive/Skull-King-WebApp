@@ -1,11 +1,26 @@
-import { Player, type PlayerInterface } from '@/model/Player'
-import type { Serializable, SerializableJson } from '@/model/Serializable'
-import { Trick, type TrickInterface } from '@/model/Trick'
-import { Deck, type DeckInterface } from '@/model/Deck'
+import { Player, type PlayerInterface } from '@/core/model/Player'
+import type { Serializable, SerializableJson } from '@/core/model/Serializable'
+import { Trick, type TrickInterface } from '@/core/model/Trick'
+import { Deck, type DeckInterface } from '@/core/model/Deck'
+
+// enum Phase {
+//   case PrepareGame
+// case PrepareTricks
+// case PlayTricks
+// case EndGame
+// }
+
+export enum Phase {
+  None = '',
+  PrepareGame = 'PrepareGame',
+  PrepareTricks = 'PrepareTricks',
+  PlayTricks = 'PlayTricks',
+  EndGame = 'EndGame',
+}
 
 export interface GameStateInterface extends Serializable<GameStateInterface> {
   round: number
-  phase: string
+  phase: Phase
   playerLimit: number
   roundLimit: number
   players: PlayerInterface[]

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import {Trick, TrickElement} from '@/model/Trick'
-import type {TrickInterface} from '@/model/Trick'
-import { Suit, StandardCard } from '@/model/Card'
-import type { SerializableJson } from '@/model/Serializable'
-import { Player } from '@/model/Player'
+import {Trick, TrickElement} from '@/core/model/Trick'
+import type {TrickInterface} from '@/core/model/Trick'
+import { Suit, StandardCard } from '@/core/model/Card'
+import type { SerializableJson } from '@/core/model/Serializable'
+import { Player } from '@/core/model/Player'
 
 describe('Trick', () => {
   it('creates a Trick with valid properties', () => {

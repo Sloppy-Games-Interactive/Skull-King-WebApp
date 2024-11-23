@@ -7,7 +7,7 @@ import {
   SpecialCard,
   JokerCard,
   assertValidCardValue, isValidCardValue
-} from '@/model/Card'
+} from '@/core/model/Card'
 
 describe('CardFactory', () => {
   it('creates a StandardCard with valid properties', () => {

@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import Modal from '@/components/utils/Modal.vue'
+
+defineOptions({
+  name: 'VPauseMenu'
+})
 
 const isModalOpen = ref(false)
 
@@ -17,11 +22,7 @@ function closeModal() {
     Menu
   </button>
 
-  <Teleport to="body">
-    <Transition name="fade">
-      <div v-if="isModalOpen" class="menu-backdrop" @click="closeModal"></div>
-    </Transition>
-  </Teleport>
+  <Modal :open="isModalOpen" :on-click="closeModal"></Modal>
 
   <Teleport to="body">
     <Transition name="slide">
@@ -54,25 +55,6 @@ function closeModal() {
 <style scoped lang="scss">
 @use 'src/assets/buttons';
 
-.fade-enter-active,
-.fade-leave-active {
-  transition:
-    opacity 0.3s ease,
-    backdrop-filter 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  backdrop-filter: blur(0);
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-  backdrop-filter: blur(20px);
-}
-
 .slide-enter-active,
 .slide-leave-active {
   transition:
@@ -87,17 +69,6 @@ function closeModal() {
 .slide-enter-to,
 .slide-leave-from {
   transform: translateX(0);
-}
-
-.menu-backdrop {
-  z-index: 999;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  backdrop-filter: blur(20px);
 }
 
 .menu {
