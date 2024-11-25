@@ -49,7 +49,7 @@ const showPlayCardOverlay = (card: CardInterface) => {
         />
       </div>
     </div>
-    <div class="mr-10 mt-10 ml-auto col-end-6 lg:col-end-7">
+    <div class="mr-10 mt-10 ml-auto col-span-3">
       <PauseMenu />
     </div>
   </div>

@@ -33,7 +33,7 @@ const fetchGameStateUpdate = async () => {
     <Transition name="slide">
       <div
         v-if="isModalOpen"
-        class="menu h-full w-3/4 mx-auto mt-10 md:w-1/4 md:ml-auto md:mr-10 center"
+        class="menu h-full w-full mx-auto mt-10 lg:w-1/4 md:ml-auto md:mr-10 center"
         @click.stop
       >
         <div class="mx-auto">
