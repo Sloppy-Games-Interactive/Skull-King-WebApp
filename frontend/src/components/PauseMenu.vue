@@ -34,7 +34,7 @@ const fetchGameStateUpdate = async () => {
       <div
         v-if="isModalOpen"
         class="menu h-full w-full mx-auto mt-10 lg:w-1/4 md:ml-auto md:mr-10 center"
-        @click.stop
+        @click.stop="closeModal"
       >
         <div class="mx-auto">
           <h1 class="text-5xl text-center text-white">Pause Menu</h1>
