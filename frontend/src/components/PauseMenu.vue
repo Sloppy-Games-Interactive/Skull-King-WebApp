@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import Modal from '@/components/utils/Modal.vue'
+import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
+import { useGameStateStore } from '@/core/stores/gameState'
 
 const isModalOpen = ref(false)
 
@@ -10,6 +12,13 @@ function openModal() {
 
 function closeModal() {
   isModalOpen.value = false
+}
+
+const gameState = useGameStateStore()
+const api = inject(API_INJECTION_KEY) as ApiService
+const fetchGameStateUpdate = async () => {
+  const state = await api.getStatus()
+  gameState.updateGameState(state)
 }
 </script>
 
@@ -30,6 +39,12 @@ function closeModal() {
         <div class="mx-auto">
           <h1 class="text-5xl text-center text-white">Pause Menu</h1>
           <div class="flex flex-col items-center mt-10">
+            <button
+              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px]"
+              @click="fetchGameStateUpdate"
+            >
+              Update
+            </button>
             <button
               class="btn text-5xl btn-primary wood-btn w-full max-w-[300px]"
               @click="closeModal"

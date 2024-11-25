@@ -4,20 +4,12 @@ import Card from '@/components/cards/Card.vue'
 import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 import { useGameStateStore } from '@/core/stores/gameState'
 import { type CardInterface, CardSize, StandardCard } from '@/core/model/Card'
-import { inject, ref } from 'vue'
-import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
+import { ref } from 'vue'
 import CardList from '@/components/cards/CardList.vue'
 import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
 
 const gameState = useGameStateStore()
-
-const api = inject(API_INJECTION_KEY) as ApiService
-const fetchGameStateUpdate = async () => {
-  console.log('UPDATE')
-  const state = await api.getStatus()
-  gameState.updateGameState(state)
-}
 
 const randomNumbers = Array(100)
   .fill(0)
@@ -33,11 +25,6 @@ const playCard = ref<CardInterface | null>(null)
 const showPlayCardOverlay = (card: CardInterface) => {
   playCard.value = card
 }
-
-const setPrediction = async () => {
-  const state = await api.setPrediction(1)
-  gameState.updateGameState(state)
-}
 </script>
 
 <template>
@@ -47,7 +34,6 @@ const setPrediction = async () => {
     @close="playCard = null"
   ></PlayCardOverlay>
 
-  <button class="btn wood-btn" @click="fetchGameStateUpdate" id="update">update</button>
   <div class="grid grid-cols-3 md:grid-cols-6">
     <div class="col-span-3 m-4">
       <div

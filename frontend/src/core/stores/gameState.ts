@@ -1,30 +1,33 @@
 import { defineStore } from 'pinia'
 import {computed, nextTick, ref} from 'vue'
-import { type GameStateInterface, Phase } from '@/core/model/GameState'
+import { GameState, type GameStateInterface, Phase } from '@/core/model/GameState'
 import type { DeckInterface } from '@/core/model/Deck'
 import type { TrickInterface } from '@/core/model/Trick'
 import type { PlayerInterface } from '@/core/model/Player'
 import { useSessionStorage } from '@vueuse/core'
 
 export const useGameStateStore = defineStore('gameState', () => {
-  //TODO fix sessionstorage
   const sessionStorage = useSessionStorage<GameStateInterface | null>(
     'gameState',
     null,
     {
       deep: true,
+      serializer: {
+        read: (v: string) => new GameState(JSON.parse(v)),
+        write: (v: GameStateInterface | null) => JSON.stringify(v),
+      }
     },
   )
 
   const currentGameState = ref<null | GameStateInterface>(null)
 
-  const round = ref<number>(0)
-  const phase = ref<Phase>(Phase.None)
-  const playerLimit = ref<number>(0)
-  const roundLimit = ref<number>(0)
-  const players = ref<PlayerInterface[]>([])
-  const deck = ref<DeckInterface | null>(null)
-  const tricks = ref<TrickInterface[]>([])
+  const round = ref<number>(sessionStorage.value?.round ?? 0)
+  const phase = ref<Phase>(sessionStorage.value?.phase ?? Phase.None)
+  const playerLimit = ref<number>(sessionStorage.value?.playerLimit ?? 0)
+  const roundLimit = ref<number>(sessionStorage.value?.roundLimit ?? 0)
+  const players = ref<PlayerInterface[]>(sessionStorage.value?.players ?? [])
+  const deck = ref<DeckInterface | null>(sessionStorage.value?.deck ?? null)
+  const tricks = ref<TrickInterface[]>(sessionStorage.value?.tricks ?? [])
 
   const updateGameState = (state: GameStateInterface) => {
     round.value = state.round
@@ -35,7 +38,7 @@ export const useGameStateStore = defineStore('gameState', () => {
     deck.value = state.deck
     tricks.value = state.tricks
 
-    // sessionStorage.value = state
+    sessionStorage.value = state
 
     currentGameState.value = state
   }
