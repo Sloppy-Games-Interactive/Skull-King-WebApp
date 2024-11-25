@@ -41,7 +41,6 @@ const setPrediction = async() => {
   <PlayCardOverlay :card="playCard as CardInterface" @close="playCard = null"></PlayCardOverlay>
 
   <button class="btn wood-btn" @click="fetchGameStateUpdate" id="update">update</button>
-  <button class="btn wood-btn" @click="setPrediction">predict</button>
   <div class="grid grid-cols-3 md:grid-cols-6">
     <div class="col-span-3 m-4">
       <div
