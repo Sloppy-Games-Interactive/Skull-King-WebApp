@@ -2,10 +2,6 @@
 import { ref } from 'vue'
 import Modal from '@/components/utils/Modal.vue'
 
-defineOptions({
-  name: 'VPauseMenu'
-})
-
 const isModalOpen = ref(false)
 
 function openModal() {

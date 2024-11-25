@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { CardSize } from '@/core/model/Card'
-import VCardList from '@/components/cards/CardList.vue'
+import CardList from '@/components/cards/CardList.vue'
 import { useGameStateStore } from '@/core/stores/gameState'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import Modal from '@/components/utils/Modal.vue'
@@ -9,10 +9,6 @@ import { Phase } from '@/core/model/GameState'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameStateStore = useGameStateStore()
-
-defineOptions({
-  name: 'VPredictOverlay',
-})
 
 const isModalOpen = computed(() => {
   return (
@@ -36,7 +32,7 @@ const setPrediction = async (prediction: number) => {
       class="bg-blue-900 w-3/4 rounded-xl justify-center place-center text-center"
     >
       <h1 class="text-5xl">Set your prediction</h1>
-      <VCardList
+      <CardList
         :cards="gameStateStore.activePlayer?.hand?.cards ?? []"
         :card-size="CardSize.small"
       />

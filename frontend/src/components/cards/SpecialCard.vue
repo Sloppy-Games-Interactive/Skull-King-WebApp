@@ -1,12 +1,7 @@
 <script setup lang="ts">
-
 import BaseCard from '@/components/cards/BaseCard.vue'
 import { computed } from 'vue'
 import {type SpecialSuit, Suit} from "@/core/model/Card";
-
-defineOptions({
-  name: 'VSpecialCard'
-})
 
 const props = defineProps<{
   suit: SpecialSuit

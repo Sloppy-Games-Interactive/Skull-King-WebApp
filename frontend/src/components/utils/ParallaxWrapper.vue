@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useMouseInElement, usePageLeave, useParallax, watchArray } from '@vueuse/core'
-
-defineOptions({
-  name: 'VParallaxWrapper'
-})
 
 const container = ref(null)
 
@@ -43,15 +39,15 @@ const parallaxStyle = computed(() => {
 
 <style scoped lang="scss">
 .parallax-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
+  //width: 100%;
+  //height: 100%;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .parallax-container > * {
-  position: absolute;
+  position: relative;
   transform-origin: center;
   transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
   box-shadow: var(--shadow-x) var(--shadow-y) 40px 0 rgba(0, 0, 0, 0.5);

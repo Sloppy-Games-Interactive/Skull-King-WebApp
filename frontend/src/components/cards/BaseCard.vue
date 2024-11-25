@@ -8,10 +8,6 @@ import {
 import useResizeCard from '@/composables/resize-card'
 import { Suit } from '@/core/model/Card'
 
-defineOptions({
-  name: 'VBaseCard'
-})
-
 type CardType = 'standard' | 'special'
 
 type CardValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13

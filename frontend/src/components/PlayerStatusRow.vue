@@ -1,15 +1,9 @@
 <script setup lang="ts">
-
-defineOptions({
-  name: 'VStatusRow'
-})
-
 const props = defineProps<{
   username: string,
   profilePicture: string,
   score?: number,
 }>()
-
 </script>
 
 <template>

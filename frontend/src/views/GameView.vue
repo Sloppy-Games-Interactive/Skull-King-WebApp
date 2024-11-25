@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import VPauseMenu from '@/components/PauseMenu.vue'
-import VCard from '@/components/cards/Card.vue'
-import VPlayerStatusRow from '@/components/PlayerStatusRow.vue'
+import PauseMenu from '@/components/PauseMenu.vue'
+import Card from '@/components/cards/Card.vue'
+import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 import {useGameStateStore} from '@/core/stores/gameState'
 import {type CardInterface, CardSize} from '@/core/model/Card'
-import {inject, ref} from "vue";
+import { inject, ref } from 'vue'
 import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
 import CardList from "@/components/cards/CardList.vue";
-import {useEventBus} from "@vueuse/core";
-import {EventName, GameStateBus, GameStateEvent} from "@/core/event-bus";
-import VPredictOverlay from "@/components/PredictOverlay.vue";
+import PredictOverlay from "@/components/PredictOverlay.vue";
+import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
 
 const gameState = useGameStateStore()
 
@@ -26,9 +25,9 @@ const getRandomRotationAngle = () => {
   return Math.random() * (max - min) + min
 }
 
-const playCard = async (card: CardInterface) => {
-  const state = await api.playCard(card)
-  gameState.updateGameState(state);
+const playCard = ref<CardInterface | null>(null)
+const showPlayCardOverlay = (card: CardInterface) => {
+  playCard.value = card
 }
 
 const setPrediction = async() => {
@@ -38,7 +37,8 @@ const setPrediction = async() => {
 </script>
 
 <template>
-  <VPredictOverlay></VPredictOverlay>
+  <PredictOverlay></PredictOverlay>
+  <PlayCardOverlay :card="playCard as CardInterface" @close="playCard = null"></PlayCardOverlay>
 
   <button class="btn wood-btn" @click="fetchGameStateUpdate" id="update">update</button>
   <button class="btn wood-btn" @click="setPrediction">predict</button>
@@ -49,7 +49,7 @@ const setPrediction = async() => {
         :key="player.name"
         class="hidden sm:block"
       >
-        <VPlayerStatusRow
+        <PlayerStatusRow
           class="m-9"
           :username="player.name"
           :score="player.score"
@@ -58,7 +58,7 @@ const setPrediction = async() => {
       </div>
     </div>
     <div class="mr-10 mt-10 ml-auto col-end-6 lg:col-end-7">
-      <VPauseMenu />
+      <PauseMenu />
     </div>
   </div>
   <!-- table -->
@@ -68,19 +68,19 @@ const setPrediction = async() => {
       ref="container"
     >
       <template v-for="stackEntry in gameState.currentTrick?.stack ?? []">
-        <VCard
+        <Card
           class="absolute"
           :card="stackEntry.card"
           :size="CardSize.medium"
           :style="{ transform: `rotate(${getRandomRotationAngle()}deg` }"
-        ></VCard>
+        ></Card>
       </template>
     </div>
   </div>
   <!-- hand cards -->
   <CardList
     :cards="gameState.activePlayer?.hand?.cards ?? []"
-    :on-click="playCard"
+    :on-click="showPlayCardOverlay"
   />
 </template>
 

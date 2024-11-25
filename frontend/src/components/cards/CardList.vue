@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { type CardInterface, CardSize } from '@/core/model/Card'
-import VCard from '@/components/cards/Card.vue'
-
-defineOptions({
-  name: 'VCardList',
-})
+import Card from '@/components/cards/Card.vue'
 
 withDefaults(
   defineProps<{
     cards: CardInterface[]
-    onClick?: (card: CardInterface) => {}
+    onClick?: (card: CardInterface) => void
     cardSize?: CardSize
   }>(),
   {
@@ -23,12 +19,12 @@ withDefaults(
 <template>
   <div class="overflow-x-auto whitespace-nowrap">
     <template v-for="card in cards ?? []">
-      <VCard
+      <Card
         class="inline-block mx-3"
         :card="card"
         :size="cardSize"
         @click="onClick(card)"
-      ></VCard>
+      ></Card>
     </template>
   </div>
 </template>
