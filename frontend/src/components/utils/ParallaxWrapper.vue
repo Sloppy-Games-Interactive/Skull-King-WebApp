@@ -39,19 +39,17 @@ const parallaxStyle = computed(() => {
 
 <style scoped lang="scss">
 .parallax-container {
-  //width: 100%;
-  //height: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  perspective: 1000px; // Add perspective for 3D effect
 }
 
 .parallax-container > * {
   position: relative;
   transform-origin: center;
-  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) translateZ(0); // Ensure 3D transform
   box-shadow: var(--shadow-x) var(--shadow-y) 40px 0 rgba(0, 0, 0, 0.5);
-  //box-shadow: var(--shadow-x) var(--shadow-y) 0 50px rgba(0, 0, 0, 1); // debug shadow
 
   &:after {
     content: '';
@@ -61,14 +59,14 @@ const parallaxStyle = computed(() => {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-      var(--shine-gradient-rotation),
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 0) 47%,
-      rgba(255, 255, 255, 0.05) 48%,
-      rgba(255, 255, 255, 0.11) 50%,
-      rgba(255, 255, 255, 0.05) 52%,
-      rgba(255, 255, 255, 0) 53%,
-      rgba(255, 255, 255, 0) 100%
+        var(--shine-gradient-rotation),
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0) 47%,
+        rgba(255, 255, 255, 0.05) 48%,
+        rgba(255, 255, 255, 0.11) 50%,
+        rgba(255, 255, 255, 0.05) 52%,
+        rgba(255, 255, 255, 0) 53%,
+        rgba(255, 255, 255, 0) 100%
     );
     background-size: 200% 200%;
     background-position: var(--shine-position);
