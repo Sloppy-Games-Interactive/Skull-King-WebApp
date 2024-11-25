@@ -13,7 +13,7 @@ const specialCard = ref('skullKing')
 </script>
 
 <template>
-  <VPredictOverlay/>
+
 </template>
 
 <style scoped lang="scss">
