@@ -40,10 +40,29 @@ const playCard = async () => {
       <ParallaxWrapper @click.stop>
         <Card :card="card" :size="CardSize.large"></Card>
       </ParallaxWrapper>
-      <button
-        class="btn text-5xl btn-primary m-2 bg-red-500 wood-btn" @click="playCard">play</button>
-      <button
-        class="btn text-5xl btn-primary m-2 bg-red-500 wood-btn" @click="close">cancel</button>
+      <v-container>
+        <v-row justify="center">
+          <v-col cols="auto">
+            <v-btn
+              height="72"
+              min-width="164"
+              @click="playCard"
+            >
+              Play
+            </v-btn>
+          </v-col>
+
+          <v-col cols="auto">
+            <v-btn
+              height="72"
+              min-width="164"
+              @click.stop.prevent="close"
+            >
+              Close
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
   </Modal>
 </template>

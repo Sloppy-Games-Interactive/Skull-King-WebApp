@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { CardSize } from '@/core/model/Card'
 import CardList from '@/components/cards/CardList.vue'
 import { useGameStateStore } from '@/core/stores/gameState'
@@ -20,6 +20,14 @@ const setPrediction = async (prediction: number) => {
   const state = await api.setPrediction(prediction)
   gameStateStore.updateGameState(state)
 }
+
+const prediction = ref(0)
+
+// list items numers of round
+const items = computed(() => {
+  const round = gameStateStore.round
+  return Array.from({ length: round + 1 }, (_, i) => i)
+})
 </script>
 
 <template>
@@ -27,26 +35,37 @@ const setPrediction = async (prediction: number) => {
     :open="isModalOpen ?? false"
     classes="flex justify-center items-center"
   >
-    <div
-      @click.stop.prevent
-      class="bg-blue-900 w-3/4 rounded-xl justify-center place-center text-center"
+    <v-card
+      class="w-3/4 lg:w-1/2 mx-auto mt-10 font-sans px-5 text-center"
+      title="Set your prediction"
+      style="background-color: rgba(255, 255, 255, 0.5)"
     >
-      <h1 class="text-5xl">Set your prediction</h1>
       <CardList
         :cards="gameStateStore.activePlayer?.hand?.cards ?? []"
         :card-size="CardSize.small"
       />
-      <div class="">
-        <template v-for="n in gameStateStore.round">
-          <button
-            class="btn text-5xl btn-primary m-2 bg-red-500 wood-btn"
-            @click="setPrediction(n)"
+
+      <v-container>
+        <v-autocomplete
+          :items="items"
+          item-text="name"
+          item-value="id"
+          label="Prediction"
+          v-model="prediction"
+          class="w-3/4 mx-auto"
+        ></v-autocomplete>
+      </v-container>
+      <v-row justify="center">
+        <v-col cols="auto" class="my-4">
+          <v-btn
+            height="72"
+            min-width="164"
+            @click.stop.prevent="setPrediction(prediction)"
+            >set prediction</v-btn
           >
-            {{ n }}
-          </button>
-        </template>
-      </div>
-    </div>
+        </v-col>
+      </v-row>
+    </v-card>
   </Modal>
 </template>
 

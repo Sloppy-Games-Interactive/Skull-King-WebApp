@@ -17,10 +17,10 @@ withDefaults(
 </script>
 
 <template>
-  <div class="overflow-x-auto whitespace-nowrap">
+  <div class="overflow-x-auto whitespace-nowrap text-center">
     <template v-for="card in cards ?? []">
       <Card
-        class="inline-block mx-3"
+        class="inline-block m-3"
         :card="card"
         :size="cardSize"
         @click="onClick(card)"
