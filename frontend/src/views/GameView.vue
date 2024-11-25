@@ -2,27 +2,31 @@
 import PauseMenu from '@/components/PauseMenu.vue'
 import Card from '@/components/cards/Card.vue'
 import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
-import {useGameStateStore} from '@/core/stores/gameState'
-import {type CardInterface, CardSize} from '@/core/model/Card'
+import { useGameStateStore } from '@/core/stores/gameState'
+import { type CardInterface, CardSize, StandardCard } from '@/core/model/Card'
 import { inject, ref } from 'vue'
-import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
-import CardList from "@/components/cards/CardList.vue";
-import PredictOverlay from "@/components/PredictOverlay.vue";
+import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
+import CardList from '@/components/cards/CardList.vue'
+import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
 
 const gameState = useGameStateStore()
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const fetchGameStateUpdate = async () => {
-  console.log("UPDATE")
+  console.log('UPDATE')
   const state = await api.getStatus()
-  gameState.updateGameState(state);
+  gameState.updateGameState(state)
 }
 
-const getRandomRotationAngle = () => {
+const randomNumbers = Array(100)
+  .fill(0)
+  .map(() => Math.random())
+
+const getRandomRotationAngle = (idx: number) => {
   const min = -8 // minimum rotation angle
   const max = 8 // maximum rotation angle
-  return Math.random() * (max - min) + min
+  return (randomNumbers[idx] ?? Math.random()) * (max - min) + min
 }
 
 const playCard = ref<CardInterface | null>(null)
@@ -30,15 +34,18 @@ const showPlayCardOverlay = (card: CardInterface) => {
   playCard.value = card
 }
 
-const setPrediction = async() => {
+const setPrediction = async () => {
   const state = await api.setPrediction(1)
-  gameState.updateGameState(state);
+  gameState.updateGameState(state)
 }
 </script>
 
 <template>
   <PredictOverlay></PredictOverlay>
-  <PlayCardOverlay :card="playCard as CardInterface" @close="playCard = null"></PlayCardOverlay>
+  <PlayCardOverlay
+    :card="playCard as CardInterface"
+    @close="playCard = null"
+  ></PlayCardOverlay>
 
   <button class="btn wood-btn" @click="fetchGameStateUpdate" id="update">update</button>
   <div class="grid grid-cols-3 md:grid-cols-6">
@@ -65,15 +72,20 @@ const setPrediction = async() => {
     <div
       class="relative h-[300px] md:h-[400px] flex justify-center items-center"
       ref="container"
+      :key="(gameState.currentTrick?.stack ?? []).length"
     >
-      <template v-for="stackEntry in gameState.currentTrick?.stack ?? []">
-        <Card
-          class="absolute"
-          :card="stackEntry.card"
-          :size="CardSize.medium"
-          :style="{ transform: `rotate(${getRandomRotationAngle()}deg` }"
-        ></Card>
-      </template>
+      <Card
+        v-for="(stackEntry, idx) in gameState.currentTrick?.stack ?? []"
+        :key="
+          stackEntry.player.name +
+          stackEntry.card.suit +
+          ((stackEntry.card as StandardCard)?.value ?? '')
+        "
+        class="absolute"
+        :card="stackEntry.card"
+        :size="CardSize.medium"
+        :style="{ transform: `rotate(${getRandomRotationAngle(idx)}deg` }"
+      ></Card>
     </div>
   </div>
   <!-- hand cards -->

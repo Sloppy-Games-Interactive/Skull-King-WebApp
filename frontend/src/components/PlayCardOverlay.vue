@@ -8,7 +8,7 @@ import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import { useGameStateStore } from '@/core/stores/gameState'
 
 const props = defineProps<{
-  card: CardInterface
+  card: CardInterface | null
 }>()
 
 const show = computed(() => {
@@ -24,6 +24,10 @@ const close = () => {
 const gameState = useGameStateStore()
 const api = inject(API_INJECTION_KEY) as ApiService
 const playCard = async () => {
+  if (!props.card) {
+    return
+  }
+
   const state = await api.playCard(props.card)
   gameState.updateGameState(state);
 }
@@ -32,7 +36,7 @@ const playCard = async () => {
 <template>
   <Modal :open="show" :on-click="close"
          classes="flex justify-center items-center">
-    <div @click.stop="close()" class="play-card-container">
+    <div v-if="card" @click.stop="close()" class="play-card-container">
       <ParallaxWrapper>
         <Card :card="card" :size="CardSize.large"></Card>
       </ParallaxWrapper>
