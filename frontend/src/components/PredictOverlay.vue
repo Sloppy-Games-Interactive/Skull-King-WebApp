@@ -1,63 +1,34 @@
 <script setup lang="ts">
-import {inject, ref} from 'vue'
-import {CardSize} from '@/core/model/Card'
+import { computed, inject } from 'vue'
+import { CardSize } from '@/core/model/Card'
 import VCardList from '@/components/cards/CardList.vue'
-import {useGameStateStore} from '@/core/stores/gameState'
-import {API_INJECTION_KEY, ApiService} from '@/core/rest/api'
+import { useGameStateStore } from '@/core/stores/gameState'
+import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import Modal from '@/components/utils/Modal.vue'
-import {useEventBus} from '@vueuse/core'
-import {EventName, GameStateBus, GameStateEvent} from '@/core/event-bus'
-import {useGameStateChangeHandler} from "@/composables/gamestate-change-handler";
-import {Phase} from "@/core/model/GameState";
+import { Phase } from '@/core/model/GameState'
 
 const api = inject(API_INJECTION_KEY) as ApiService
-const { round, updateGameState, activePlayer } = useGameStateStore()
+const gameStateStore = useGameStateStore()
 
 defineOptions({
   name: 'VPredictOverlay',
 })
 
-const isModalOpen = ref(false)
-
-function openModal() {
-  isModalOpen.value = true
-}
-
-function closeModal() {
-  isModalOpen.value = false
-}
+const isModalOpen = computed(() => {
+  return (
+    gameStateStore.activePlayer && gameStateStore.phase === Phase.PrepareTricks
+  )
+})
 
 const setPrediction = async (prediction: number) => {
   const state = await api.setPrediction(prediction)
-  updateGameState(state)
+  gameStateStore.updateGameState(state)
 }
-
-const bus = useEventBus<GameStateEvent>(GameStateBus)
-
-bus.on((event: GameStateEvent) => {
-  console.log(
-    'TEST',
-    event.name,
-    EventName.PromptPrediction,
-    round,
-    activePlayer,
-  )
-  if (event.name === EventName.PromptPrediction) {
-setTimeout(() => {
-  openModal()
-}, 10)
-
-    return
-  }
-
-  closeModal()
-})
 </script>
 
 <template>
   <Modal
-    :open="isModalOpen"
-    :on-click="closeModal"
+    :open="isModalOpen ?? false"
     classes="flex justify-center items-center"
   >
     <div
@@ -66,11 +37,11 @@ setTimeout(() => {
     >
       <h1 class="text-5xl">Set your prediction</h1>
       <VCardList
-        :cards="activePlayer?.hand?.cards ?? []"
+        :cards="gameStateStore.activePlayer?.hand?.cards ?? []"
         :card-size="CardSize.small"
       />
       <div class="">
-        <template v-for="n in round">
+        <template v-for="n in gameStateStore.round">
           <button
             class="btn text-5xl btn-primary m-2 bg-red-500 wood-btn"
             @click="setPrediction(n)"

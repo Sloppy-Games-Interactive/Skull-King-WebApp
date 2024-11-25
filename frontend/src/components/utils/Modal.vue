@@ -2,7 +2,7 @@
 withDefaults(defineProps<{
   open: boolean,
   classes?: string,
-  onClick: () => void
+  onClick?: () => void
 }>(), {
   open: () => false,
   classes: () => ''
