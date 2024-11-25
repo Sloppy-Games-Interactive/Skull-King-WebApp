@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import BaseCard from '@/components/cards/BaseCard.vue'
 import { computed } from 'vue'
-import {type SpecialSuit, Suit} from "@/core/model/Card";
+import { type SpecialSuit, Suit } from '@/core/model/Card'
 
 const props = defineProps<{
   suit: SpecialSuit
+  cardWidth?: number
+  cardHeight?: number
 }>()
 
 const cardText = computed(() => {
@@ -24,9 +26,13 @@ const cardText = computed(() => {
 </script>
 
 <template>
-  <BaseCard card-type="special" :suit="props.suit" :text="cardText"></BaseCard>
+  <BaseCard
+    card-type="special"
+    :suit="props.suit"
+    :text="cardText"
+    :card-width="cardWidth"
+    :card-height="cardHeight"
+  ></BaseCard>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

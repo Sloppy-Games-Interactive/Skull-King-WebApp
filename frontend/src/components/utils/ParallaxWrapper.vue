@@ -50,6 +50,7 @@ const parallaxStyle = computed(() => {
   transform-origin: center;
   transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) translateZ(0); // Ensure 3D transform
   box-shadow: var(--shadow-x) var(--shadow-y) 40px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
 
   &:after {
     content: '';

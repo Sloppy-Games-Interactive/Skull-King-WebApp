@@ -18,6 +18,8 @@ const props = defineProps<{
   value?: CardValue
   text?: string
   flipped?: boolean
+  cardWidth?: number,
+  cardHeight?: number,
 }>()
 
 const suitClass = computed(() => {
@@ -62,10 +64,17 @@ useResizeObserver($parent, entries => {
 })
 
 const { style } = useResizeCard(availableWidth, availableHeight)
+
+const dimensionsStyle = computed(() => {
+  return {
+    '--card_max-width': props.cardWidth ? `${props.cardWidth}px` : style['--card_max-width'],
+    '--card_max-height': props.cardHeight ? `${props.cardHeight}px` : style['--card_max-height'],
+  }
+})
 </script>
 
 <template>
-  <div class="card textured" :style="style" :class="classes">
+  <div class="card textured" :style="Object.assign(style, dimensionsStyle)" :class="classes">
     <div v-if="typeof value === 'number'" class="values top">
       <div class="value textured">{{ props.value }}</div>
     </div>

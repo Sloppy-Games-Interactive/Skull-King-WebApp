@@ -37,7 +37,7 @@ const playCard = async () => {
   <Modal :open="show" :on-click="close"
          classes="flex justify-center items-center">
     <div v-if="card" @click.stop="close()" class="play-card-container">
-      <ParallaxWrapper>
+      <ParallaxWrapper @click.stop>
         <Card :card="card" :size="CardSize.large"></Card>
       </ParallaxWrapper>
       <button
