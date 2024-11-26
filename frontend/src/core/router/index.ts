@@ -16,7 +16,7 @@ const router = createRouter({
       path: '/new-game',
       name: 'new-game',
       meta: {
-        bg: 'bg-pre-game stage-1',
+        bg: 'bg-pre-game stage-1 stage-1_2',
       },
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -27,7 +27,7 @@ const router = createRouter({
       path: '/join-game',
       name: 'join-game',
       meta: {
-        bg: 'bg-pre-game stage-2',
+        bg: 'bg-pre-game stage-2 stage-2_2',
       },
       component: () => import('@/views/pre-game/JoinGameView.vue'),
     },
@@ -35,7 +35,7 @@ const router = createRouter({
       path: '/game-lobby',
       name: 'game-lobby',
       meta: {
-        bg: 'bg-pre-game stage-3',
+        bg: 'bg-pre-game stage-3 stage-3_3',
       },
       component: () => import('@/views/pre-game/GameLobbyView.vue'),
     },
