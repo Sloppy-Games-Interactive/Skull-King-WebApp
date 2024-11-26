@@ -31,7 +31,7 @@ const newGame = async (event: MouseEvent) => {
       <a class="btn text-5xl btn-primary wood-btn" @click.stop.prevent="newGame"
         >New Game</a
       >
-      <a class="btn text-5xl btn-primary wood-btn" @click.stop.prevent="joinGame"
+      <a class="btn text-5xl btn-primary wood-btn disabled" @click.stop.prevent="joinGame"
         >Join Game</a>
 
       <router-link to="/settings" class="btn text-5xl btn-primary wood-btn"
