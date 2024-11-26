@@ -8,6 +8,7 @@ import { ref } from 'vue'
 import CardList from '@/components/cards/CardList.vue'
 import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
+import PlayerStatusMenu from "@/components/PlayerStatusMenu.vue";
 
 const gameState = useGameStateStore()
 
@@ -35,21 +36,12 @@ const showPlayCardOverlay = (card: CardInterface) => {
   ></PlayCardOverlay>
 
   <div class="grid grid-cols-3 md:grid-cols-6">
-    <div class="col-span-3 m-4">
-      <div
-        v-for="player in gameState.players"
-        :key="player.name"
-        class="hidden sm:block"
-      >
-        <PlayerStatusRow
-          class="m-9"
-          :username="player.name"
-          :score="player.score"
-          profile-picture="https://media.istockphoto.com/id/816752606/photo/tv-test-card-or-test-pattern-generic.jpg?s=612x612&w=0&k=20&c=63Jcx_5bFnvBw9elRDLrLKjtDYXr70pKtUK0jXJ2_uY="
-        />
-      </div>
+    <div class="ml-10 mt-10 ml-auto fixed left-0 top-0 align-middle z-[9]">
+      <PlayerStatusMenu />
     </div>
-    <div class="mr-10 mt-10 ml-auto col-span-3">
+
+
+    <div class="mr-10 mt-10 ml-auto fixed right-0 top-0 align-middle z-[10]">
       <PauseMenu />
     </div>
   </div>
