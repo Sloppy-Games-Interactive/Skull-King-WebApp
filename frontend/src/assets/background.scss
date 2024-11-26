@@ -1,0 +1,68 @@
+.bg-test {
+  background-color: #131313;
+}
+
+.bg-settings {
+  background-image: url('/images/background/settings.jpeg');
+}
+
+.bg-pre-game {
+  background-image: url('/images/background/pre_game.jpeg');
+}
+
+.bg-tavern {
+  background-image: url('/images/background/tavern.jpeg');
+}
+
+.bg-town {
+  background-image: url('/images/background/pirate_town.jpeg');
+
+  background-position-x: -120px;
+
+  @media (screen(sm)) {
+    background-position-x: 0;
+  }
+}
+
+.bg-settings,
+.bg-pre-game,
+.bg-town,
+.bg-tavern {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.bg-pre-game {
+  transition: background-position-x cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
+
+  &.stage-1, &.stage-1_3 {
+    //transition: none;
+    background-position-x: 0;
+  }
+
+  &.stage-2, &.stage-2_3 {
+    background-position-x: calc(100% / 3);
+  }
+
+  &.stage-3, &.stage-3_3 {
+    background-position-x: calc(100% / 3 * 2);
+  }
+
+  &.stage-1_2 {
+  //transition: none;
+  background-position-x: 0;
+}
+
+  &.stage-2_2 {
+  background-position-x: calc(100% / 2);
+}
+
+  &.stage-1,
+  &.stage-2,
+  &.stage-3 {
+    @media (screen(xl)) {
+      transition: none;
+      background-position-x: 0;
+    }
+  }
+}

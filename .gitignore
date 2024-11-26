@@ -36,3 +36,4 @@ metals.sbt
 /.worksheet/
 
 /logs
+backend/logs/
