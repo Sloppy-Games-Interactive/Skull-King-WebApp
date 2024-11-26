@@ -41,15 +41,22 @@ const fetchGameStateUpdate = async () => {
           <div class="flex flex-col items-center mt-10">
             <button
               class="btn text-5xl btn-primary wood-btn w-full max-w-[300px]"
-              @click="fetchGameStateUpdate"
-            >
-              Update
-            </button>
-            <button
-              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px]"
               @click="closeModal"
             >
               Resume
+            </button>
+
+            <button
+              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px] disabled"
+              @click.stop.prevent
+            >
+              Scores
+            </button>
+            <button
+              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px]"
+              @click="fetchGameStateUpdate"
+            >
+              Update
             </button>
             <router-link
               to="/"

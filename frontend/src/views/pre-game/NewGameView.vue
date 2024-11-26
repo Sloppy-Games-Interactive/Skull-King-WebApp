@@ -9,7 +9,7 @@ const gameState = useGameStateStore()
 
 const playerLimitInput = ref(2)
 const postPlayerLimit = async () => {
-  const state = await api.setPlayerLimit(playerLimitInput.value)
+  const state = await api.setPlayerLimit(Number.parseInt(playerLimitInput.value))
   gameState.updateGameState(state)
   await router.push('/join-game')
 }
@@ -48,7 +48,7 @@ const rules = {
           <v-btn
             height="72"
             min-width="164"
-            @click.stop.prevent="$router.push('/')"
+            @click.stop.prevent="router.push('/')"
           >
             Back
           </v-btn>

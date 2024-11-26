@@ -16,7 +16,8 @@ const postPlayerName = async () => {
   const state = await api.setPlayerName(playerNameInput.value)
   gameState.updateGameState(state)
   if (state.players.length === state.playerLimit) {
-    await router.push('/game-lobby')
+    // await router.push('/game-lobby')
+    await router.push('/play')
     return
   }
   playerNameInput.value = ''
