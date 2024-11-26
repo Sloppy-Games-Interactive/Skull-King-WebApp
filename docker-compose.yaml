@@ -1,0 +1,35 @@
+services:
+  frontend:
+    # todo
+    image: node # todo: use own dockerfile
+    working_dir: /app
+    volumes:
+      - ./frontend
+    ports:
+      - "3000:3000" # todo: port mapping
+    networks:
+      - skullnet
+    # todo
+    command: ["yarn", "start"]
+
+  backend:
+    # todo
+    image: sbt # todo: use own dockerfile
+    working_dir: /app
+    volumes:
+      - ./backend
+    ports:
+      - "8080:8080" # todo: port mapping
+    networks:
+      - skullnet
+    # todo
+    command: ["sbt", "run"]
+
+# todo
+#  redis:
+#    image: redis
+
+# todo
+networks:
+  skullnet:
+    driver: bridge
