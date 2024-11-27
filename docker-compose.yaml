@@ -6,8 +6,8 @@ services:
       args:
         - CACHEBUST=${CACHEBUST}
     working_dir: /app
-    volumes:
-      - ./frontend:/app
+#    volumes:
+#      - ./frontend:/app
     ports:
       - "3000:3000"
     networks:
