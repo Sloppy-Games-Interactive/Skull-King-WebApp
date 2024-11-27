@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { RouterView, useRoute } from 'vue-router'
-import {computed} from 'vue'
+import { computed, watch } from 'vue'
 import {useGameStateChangeHandler} from "@/composables/gamestate-change-handler";
 import { useWebSocket } from '@vueuse/core'
+import { useGameStateStore } from '@/core/stores/gameState'
+import { GameState } from '@/core/model/GameState'
 
 const route = useRoute()
 
@@ -23,6 +25,16 @@ const { status, data, send, open, close } = useWebSocket('ws://localhost:9000/ws
       alert('Failed to connect WebSocket after 3 retries')
     },
   }
+})
+
+const gameState = useGameStateStore()
+
+watch(data, (newData) => {
+  if (newData === 'pong') {
+    return;
+  }
+  
+  gameState.updateGameState(new GameState(JSON.parse(newData)))
 })
 
 const message = () => {

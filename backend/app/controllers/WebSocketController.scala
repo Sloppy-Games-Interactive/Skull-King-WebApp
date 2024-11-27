@@ -8,6 +8,7 @@ import javax.inject._
 import play.api.mvc._
 import play.api.libs.streams.ActorFlow
 import scala.collection.mutable
+import de.htwg.se.skullking.util.{ObservableEvent, Observer}
 
 @Singleton
 class WebSocketController @Inject()(cc: ControllerComponents)(implicit system: org.apache.pekko.actor.ActorSystem, mat: Materializer) extends AbstractController(cc) {
@@ -24,8 +25,16 @@ object WebSocketActor {
   def props(out: ActorRef, clients: mutable.Map[String, ActorRef]): Props = Props(new WebSocketActor(out, clients))
 }
 
-class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) extends Actor {
+class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) extends Actor with Observer {
   val controller: IController = summon[IController]
+
+  controller.add(this)
+
+  override def update(e: ObservableEvent): Unit = {
+    e match {
+      case _ => clients.foreach(_._2 ! controller.state.toJson.toString)
+    }
+  }
 
   override def preStart(): Unit = {
     val clientId = self.path.name

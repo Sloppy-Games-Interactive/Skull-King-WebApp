@@ -13,7 +13,11 @@ TODO:
    - [ ] hand cards
    - [ ] predict menu
    - [ ] everything else...
- - [ ] add websocket support
+ - [ ] add websocket support:
+   - [x] basic handling
+   - [ ] multi client handling
+   - [ ] websocket client class for easy handling
+   - [ ] chatsocket
  - [ ] implement scoreboard
  - [ ] implement phase transition screens (round start, trick end/winner, game end/winner)
  - [ ] implement game lobby
