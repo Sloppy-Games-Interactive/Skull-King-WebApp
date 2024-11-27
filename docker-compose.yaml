@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/frontend.Dockerfile
+      args:
+        - CACHEBUST=${CACHEBUST}
     working_dir: /app
     volumes:
       - ./frontend:/app
@@ -31,4 +33,4 @@ services:
 # todo
 networks:
   skullnet:
-    driver: host
+    driver: bridge

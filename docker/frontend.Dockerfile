@@ -1,15 +1,17 @@
 FROM node:18-alpine
 
+ARG CACHEBUST=1
+
+RUN echo $CACHEBUST
+
 COPY ./frontend /app
 
 WORKDIR /app
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 RUN yarn build-only
 
-# Expose the port the app runs on
 EXPOSE 3000
 
-# Command to start the server
 CMD ["node", "server.js"]
