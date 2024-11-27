@@ -26,7 +26,8 @@ const { status, data, send, open, close } = useWebSocket('ws://localhost:9000/ws
 })
 
 const message = () => {
-  send('Hello')
+  console.log('sending')
+  send('state')
 }
 </script>
 

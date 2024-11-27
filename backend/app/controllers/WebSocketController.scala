@@ -1,14 +1,16 @@
 package controllers
 
-import akka.actor.{Actor, ActorRef, Props}
-import akka.stream.Materializer
+import de.htwg.se.skullking.modules.Default.given
+import de.htwg.se.skullking.controller.ControllerComponent.IController
+import org.apache.pekko.actor.{Actor, ActorRef, Props}
+import org.apache.pekko.stream.Materializer
 import javax.inject._
 import play.api.mvc._
 import play.api.libs.streams.ActorFlow
 import scala.collection.mutable
 
 @Singleton
-class WebSocketController @Inject()(cc: ControllerComponents)(implicit system: akka.actor.ActorSystem, mat: Materializer) extends AbstractController(cc) {
+class WebSocketController @Inject()(cc: ControllerComponents)(implicit system: org.apache.pekko.actor.ActorSystem, mat: Materializer) extends AbstractController(cc) {
   private val clients = mutable.Map[String, ActorRef]()
 
   def socket: WebSocket = WebSocket.accept[String, String] { request =>
