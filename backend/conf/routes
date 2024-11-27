@@ -23,6 +23,7 @@ POST     /play-card                  controllers.GameController.playCard
 POST     /save-game                  controllers.GameController.saveGame
 POST     /load-game                  controllers.GameController.loadGame
 
+GET      /ws                         controllers.WebSocketController.socket
 
 # Map static resources from the /public folder to the /assets URL path
 #-- skip
