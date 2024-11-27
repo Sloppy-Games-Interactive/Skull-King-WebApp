@@ -9,7 +9,6 @@ import scala.collection.mutable
 
 @Singleton
 class WebSocketController @Inject()(cc: ControllerComponents)(implicit system: akka.actor.ActorSystem, mat: Materializer) extends AbstractController(cc) {
-
   private val clients = mutable.Map[String, ActorRef]()
 
   def socket: WebSocket = WebSocket.accept[String, String] { request =>
@@ -24,6 +23,8 @@ object WebSocketActor {
 }
 
 class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) extends Actor {
+  val controller: IController = summon[IController]
+
   override def preStart(): Unit = {
     val clientId = self.path.name
     clients += (clientId -> out)
@@ -35,6 +36,10 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
   }
 
   def receive: Receive = {
+    case msg: String if msg.equals("ping") =>
+      out ! "pong"
+    case msg: String if msg.equals("state") =>
+      out ! controller.state.toJson.toString
     case msg: String =>
       // Handle incoming messages and notify specific clients
       val clientId = extractClientId(msg)
