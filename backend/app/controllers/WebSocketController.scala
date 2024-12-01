@@ -1,14 +1,15 @@
 package controllers
 
 import de.htwg.se.skullking.modules.Default.given
-import de.htwg.se.skullking.controller.ControllerComponent.IController
-import org.apache.pekko.actor.{Actor, ActorRef, Props}
+import org.apache.pekko.actor.ActorRef
 import org.apache.pekko.stream.Materializer
-import javax.inject._
-import play.api.mvc._
+
+import javax.inject.*
+import play.api.mvc.*
 import play.api.libs.streams.ActorFlow
+
 import scala.collection.mutable
-import de.htwg.se.skullking.util.{ObservableEvent, Observer}
+import models.websocket.WebSocketActor
 
 @Singleton
 class WebSocketController @Inject()(cc: ControllerComponents)(implicit system: org.apache.pekko.actor.ActorSystem, mat: Materializer) extends AbstractController(cc) {
@@ -19,46 +20,19 @@ class WebSocketController @Inject()(cc: ControllerComponents)(implicit system: o
       WebSocketActor.props(out, clients)
     }
   }
-}
 
-object WebSocketActor {
-  def props(out: ActorRef, clients: mutable.Map[String, ActorRef]): Props = Props(new WebSocketActor(out, clients))
-}
+  def listClients: Action[AnyContent] = Action {
+    val clientIds = clients.keys
+    Ok(clientIds.mkString("\n"))
+  }
 
-class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) extends Actor with Observer {
-  val controller: IController = summon[IController]
-
-  controller.add(this)
-
-  override def update(e: ObservableEvent): Unit = {
-    e match {
-      case _ => clients.foreach(_._2 ! controller.state.toJson.toString)
+  def sendMessageToClient(clientId: String, message: String): Action[AnyContent] = Action {
+    clients.get(clientId) match {
+      case Some(clientRef) =>
+        clientRef ! WebSocketActor.SendMessage(message)
+        Ok(s"Message sent to client $clientId")
+      case None =>
+        NotFound(s"Client $clientId not found")
     }
-  }
-
-  override def preStart(): Unit = {
-    val clientId = self.path.name
-    clients += (clientId -> out)
-  }
-
-  override def postStop(): Unit = {
-    val clientId = self.path.name
-    clients -= clientId
-  }
-
-  def receive: Receive = {
-    case msg: String if msg.equals("ping") =>
-      out ! "pong"
-    case msg: String if msg.equals("state") =>
-      out ! controller.state.toJson.toString
-    case msg: String =>
-      // Handle incoming messages and notify specific clients
-      val clientId = extractClientId(msg)
-      clients.get(clientId).foreach(_ ! s"Message for $clientId: $msg")
-  }
-
-  private def extractClientId(msg: String): String = {
-    // Extract client ID from the message (implementation depends on your message format)
-    msg.split(":")(0)
   }
 }
