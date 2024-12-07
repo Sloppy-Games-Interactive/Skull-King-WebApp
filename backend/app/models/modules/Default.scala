@@ -18,6 +18,8 @@ import de.htwg.se.skullking.model.trick.TrickComponent.TrickBaseImpl.{Trick, Tri
 import de.htwg.se.skullking.model.trick.TrickComponent.{ITrick, ITrickFactory}
 import de.htwg.se.skullking.model.trick.TrickWinnerHandlerComponent.ITrickWinnerHandler
 import de.htwg.se.skullking.model.trick.TrickWinnerHandlerComponent.TrickWinnerHandlerBaseImpl.TrickWinnerHandler
+import models.model.LobbyComponent.ILobby
+import models.model.LobbyComponent.LobbyBaseImpl.Lobby
 
 object Default {
   given IGameState = GameState()
@@ -32,6 +34,7 @@ object Default {
   given IHandFactory = HandFactory
   given ITrickFactory = TrickFactory
   given IGameStateFactory = GameStateFactory
+  given ILobby = Lobby()
 
   given baseImplBonusPointsHandler: ITrickBonusPointsHandler = BaseImplTrickBonusPointsHandler()
 //  given funnyHahaBonusPointsHandler: ITrickBonusPointsHandler = FunnyHahaTrickBonusPointsHandler()

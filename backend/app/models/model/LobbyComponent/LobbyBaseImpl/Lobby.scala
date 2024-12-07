@@ -1,0 +1,61 @@
+package models.model.LobbyComponent.LobbyBaseImpl
+
+import de.htwg.se.skullking.model.PlayerComponent.PlayerBaseImpl.Player
+import de.htwg.se.skullking.model.StateComponent.IGameState
+import models.model.LobbyComponent.ILobby
+
+import java.util.UUID
+
+case class Lobby(
+  uuid: UUID = UUID.randomUUID(),
+  // TODO: send modified gameState to specific players with only their hands
+  gameState: IGameState = null,
+  name: String = "",
+  joinCode: String = scala.util.Random.alphanumeric.take(8).mkString,
+  playerLimit: Int = 2,
+  players: List[Player] = List(),
+  host: Player = null,
+  started: Boolean = false
+) extends ILobby {
+
+  override def createLobby(name: String, playerLimit: Int): ILobby = {
+    this.copy(name = name, playerLimit = playerLimit)
+  }
+
+  override def joinLobby(player: Player): Boolean = {
+    if (players.isEmpty) {
+      this.copy(players = players :+ player).copy(host = player)
+    } 
+    
+    if (players.length < playerLimit) {
+      this.copy(players = players :+ player)
+      true
+    } else {
+      false
+    }
+  }
+  
+  override def leaveLobby(player: Player): Boolean = {
+    if (players.contains(player)) {
+      val updatedPlayers = players.filterNot(_ == player)
+      val updatedHost = if (player == host && updatedPlayers.nonEmpty) updatedPlayers.head else host
+  
+      if (player == host && updatedPlayers.isEmpty) {
+        false
+      } else {
+        this.copy(players = updatedPlayers, host = updatedHost)
+        true
+      }
+    } else {
+      false
+    }
+}
+  
+  override def startGame: Unit = {
+    this.copy(started = true)
+  }
+  
+  override def getLobby: ILobby = this
+  
+  private def setPlayerLimit(n: Int): Lobby = this.copy(playerLimit = n)
+}

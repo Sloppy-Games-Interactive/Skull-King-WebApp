@@ -40,6 +40,12 @@ class Controller(using var state: IGameState) extends IController {
     handleState()
   }
 
+  def newLobby: Unit = {
+    //undoManager.doStep(new NewLobbyCommand(this))
+    notifyObservers(ControllerEvents.NewGame)
+    handleState()
+  }
+  
   def setPlayerLimit(limit: Int): Unit = {
     undoManager.doStep(new SetPlayerLimitCommand(this, limit))
     notifyObservers(ControllerEvents.PlayerLimitSet)

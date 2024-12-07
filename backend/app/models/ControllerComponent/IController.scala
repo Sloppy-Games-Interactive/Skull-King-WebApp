@@ -16,6 +16,8 @@ trait IController() extends Observable {
   def redo: Unit
 
   def newGame: Unit
+  
+  def newLobby: Unit
 
   def setPlayerLimit(limit: Int): Unit
   

@@ -42,6 +42,11 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
     controller.newGame
     Ok(controller.state.toJson)
   }
+  
+  def newLobby = Action { implicit request: Request[AnyContent] =>
+    controller.newLobby
+    Ok(controller.state.toJson)
+  }
 
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
     val limit = Try[Int](request.body.asJson.get("limit").as[Int])
