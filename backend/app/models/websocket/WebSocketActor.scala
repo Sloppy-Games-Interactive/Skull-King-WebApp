@@ -5,7 +5,7 @@ import de.htwg.se.skullking.util.{ObservableEvent, Observer}
 import org.apache.pekko.actor.{Actor, ActorRef, Props}
 import org.apache.pekko.stream.Materializer
 import de.htwg.se.skullking.modules.Default.given
-
+import play.api.libs.json.Json
 
 import java.util.UUID
 import scala.collection.mutable
@@ -29,6 +29,8 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
 
   override def preStart(): Unit = {
     clients += clientId -> out
+    val clientIdJson = Json.obj("playerId" -> clientId)
+    out ! clientIdJson.toString
     println(s"Connected with client $clientId")
     //out ! s"Connected with client $clientId"
   }

@@ -10,6 +10,7 @@ import de.htwg.se.skullking.util.UndoManager
 
 class Controller(using var state: IGameState) extends IController {
   val undoManager = UndoManager()
+  private var playerID: Int = 0
 
   def handleState(): Unit = {
     state.phase match {
@@ -46,7 +47,8 @@ class Controller(using var state: IGameState) extends IController {
   }
 
   def addPlayer(name: String): Unit = {
-    undoManager.doStep(new AddPlayerCommand(this, summon[IPlayerFactory].create(name)))
+    undoManager.doStep(new AddPlayerCommand(this, summon[IPlayerFactory].create(playerID, name)))
+    playerID += 1
     notifyObservers(ControllerEvents.PlayerAdded)
     handleState()
   }

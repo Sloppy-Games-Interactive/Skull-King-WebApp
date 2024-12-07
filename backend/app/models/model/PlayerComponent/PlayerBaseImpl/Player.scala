@@ -3,8 +3,15 @@ package de.htwg.se.skullking.model.PlayerComponent.PlayerBaseImpl
 import de.htwg.se.skullking.model.CardComponent.ICard
 import de.htwg.se.skullking.model.PlayerComponent.*
 
+import java.util.UUID
+
 case class Player(
+  id: Int = 0,
   name: String,
+  // TODO: change default profile pic
+  profilePicUrl: String = "https://api.dicebear.com/9.x/bottts/svg",
+  // maybe the server should generate the UUID and send it to the client not the other way around
+  uuid: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000"),
   hand: IHand = Hand(),
   score: Int = 0,
   prediction: Option[Int] = None,
@@ -31,10 +38,14 @@ case class Player(
   def setScore(score: Int): IPlayer = this.copy(score = score)
   
   def setActive(active: Boolean): IPlayer = this.copy(active = active)
+
+  def setUUID(uuid: UUID): IPlayer = this.copy(uuid = uuid)
+
+  def setProfilePicUrl(url: String): IPlayer = this.copy(profilePicUrl = url)
   
   override def toString: String = s"$name: $score, $hand, prediction: ${prediction.getOrElse("-")}"
 }
 
 object PlayerFactory extends IPlayerFactory {
-  def create(name: String): IPlayer = Player(name)
+  def create(id: Int, name: String): IPlayer = Player(id, name)
 } 

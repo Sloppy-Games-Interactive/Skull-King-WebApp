@@ -27,13 +27,21 @@ const { status, data, send, open, close } = useWebSocket('ws://localhost:9000/ws
   }
 })
 
+
 const gameState = useGameStateStore()
 
 watch(data, (newData) => {
   if (newData === 'pong') {
     return;
   }
-  
+
+  // const parsedData = JSON.parse(newData);
+  // if (parsedData.playerId) {
+  //   parsedData.clientId = parsedData.playerId;
+  //   console.log('parsedData', parsedData)
+  //   delete parsedData.playerId;
+  // }
+
   gameState.updateGameState(new GameState(JSON.parse(newData)))
 })
 
