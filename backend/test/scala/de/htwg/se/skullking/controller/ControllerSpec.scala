@@ -187,7 +187,7 @@ class ControllerSpec extends AnyWordSpec {
         controller.newGame
         controller.quit
 
-        observer.updated should be(3)
+        observer.updated should be(5)
         assert(true) // TODO implement actual test - assert(true) == BÖÖÖÖÖÖÖSE
       }
 

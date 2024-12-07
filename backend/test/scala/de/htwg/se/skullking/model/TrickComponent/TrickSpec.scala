@@ -38,8 +38,8 @@ class TrickSpec extends AnyWordSpec {
     }
 
     "playing any card" should {
-      val p1 = Player("p1")
-      val p2 = Player("p2")
+      val p1 = Player(0, "p1")
+      val p2 = Player(0, "p2")
       val t0 = Trick()
       val t1 = t0.play(r1, p1)
       val t2 = t1.play(r2, p2)
@@ -70,8 +70,8 @@ class TrickSpec extends AnyWordSpec {
     }
 
     "playing only standard suits" should {
-      val p1 = Player("p1")
-      val p2 = Player("p2")
+      val p1 = Player(0, "p1")
+      val p2 = Player(0, "p2")
       val trick = Trick().play(r1, p1)
 
       "be won by highest card of leading suit" in {
@@ -81,9 +81,9 @@ class TrickSpec extends AnyWordSpec {
     }
 
     "playing trump cards" should {
-      val p1 = Player("p1")
-      val p2 = Player("p2")
-      val p3 = Player("p3")
+      val p1 = Player(0, "p1")
+      val p2 = Player(0, "p2")
+      val p3 = Player(0, "p3")
       val trick = Trick().play(r1, p1)
 
       "be won by highest trump card" in {
@@ -94,11 +94,11 @@ class TrickSpec extends AnyWordSpec {
     }
 
     "playing special cards" should {
-      val p1 = Player("p1")
-      val p2 = Player("p2")
-      val p3 = Player("p3")
-      val p4 = Player("p4")
-      val p5 = Player("p5")
+      val p1 = Player(0, "p1")
+      val p2 = Player(0, "p2")
+      val p3 = Player(0, "p3")
+      val p4 = Player(0, "p4")
+      val p5 = Player(0, "p5")
       val trick = Trick().play(r14, p1).play(b14, p2)
 
       "be won by skull king" in {
@@ -119,8 +119,8 @@ class TrickSpec extends AnyWordSpec {
     }
 
     "playing escape cards" should {
-      val p1 = Player("p1")
-      val p2 = Player("p2")
+      val p1 = Player(0, "p1")
+      val p2 = Player(0, "p2")
       val escapeTrick = Trick().play(e, p1)
 
       "be won by escape" in {
@@ -132,7 +132,7 @@ class TrickSpec extends AnyWordSpec {
         escapeTrick.play(m, p2).leadSuit should be(None)
       }
       "have first non-escape card as leading suit" in {
-        val p1 = Player("p1")
+        val p1 = Player(0, "p1")
         val t = escapeTrick.play(r1, p1)
         t.winner should be(Some(p1))
         t.leadSuit should be(Suit.Red)
@@ -141,39 +141,39 @@ class TrickSpec extends AnyWordSpec {
 
     "calculating bonus points" should {
       "give 10 points for each standard suit 14 card" in {
-        val p1 = Player("p1")
-        val p2 = Player("p2")
+        val p1 = Player(0, "p1")
+        val p2 = Player(0, "p2")
         Trick().play(r14, p1).calculateBonusPoints should be(10)
         Trick().play(r14, p1).play(y14, p2).calculateBonusPoints should be(20)
       }
       "give 20 points for trump 14 card" in {
-        val p1 = Player("p1")
+        val p1 = Player(0, "p1")
         Trick().play(b14, p1).calculateBonusPoints should be(20)
       }
       "give 40 points for skull king + mermaid" in {
-        val p1 = Player("p1")
-        val p2 = Player("p2")
+        val p1 = Player(0, "p1")
+        val p2 = Player(0, "p2")
         Trick().play(sk, p1).play(m, p2).calculateBonusPoints should be(40)
       }
       "give 30 points per pirate if skull king present" in {
-        val p1 = Player("p1")
-        val p2 = Player("p2")
-        val p3 = Player("p3")
+        val p1 = Player(0, "p1")
+        val p2 = Player(0, "p2")
+        val p3 = Player(0, "p3")
         Trick().play(sk, p1).play(p, p2).calculateBonusPoints should be(30)
         Trick().play(sk, p1).play(p, p2).play(p, p3).calculateBonusPoints should be(60)
       }
       "give 20 points per mermaid if at least one pirate present" in {
-        val p1 = Player("p1")
-        val p2 = Player("p2")
-        val p3 = Player("p3")
+        val p1 = Player(0, "p1")
+        val p2 = Player(0, "p2")
+        val p3 = Player(0, "p3")
         Trick().play(p, p1).play(m, p2).calculateBonusPoints should be(20)
         Trick().play(p, p1).play(m, p2).play(m, p3).calculateBonusPoints should be(40)
       }
       "only give mermaid bonus if mermaid + skull king + pirate present" in {
-        val p1 = Player("p1")
-        val p2 = Player("p2")
-        val p3 = Player("p3")
-        val p4 = Player("p4")
+        val p1 = Player(0, "p1")
+        val p2 = Player(0, "p2")
+        val p3 = Player(0, "p3")
+        val p4 = Player(0, "p4")
         Trick().play(p, p1).play(m, p2).play(sk, p3).calculateBonusPoints should be(40)
         Trick().play(p, p1).play(m, p2).play(sk, p3).play(m, p4).calculateBonusPoints should be(40)
       }
@@ -181,8 +181,8 @@ class TrickSpec extends AnyWordSpec {
 
     "serializing" should {
       "be serializable as json" in {
-        val p1 = Player("p1")
-        val p2 = Player("p2")
+        val p1 = Player(0, "p1")
+        val p2 = Player(0, "p2")
         val trick = Trick().play(r1, p1).play(r2, p2)
         val json = trick.toJson
 
@@ -209,8 +209,8 @@ class TrickSpec extends AnyWordSpec {
       }
 
       "be xml serializable" in {
-        val p1 = Player("p1")
-        val p2 = Player("p2")
+        val p1 = Player(0, "p1")
+        val p2 = Player(0, "p2")
         val trick = Trick().play(r1, p1).play(r2, p2)
         val xmlTrick = trick.toXml
 
