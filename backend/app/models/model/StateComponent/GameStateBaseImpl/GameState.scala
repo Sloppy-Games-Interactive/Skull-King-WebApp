@@ -65,7 +65,7 @@ case class GameState(
 
   private def setPrediction(player: IPlayer, newPrediction: Int): GameState = {
     val updatedPlayers = players.map {
-      case p if p.name == player.name => p.setPrediction(newPrediction)
+      case p if p.id == player.id => p.setPrediction(newPrediction)
       case p => p
     }
 
@@ -94,7 +94,7 @@ case class GameState(
         val (playedCard, updatedPlayer) = player.playCard(card)
         val updatedTrick = trick.play(playedCard, updatedPlayer)
         val updatedPlayers = players.map {
-          case p if p.name == updatedPlayer.name => updatedPlayer
+          case p if p.id == updatedPlayer.id => updatedPlayer
           case p => p
         }
 
@@ -123,7 +123,7 @@ case class GameState(
     val updatedPlayers = players.map { player =>
       val wonTricks = for {
         trick <- tricks
-        winner <- trick.winner if winner.name == player.name
+        winner <- trick.winner if winner.id == player.id
       } yield trick
 
       val numTricksWon = wonTricks.length
@@ -165,7 +165,7 @@ case class GameState(
   private def determineTrickStartPlayer(players: List[IPlayer], roundNumber: Int, lastWinner: Option[IPlayer]): List[IPlayer] = {
     lastWinner match {
       case Some(winner) => players.map {
-        case p if p.name == winner.name => p.setActive(true)
+        case p if p.id == winner.id => p.setActive(true)
         case p => p.setActive(false)
       }
       case None => determineRoundStartPlayer(players, roundNumber)
@@ -182,7 +182,7 @@ case class GameState(
   private def setNextPlayerActive(players: List[IPlayer]): List[IPlayer] = {
     val nextPlayer = nextActive(players)
     players.map {
-      case p if nextPlayer.isDefined && p.name == nextPlayer.get.name => p.setActive(true)
+      case p if nextPlayer.isDefined && p.id == nextPlayer.get.id => p.setActive(true)
       case p => p.setActive(false)
     }
   }
