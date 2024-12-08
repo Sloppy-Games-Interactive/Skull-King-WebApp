@@ -10,6 +10,17 @@ import play.api.libs.json.Json
 import java.util.UUID
 import scala.collection.mutable
 
+enum WebSocketEvent {
+  case Connected
+  case Disconnected
+  case State
+  case Play
+  case Join
+  case Leave
+  case Message
+  case Error
+}
+
 object WebSocketActor {
   def props(out: ActorRef, clients: mutable.Map[String, ActorRef]): Props = Props(new WebSocketActor(out, clients))
   case class SendMessage(message: String)
@@ -18,7 +29,6 @@ object WebSocketActor {
 class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) extends Actor with Observer {
   private val clientId: String = UUID.randomUUID().toString
   val controller: IController = summon[IController]
-
   controller.add(this)
 
   override def update(e: ObservableEvent): Unit = {
@@ -41,14 +51,17 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
   }
 
   def receive: Receive = {
-
     case msg: String if msg.equals("ping") =>
+      //println("WebSocketActor receive from clientid " + clientId)
       out ! "pong"
     case msg: String if msg.equals("state") =>
+      println("WebSocketActor receive from clientid " + clientId)
       out ! controller.state.toJson.toString
     case msg: String =>
       // Handle incoming messages and notify specific clients
+      println("WebSocketActor receive from clientid " + this.clientId)
       val clientId = extractClientId(msg)
+      // TODO: Extend for multiple clients
       clients.get(clientId).foreach(_ ! s"Message for $clientId: $msg")
   }
 
@@ -56,4 +69,5 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
     // Extract client ID from the message (implementation depends on your message format)
     msg.split(":")(0)
   }
+
 }

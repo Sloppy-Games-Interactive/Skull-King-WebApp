@@ -25,14 +25,4 @@ class WebSocketController @Inject()(cc: ControllerComponents)(implicit system: o
     val clientIds = clients.keys
     Ok(clientIds.mkString("\n"))
   }
-
-  def sendMessageToClient(clientId: String, message: String): Action[AnyContent] = Action {
-    clients.get(clientId) match {
-      case Some(clientRef) =>
-        clientRef ! WebSocketActor.SendMessage(message)
-        Ok(s"Message sent to client $clientId")
-      case None =>
-        NotFound(s"Client $clientId not found")
-    }
-  }
 }

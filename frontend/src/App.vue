@@ -12,6 +12,18 @@ useGameStateChangeHandler()
 
 const bgClass = computed(() => route.meta?.bg)
 
+enum WebSocketEvent {
+  CONNECTED = 'Connected',
+  DISCONNECTED = 'Disconnected',
+  STATE = 'State',
+  PLAY = 'Play',
+  JOIN = 'Join',
+  LEAVE = 'Leave',
+  Message = 'Message',
+  ERROR = 'Error',
+}
+
+
 const { status, data, send, open, close } = useWebSocket('ws://localhost:9000/ws', {
   heartbeat: {
     message: 'ping',
@@ -35,6 +47,8 @@ watch(data, (newData) => {
     return;
   }
 
+  console.log('newData', newData)
+
   // const parsedData = JSON.parse(newData);
   // if (parsedData.playerId) {
   //   parsedData.clientId = parsedData.playerId;
@@ -42,18 +56,32 @@ watch(data, (newData) => {
   //   delete parsedData.playerId;
   // }
 
-  gameState.updateGameState(new GameState(JSON.parse(newData)))
+  //gameState.updateGameState(new GameState(JSON.parse(newData)))
 })
 
 const message = () => {
   console.log('sending')
   send('state')
 }
+
+const test = () => {
+  console.log('test')
+  send('test')
+}
+
+const sendmsgtoclient = (client) => {
+  console.log('sending')
+  send(client + ":message")
+}
 </script>
 
 <template>
   <button @click="message">send</button>
-
+  <button @click="test">test</button>
+  <form>
+    <input type="text" v-model="client" />
+    <button @click="sendmsgtoclient(client)">send to client</button>
+  </form>
   {{data}}
 
   <div :class="bgClass" class="w-full h-full grid items-center">
