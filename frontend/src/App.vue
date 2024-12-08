@@ -4,6 +4,9 @@ import { computed, watch } from 'vue'
 import {useGameStateChangeHandler} from "@/composables/gamestate-change-handler";
 import { useWebSocket } from '@vueuse/core'
 import { useGameStateStore } from '@/core/stores/gameState'
+import type { JsonValue } from 'type-fest';
+import { v4 as uuid } from 'uuid';
+
 import { GameState } from '@/core/model/GameState'
 
 const route = useRoute()
@@ -23,6 +26,14 @@ enum WebSocketEvent {
   ERROR = 'Error',
 }
 
+function transportProtocol(event: WebSocketEvent, toClients: string[], fromClient: string, data: JsonValue): JsonValue {
+  return {
+    event: event.toString(),
+    toClients: toClients,
+    fromClient: fromClient,
+    data: data
+  };
+}
 
 const { status, data, send, open, close } = useWebSocket('ws://localhost:9000/ws', {
   heartbeat: {
@@ -47,7 +58,19 @@ watch(data, (newData) => {
     return;
   }
 
-  console.log('newData', newData)
+  console.log('newData:', newData)
+  const parsedData = JSON.parse(newData);
+
+  switch (parsedData.event) {
+    case WebSocketEvent.STATE:
+      gameState.updateGameState(new GameState(parsedData.data))
+      break;
+    case WebSocketEvent.Message:
+      console.log('message:', parsedData.data)
+      break;
+    default:
+      console.log('unknown event:', parsedData.event)
+  }
 
   // const parsedData = JSON.parse(newData);
   // if (parsedData.playerId) {
@@ -69,9 +92,11 @@ const test = () => {
   send('test')
 }
 
-const sendmsgtoclient = (client) => {
+const sendmsgtoclient = (client: string) => {
   console.log('sending')
-  send(client + ":message")
+  const data = JSON.stringify(transportProtocol(WebSocketEvent.Message, [client], 'server', 'hello') ?? {})
+  console.log(data)
+  send(data)
 }
 </script>
 
