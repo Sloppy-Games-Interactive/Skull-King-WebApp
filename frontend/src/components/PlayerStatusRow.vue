@@ -11,7 +11,7 @@ const props = defineProps<{
     <img
       :src="props.profilePicture"
       alt="Profile Picture"
-      class="w-24 h-24 rounded-full -ml-10 border-2 border-amber-600 absolute object-cover"
+      class="w-24 h-24 rounded-full -ml-10 border-2 border-amber-600 absolute object-cover bg-[#573324] border-solid"
     />
     <div class="ml-16 flex w-full">
       <p class="text-4xl font-semibold text-white content-center">{{ props.username }}</p>
