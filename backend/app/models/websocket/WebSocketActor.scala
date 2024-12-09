@@ -42,7 +42,8 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
 
   override def update(e: ObservableEvent): Unit = {
     e match {
-      case _ => clients.foreach(_._2 ! controller.state.toJson.toString)
+      case _ => clients.foreach(_._2 ! transportProtocol(WebSocketEvent.State, 
+        List(UUID.fromString(clientId)), UUID.fromString(clientId), controller.state.toJson).toString)
     }
   }
 
@@ -69,6 +70,9 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
       // TODO: fix as[String] to as[WebSocketEvent]
       val event = (jsonData \ "event").as[String]
       event match {
+        case event if event == WebSocketEvent.State.toString =>
+          out ! transportProtocol(WebSocketEvent.State, List(UUID.fromString(clientId)), 
+            UUID.fromString(clientId), controller.state.toJson).toString
 //        case "play" =>
 //          val data = (jsonData \ "data").as[JsValue]
 //          controller.play(data)

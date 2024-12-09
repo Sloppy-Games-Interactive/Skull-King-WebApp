@@ -26,7 +26,8 @@ enum WebSocketEvent {
   ERROR = 'Error',
 }
 
-function transportProtocol(event: WebSocketEvent, toClients: string[], fromClient: string, data: JsonValue): JsonValue {
+function transportProtocol(event: WebSocketEvent, toClients: string[] = [""],
+                           fromClient: string, data: JsonValue = {}): JsonValue {
   return {
     event: event.toString(),
     toClients: toClients,
@@ -58,18 +59,21 @@ watch(data, (newData) => {
     return;
   }
 
-  console.log('newData:', newData)
-  const parsedData = JSON.parse(newData);
+  transportProtocol(WebSocketEvent.STATE, [], 'server')
 
+  //console.log('newData:', newData)
+  const parsedData = JSON.parse(newData);
+  //console.log('parsedData:', parsedData)
   switch (parsedData.event) {
     case WebSocketEvent.STATE:
+      //console.log('state:', parsedData.data)
       gameState.updateGameState(new GameState(parsedData.data))
       break;
     case WebSocketEvent.Message:
-      console.log('message:', parsedData.data)
+      //console.log('message:', parsedData.data)
       break;
     default:
-      console.log('unknown event:', parsedData.event)
+      //console.log('unknown event:', parsedData.event)
   }
 
   // const parsedData = JSON.parse(newData);
@@ -87,28 +91,16 @@ const message = () => {
   send('state')
 }
 
-const test = () => {
-  console.log('test')
-  send('test')
-}
-
-const sendmsgtoclient = (client: string) => {
+const sendMsgToClient = (client: string) => {
   console.log('sending')
-  const data = JSON.stringify(transportProtocol(WebSocketEvent.Message, [client], 'server', 'hello') ?? {})
+  const data = JSON.stringify(transportProtocol(WebSocketEvent.Message,
+    [client], 'server', 'hello') ?? {})
   console.log(data)
   send(data)
 }
 </script>
 
 <template>
-  <button @click="message">send</button>
-  <button @click="test">test</button>
-  <form>
-    <input type="text" v-model="client" />
-    <button @click="sendmsgtoclient(client)">send to client</button>
-  </form>
-  {{data}}
-
   <div :class="bgClass" class="w-full h-full grid items-center">
     <RouterView />
   </div>
