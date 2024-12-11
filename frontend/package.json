@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.0.0",
   "private": true,
+  "main": "main.js",
   "scripts": {
     "build": "run-p type-check \"build-only {@}\" --",
     "test:unit": "vitest",
@@ -42,6 +43,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
     "autoprefixer": "^10.4.20",
+    "electron": "^33.2.1",
     "eslint": "^9.13.0",
     "eslint-plugin-playwright": "^2.0.0",
     "eslint-plugin-vue": "^9.29.0",
