@@ -8,6 +8,7 @@ import java.util.UUID
 
 case class Lobby(
   uuid: UUID = UUID.randomUUID(),
+  created: Long = System.currentTimeMillis(),
   // TODO: send modified gameState to specific players with only their hands
   gameState: IGameState = null,
   name: String = "",
