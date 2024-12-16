@@ -44,8 +44,9 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
   
   def newLobby = Action { implicit request: Request[AnyContent] =>
-    controller.newLobby
-    Ok(controller.state.toJson)
+    controller.newLobby("Lobby", 0)
+    // print last added lobby (maybe vulnerable to race conditions exploits)
+    Ok(controller.lobby.getLobby.toString)
   }
 
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
