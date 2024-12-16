@@ -1,6 +1,6 @@
 package de.htwg.se.skullking.modules
 
-import de.htwg.se.skullking.controller.ControllerComponent.IController
+import de.htwg.se.skullking.controller.ControllerComponent.{IController, ILobbyController}
 import de.htwg.se.skullking.model.CardComponent.CardBaseImpl.{CardFactory, JokerCard}
 import de.htwg.se.skullking.model.CardComponent.{ICardFactory, IJokerCard}
 import de.htwg.se.skullking.model.DeckComponent.DeckBaseImpl.{Deck, DeckFactory}
@@ -24,6 +24,8 @@ import models.model.LobbyComponent.LobbyBaseImpl.Lobby
 object Default {
   given IGameState = GameState()
   given IController = Controller(using summon[IGameState])
+  given ILobbyController = Controller(using summon[IGameState])
+
   given IHand = Hand()
   given IDeck = Deck()
   given IPlayerFactory = PlayerFactory
@@ -34,7 +36,6 @@ object Default {
   given IHandFactory = HandFactory
   given ITrickFactory = TrickFactory
   given IGameStateFactory = GameStateFactory
-  given ILobby = Lobby()
 
   given baseImplBonusPointsHandler: ITrickBonusPointsHandler = BaseImplTrickBonusPointsHandler()
 //  given funnyHahaBonusPointsHandler: ITrickBonusPointsHandler = FunnyHahaTrickBonusPointsHandler()

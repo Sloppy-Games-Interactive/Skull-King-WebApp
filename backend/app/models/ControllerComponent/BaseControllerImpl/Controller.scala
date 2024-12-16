@@ -11,9 +11,7 @@ import models.model.LobbyComponent.ILobby
 
 class Controller(using var state: IGameState) extends IController {
   val undoManager = UndoManager()
-  private var playerIDs: Int = 0
-  var lobby = null
-
+  
    def handleState(): Unit = {
     state.phase match {
       case Phase.PrepareGame if state.playerLimit == 0 => notifyObservers(ControllerEvents.PromptPlayerLimit)
@@ -23,6 +21,8 @@ class Controller(using var state: IGameState) extends IController {
       case Phase.EndGame => notifyObservers(ControllerEvents.PromptNewGame)
     }
   }
+
+  override def addPlayer(name: String): Unit = ???
 
    def undo: Unit = {
     undoManager.undoStep
@@ -35,11 +35,6 @@ class Controller(using var state: IGameState) extends IController {
     notifyObservers(ControllerEvents.Redo)
     handleState()
   }
-  
-   def newLobby(name: String, playerLimit: Int): Unit = {
-    println("This is the base controller: newLobby not implemented")
-
-  }
 
    def newGame: Unit = {
     undoManager.doStep(new NewGameCommand(this))
@@ -50,13 +45,6 @@ class Controller(using var state: IGameState) extends IController {
    def setPlayerLimit(limit: Int): Unit = {
     undoManager.doStep(new SetPlayerLimitCommand(this, limit))
     notifyObservers(ControllerEvents.PlayerLimitSet)
-    handleState()
-  }
-
-   def addPlayer(name: String): Unit = {
-    undoManager.doStep(new AddPlayerCommand(this, summon[IPlayerFactory].create(playerIDs, name)))
-    playerIDs += 1
-    notifyObservers(ControllerEvents.PlayerAdded)
     handleState()
   }
 

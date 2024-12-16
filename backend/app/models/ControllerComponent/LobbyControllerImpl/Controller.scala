@@ -7,11 +7,12 @@ import de.htwg.se.skullking.model.PlayerComponent.{IPlayer, IPlayerFactory}
 import de.htwg.se.skullking.model.StateComponent.{IGameState, Phase}
 import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.util.UndoManager
-import models.model.LobbyComponent.LobbyBaseImpl.Lobby
+import models.model.LobbyComponent.LobbyBaseImpl.{Lobby, LobbyObject}
 
-class Controller(using var state: IGameState) extends IController {
+import java.util.UUID
+
+class Controller(using var state: IGameState) extends ILobbyController {
   override val undoManager = UndoManager()
-  val lobby: Lobby = Lobby()
   private var playerIDs: Int = 0
 
   override def handleState(): Unit = {
@@ -42,13 +43,31 @@ class Controller(using var state: IGameState) extends IController {
     handleState()
   }
 
-  def newLobby(name: String, playerLimit: Int): Unit = {
+  def newLobby(uuid: UUID, playerLimit: Int): Unit = {
     //undoManager.doStep(new NewLobbyCommand(this))
-    lobby.createLobby(name, playerLimit)
+    LobbyObject.createLobby(uuid, playerLimit)
     notifyObservers(ControllerEvents.NewLobby)
     //print(state.toJson)
     handleState()
   }
+
+  override def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean = {
+    LobbyObject.getLobby(lobbyUuid)
+     match
+      case None => false
+      case Some(lobby) =>
+        if (lobby.players.length < lobby.playerLimit) {
+          lobby.joinLobby(summon[IPlayerFactory].create(playerUuid, player), lobbyUuid)
+          true
+        } else {
+          false
+        }
+    
+  }
+  
+  override def leaveLobby(player: IPlayer): Boolean = ???
+  
+  override def startGame: Unit = ???
   
   override def setPlayerLimit(limit: Int): Unit = {
     undoManager.doStep(new SetPlayerLimitCommand(this, limit))
@@ -56,12 +75,12 @@ class Controller(using var state: IGameState) extends IController {
     handleState()
   }
 
-  override def addPlayer(name: String): Unit = {
-    undoManager.doStep(new AddPlayerCommand(this, summon[IPlayerFactory].create(playerIDs, name)))
-    playerIDs += 1
-    notifyObservers(ControllerEvents.PlayerAdded)
-    handleState()
-  }
+  override def addPlayer(name: String): Unit = ??? //{
+//    undoManager.doStep(new AddPlayerCommand(this, summon[IPlayerFactory].create(, name)))
+//    playerIDs += 1
+//    notifyObservers(ControllerEvents.PlayerAdded)
+//    handleState()
+//  }
 
   override def playCard(player: IPlayer, card: ICard): Unit = {
     undoManager.doStep(new PlayCardCommand(this, player, card))

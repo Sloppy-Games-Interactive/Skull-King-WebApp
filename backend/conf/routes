@@ -6,23 +6,24 @@
 # An example controller showing a sample home page
 
 ## Test description
-GET      /                           controllers.GameController.index
+GET      /                           controllers.PlayController.index
 
-GET      /rules                      controllers.GameController.rules
-GET      /status                     controllers.GameController.status
+GET      /rules                      controllers.PlayController.rules
+GET      /status                     controllers.PlayController.status
 ## Play the game
-GET      /play                      controllers.GameController.play
+GET      /play                      controllers.PlayController.play
 ## Start a new game
-POST     /new-game                   controllers.GameController.newGame
-POST     /new-lobby                  controllers.GameController.newLobby
-POST     /set-player-limit           controllers.GameController.setPlayerLimit
+POST     /new-game                   controllers.PlayController.newGame
+POST     /new-lobby                  controllers.PlayController.newLobby
+POST     /set-player-limit           controllers.PlayController.setPlayerLimit
+POST     /join-lobby                 controllers.PlayController.joinLobby
 ## Set name of player
-POST     /set-player-name            controllers.GameController.setPlayerName
+#POST     /set-player-name            controllers.PlayController.setPlayerName
 ## Set prediction of player for the current round
-POST     /set-prediction             controllers.GameController.setPrediction
-POST     /play-card                  controllers.GameController.playCard
-POST     /save-game                  controllers.GameController.saveGame
-POST     /load-game                  controllers.GameController.loadGame
+POST     /set-prediction             controllers.PlayController.setPrediction
+POST     /play-card                  controllers.PlayController.playCard
+POST     /save-game                  controllers.PlayController.saveGame
+POST     /load-game                  controllers.PlayController.loadGame
 
 GET      /ws                         controllers.WebSocketController.socket
 

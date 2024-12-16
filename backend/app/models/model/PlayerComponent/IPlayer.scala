@@ -12,10 +12,9 @@ object PlayerDeserializer extends Deserializer[IPlayer] {
   private val PlayerFactory = summon[IPlayerFactory]
 
   override def fromXml(xml: Elem): IPlayer = {
-    val id = (xml \ "id").text.toInt
+    val id = UUID.fromString((xml \ "id").text)
     val name = (xml \ "name").text
     val profilePicUrl = (xml \ "profilePicUrl").text
-    val uuid = UUID.fromString((xml \ "uuid").text)
     val score = (xml \ "score").text.toInt
     val hand = HandDeserializer.fromXml((xml \ "Hand").head.asInstanceOf[Elem])
     val prediction = (xml \ "prediction").text match {
@@ -28,10 +27,9 @@ object PlayerDeserializer extends Deserializer[IPlayer] {
   }
 
   override def fromJson(json: JsObject): IPlayer = {
-    val id = (json \ "id").as[Int]
+    val id = UUID.fromString((json \ "id").as[String])
     val name = (json \ "name").as[String]
     val profilePicUrl = (json \ "profilePicUrl").as[String]
-    val uuid = UUID.fromString((json \ "uuid").as[String])
     val score = (json \ "score").as[Int]
     val hand = HandDeserializer.fromJson((json \ "hand").as[JsObject])
     val prediction = (json \ "prediction").asOpt[Int]
@@ -42,10 +40,9 @@ object PlayerDeserializer extends Deserializer[IPlayer] {
 }
 
 trait IPlayer extends Serializable{
-  val id: Int
+  val id: UUID
   val name: String
   val profilePicUrl: String
-  val uuid: UUID
   val hand: IHand
   val score: Int
   val prediction: Option[Int]
@@ -56,7 +53,6 @@ trait IPlayer extends Serializable{
       <id>{id}</id>
       <name>{name}</name>
       <profilePicUrl>{profilePicUrl}</profilePicUrl>
-      <uuid>{uuid}</uuid>
       <score>{score}</score>
       {hand.toXml}
       {prediction match {
@@ -72,7 +68,6 @@ trait IPlayer extends Serializable{
       "id" -> id,
       "name" -> name,
       "profilePicUrl" -> profilePicUrl,
-      "uuid" -> uuid.toString,
       "score" -> score,
       "hand" -> hand.toJson,
       "prediction" -> prediction,
@@ -100,5 +95,5 @@ trait IPlayer extends Serializable{
 }
 
 trait IPlayerFactory {
-  def create(id: Int, name: String): IPlayer
+  def create(uuid: UUID, name: String): IPlayer
 }

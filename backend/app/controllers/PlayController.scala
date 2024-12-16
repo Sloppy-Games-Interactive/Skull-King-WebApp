@@ -3,23 +3,24 @@ package controllers
 import javax.inject.*
 import play.api.*
 import play.api.mvc.*
-
 import de.htwg.se.skullking.modules.Default.given
-import de.htwg.se.skullking.controller.ControllerComponent.IController
+import de.htwg.se.skullking.controller.ControllerComponent.{IController, ILobbyController}
 import de.htwg.se.skullking.model.StateComponent.GameStateDeserializer
 import de.htwg.se.skullking.util.RoutesUtil
 import de.htwg.se.skullking.view.tui.{Parser, Tui}
+import models.model.LobbyComponent.LobbyBaseImpl.{Lobby, LobbyObject}
 import play.api.libs.json.JsObject
 
+import java.util.UUID
 import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
 
 
 @Singleton
-class GameController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
-  val controller: IController = summon[IController]
+class PlayController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+  val controller: ILobbyController = summon[ILobbyController]
   val tui = Tui(controller)
-
+  
   val parser = new Parser
 
   def index = Action {
@@ -44,11 +45,13 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
   }
   
   def newLobby = Action { implicit request: Request[AnyContent] =>
-    controller.newLobby("Lobby", 0)
+    val uuid = UUID.randomUUID()
+    controller.newLobby(uuid, 2)
     // print last added lobby (maybe vulnerable to race conditions exploits)
-    Ok(controller.lobby.getLobby.toString)
+    Ok(uuid.toString)
   }
-
+  
+  
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
     val limit = Try[Int](request.body.asJson.get("limit").as[Int])
 
@@ -63,8 +66,11 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
     }
   }
 
-  def setPlayerName = Action { implicit request: Request[AnyContent] =>
+  def joinLobby = Action { implicit request: Request[AnyContent] =>
     val name = Try[String](request.body.asJson.get("name").as[String])
+    val playerUuid = Try[String](request.body.asJson.get("playerUuid").as[String])
+    val lobbyUuid = Try[String](request.body.asJson.get("lobbyUuid").as[String])
+
 
     name match {
       case Success(n) => parser.parsePlayerName(n)
@@ -72,8 +78,23 @@ class GameController @Inject()(val controllerComponents: ControllerComponents) e
     } match {
       case None => BadRequest("Invalid name")
       case Some(n) =>
-        controller.addPlayer(n)
-        Ok(controller.state.toJson)
+        playerUuid match {
+          case Success(p) => parser.parsePlayerUUID(p) match {
+            case Some(uuid) => lobbyUuid match {
+              case Success(l) => parser.parsePlayerUUID(l) match {
+                case Some(lobbyUuid) => {
+                  controller.joinLobby(n, UUID.fromString(uuid), UUID.fromString(lobbyUuid))
+                  Ok(LobbyObject.getLobby(UUID.fromString(lobbyUuid)).get.gameState.toJson)
+                }
+
+                case None => BadRequest("Invalid lobby uuid")
+              }
+              case Failure(f) => BadRequest("Invalid lobby uuid")
+            }
+            case None => BadRequest("Invalid player uuid")
+          }
+          case Failure(f) => BadRequest("Invalid player uuid")
+        } 
     }
   }
 

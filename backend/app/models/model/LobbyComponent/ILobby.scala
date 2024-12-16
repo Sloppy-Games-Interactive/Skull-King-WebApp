@@ -1,19 +1,20 @@
 package models.model.LobbyComponent
 
+import de.htwg.se.skullking.model.PlayerComponent.IPlayer
 import de.htwg.se.skullking.model.PlayerComponent.PlayerBaseImpl.Player
+import de.htwg.se.skullking.model.StateComponent.IGameState
+import de.htwg.se.skullking.modules.Default.given
 
 import java.util.UUID
 import scala.collection.mutable
 
 trait ILobby {
-  def createLobby(name: String, playerLimit: Int): ILobby
-  def joinLobby(player: Player, uuid: UUID): Boolean
-  def leaveLobby(player: Player): Boolean
+  val players: List[IPlayer]
+  val playerLimit: Int
+  val gameState: IGameState
+  
+  def joinLobby(player: IPlayer, uuid: UUID): Boolean
+  def leaveLobby(player: IPlayer): Boolean
   def startGame: Unit
-  def getLobby: ILobby
 }
 
-object Lobby {
-  // TODO: HashMap not allowed for controller print, because its not a linked list
-  val lobbies: mutable.Map[UUID, ILobby] = mutable.Map()
-}

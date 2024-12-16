@@ -33,7 +33,7 @@ case class GameState(
 
   private def setPlayerLimit(n: Int): GameState = this.copy(playerLimit = n)
 
-  private def addPlayer(player: IPlayer): IGameState = {
+  override def addPlayer(player: IPlayer): IGameState = {
     val nextState = this.copy(players = players :+ player)
     if (players.length < playerLimit - 1) {
       nextState
@@ -192,6 +192,7 @@ case class GameState(
     players.lift(nextIndex)
   }
 }
+
 
 object GameStateFactory extends IGameStateFactory {
   def apply(

@@ -6,10 +6,11 @@ import de.htwg.se.skullking.model.StateComponent.IGameState
 import de.htwg.se.skullking.util.{Observable, ObservableEvent, UndoManager}
 import models.model.LobbyComponent.ILobby
 
+import java.util.UUID
+
 trait IController() extends Observable {
   var state: IGameState
   val undoManager: UndoManager
-  var lobby: ILobby
 
   def handleState(): Unit
 
@@ -18,8 +19,6 @@ trait IController() extends Observable {
   def redo: Unit
 
   def newGame: Unit
-  
-  def newLobby(name: String, playerLimit: Int): Unit
   
   def setPlayerLimit(limit: Int): Unit
   
@@ -34,6 +33,14 @@ trait IController() extends Observable {
   def loadGame(loadState: Option[IGameState] = None): Unit
   
   def quit: Unit
+}
+
+trait ILobbyController extends IController {
+  def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean
+  def leaveLobby(player: IPlayer): Boolean
+  def startGame: Unit
+  def newLobby(UUID: UUID, playerLimit: Int): Unit
+
 }
 
 enum ControllerEvents extends ObservableEvent {

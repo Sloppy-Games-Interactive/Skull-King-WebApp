@@ -111,6 +111,8 @@ trait IGameState extends Serializable{
       "tricks" -> tricks.map(_.toJson)
     )
   }
+  
+  def addPlayer(player: IPlayer): IGameState
 
   def handleEvent(event: GameStateEvent): IGameState
 
