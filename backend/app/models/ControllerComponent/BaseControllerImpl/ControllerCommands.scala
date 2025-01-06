@@ -8,62 +8,63 @@ import de.htwg.se.skullking.model.StateComponent.*
 import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.util.Command
 
-class AddPlayerCommand(val controller: IController, player: IPlayer) extends Command {
-  var memento: IGameState = controller.state
-  override def doStep: Unit = controller.state = controller.state.handleEvent(AddPlayerEvent(player))
-  override def undoStep: Unit = controller.state = memento
-  override def redoStep: Unit = {
-    memento = controller.state
+class AddPlayerCommand(val state: IGameState, player: IPlayer) extends Command {
+  var memento: IGameState = state
+  override def doStep: IGameState = state.handleEvent(AddPlayerEvent(player))
+  override def undoStep: IGameState = memento
+
+  override def redoStep: IGameState = {
+    memento = state
     doStep
   }
 }
 
-class NewGameCommand(val controller: IController) extends Command {
-  var memento: IGameState = controller.state
-  override def doStep: Unit = controller.state = summon[IGameState]
-  override def undoStep: Unit = controller.state = memento
-  override def redoStep: Unit = {
-    memento = controller.state
+class NewGameCommand(val state: IGameState) extends Command {
+  var memento: IGameState = state
+  override def doStep: IGameState = summon[IGameState]
+  override def undoStep: IGameState = memento
+  override def redoStep: IGameState = {
+    memento = state
     doStep
   }
 }
 
-class LoadGameCommand(val controller: IController, val gameState: IGameState) extends Command {
-  var memento: IGameState = controller.state
-  override def doStep: Unit = controller.state = gameState
-  override def undoStep: Unit = controller.state = memento
-  override def redoStep: Unit = {
-    memento = controller.state
+class LoadGameCommand(val state: IGameState, val gameState: IGameState) extends Command {
+  var memento: IGameState = state
+  override def doStep: IGameState = gameState
+  override def undoStep: IGameState = memento
+  override def redoStep: IGameState = {
+    memento = state
     doStep
   }
 }
 
-class PlayCardCommand(val controller: IController, player: IPlayer, card: ICard) extends Command {
-  var memento: IGameState = controller.state
-  override def doStep: Unit = controller.state = controller.state.handleEvent(PlayCardEvent(player, card))
-  override def undoStep: Unit = controller.state = memento
-  override def redoStep: Unit = {
-    memento = controller.state
+class PlayCardCommand(val state: IGameState, player: IPlayer, card: ICard) extends Command {
+  var memento: IGameState = state
+  override def doStep: IGameState = state.handleEvent(PlayCardEvent(player, card))
+  override def undoStep: IGameState = memento
+  override def redoStep: IGameState = {
+    memento = state
     doStep
   }
 }
 
-class SetPlayerLimitCommand(val controller: IController, limit: Int) extends Command {
-  var memento: IGameState = controller.state
-  override def doStep: Unit = controller.state = controller.state.handleEvent(SetPlayerLimitEvent(limit))
-  override def undoStep: Unit = controller.state = memento
-  override def redoStep: Unit = {
-    memento = controller.state
+class SetPlayerLimitCommand(val state: IGameState, limit: Int) extends Command {
+  var memento: IGameState = state
+  override def doStep: IGameState = state.handleEvent(SetPlayerLimitEvent(limit))
+  override def undoStep: IGameState = memento
+  override def redoStep: IGameState = {
+    memento = state
     doStep
   }
 }
 
-class SetPredictionCommand(val controller: IController, player: IPlayer, prediction: Int) extends Command {
-  var memento: IGameState = controller.state
-  override def doStep: Unit = controller.state = controller.state.handleEvent(SetPredictionEvent(player, prediction))
-  override def undoStep: Unit = controller.state = memento
-  override def redoStep: Unit = {
-    memento = controller.state
+class SetPredictionCommand(val state: IGameState, player: IPlayer, prediction: Int) extends Command {
+  var memento: IGameState = state
+  override def doStep: IGameState = state.handleEvent(SetPredictionEvent(player, prediction))
+  override def undoStep: IGameState = memento
+  override def redoStep: IGameState = {
+    memento = state
     doStep
   }
 }

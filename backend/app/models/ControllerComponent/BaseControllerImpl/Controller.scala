@@ -37,25 +37,25 @@ class Controller(using var state: IGameState) extends IController {
   }
 
    def newGame: Unit = {
-    undoManager.doStep(new NewGameCommand(this))
+    state = undoManager.doStep(new NewGameCommand(state))
     notifyObservers(ControllerEvents.NewGame)
     handleState()
   }
   
    def setPlayerLimit(limit: Int): Unit = {
-    undoManager.doStep(new SetPlayerLimitCommand(this, limit))
+    state = undoManager.doStep(new SetPlayerLimitCommand(state, limit))
     notifyObservers(ControllerEvents.PlayerLimitSet)
     handleState()
   }
 
    def playCard(player: IPlayer, card: ICard): Unit = {
-    undoManager.doStep(new PlayCardCommand(this, player, card))
+    state = undoManager.doStep(new PlayCardCommand(state, player, card))
     notifyObservers(ControllerEvents.CardPlayed)
     handleState()
   }
 
    def setPrediction(player: IPlayer, prediction: Int): Unit = {
-    undoManager.doStep(new SetPredictionCommand(this, player, prediction))
+    state = undoManager.doStep(new SetPredictionCommand(state, player, prediction))
     notifyObservers(ControllerEvents.PredictionSet)
     handleState()
   }
@@ -77,7 +77,7 @@ class Controller(using var state: IGameState) extends IController {
       case None => summon[IFileIO].load
     }
 
-    undoManager.doStep(new LoadGameCommand(this, stateToLoad))
+    state = undoManager.doStep(new LoadGameCommand(state, stateToLoad))
     notifyObservers(ControllerEvents.LoadGame)
     handleState()
   }

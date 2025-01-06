@@ -38,7 +38,6 @@ trait IController() extends Observable {
 trait ILobbyController extends IController {
   def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean
   def leaveLobby(player: IPlayer): Boolean
-  def startGame: Unit
   def newLobby(UUID: UUID, playerLimit: Int): Unit
 
 }
