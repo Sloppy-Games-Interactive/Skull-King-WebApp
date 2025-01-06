@@ -31,18 +31,6 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
   def rules = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.rules())
   }
-
-  def status = Action { implicit request: Request[AnyContent] =>
-    request.contentType match {
-      case Some("application/json") => Ok(controller.state.toJson)
-      case _ => Ok(views.html.status(controller.state))
-    }
-  }
-
-  def newGame = Action { implicit request: Request[AnyContent] =>
-    controller.newGame
-    Ok(controller.state.toJson)
-  }
   
   def newLobby = Action { implicit request: Request[AnyContent] =>
     val uuid = UUID.randomUUID()
@@ -54,23 +42,36 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
   
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
     val limit = Try[Int](request.body.asJson.get("limit").as[Int])
+    val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])
 
-    limit match {
-      case Success(l) => parser.parsePlayerLimit(l)
-      case Failure(f) => None
-    } match {
-      case None => BadRequest("Invalid limit")
-      case Some(l) =>
-        controller.setPlayerLimit(l)
-        Ok(controller.state.toJson)
-    }
+    uuid match
+      case Success(u) => LobbyObject.getLobby(u) match {
+        case Some(lobby) => {
+          limit match {
+            case Success(l) => parser.parsePlayerLimit(l)
+            case Failure(f) => None
+          } match {
+            case None => BadRequest("Invalid limit")
+            case Some(l) =>
+              val state = controller.setPlayerLimit(lobby.gameState, l)
+              val newLobby = lobby.setGameState(state)
+              LobbyObject.setLobby(u, newLobby)
+              Ok(state.toJson)
+          }
+        }
+        case None => BadRequest("Invalid lobby uuid")
+      }
+      case Failure(f) => BadRequest("Invalid lobby uuid")
+
+
   }
 
+  // TODO: Dont change phase automatically when player limit is reached
+  // TODO: Adding two players with same name and uuid breaks state
   def joinLobby = Action { implicit request: Request[AnyContent] =>
     val name = Try[String](request.body.asJson.get("name").as[String])
     val playerUuid = Try[String](request.body.asJson.get("playerUuid").as[String])
     val lobbyUuid = Try[String](request.body.asJson.get("lobbyUuid").as[String])
-
 
     name match {
       case Success(n) => parser.parsePlayerName(n)
@@ -100,55 +101,60 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
 
   def setPrediction = Action { implicit request: Request[AnyContent] =>
     val prediction = Try[Int](request.body.asJson.get("prediction").as[Int])
+    val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])
 
-    controller.state.activePlayer match {
-      case None => BadRequest("No active player")
-      case Some(player) =>
-        prediction match {
-          case Success(p) => parser.parsePrediction(p, controller.state.round)
-          case Failure(f) => None
-        } match {
-          case None => BadRequest("Invalid prediction")
-          case Some(pred) =>
-            controller.setPrediction(player, pred)
-            Ok(controller.state.toJson)
+    uuid match
+      case Success(u) => LobbyObject.getLobby(u) match {
+        case Some(lobby) => {
+          lobby.gameState.activePlayer match {
+            case None => BadRequest("No active player")
+            case Some(player) =>
+              prediction match {
+                case Success(p) => parser.parsePrediction(p, lobby.gameState.round)
+                case Failure(f) => None
+              } match {
+                case None => BadRequest("Invalid prediction")
+                case Some(pred) =>
+                  val nextState = controller.setPrediction(lobby.gameState, player, pred)
+                  LobbyObject.setLobby(u, lobby.setGameState(nextState))
+                  Ok(nextState.toJson)
+              }
+          }
         }
-    }
+        case None => BadRequest("Invalid lobby uuid")
+      }
+      case Failure(f) => BadRequest("Invalid lobby uuid")
+
+
   }
 
   def playCard = Action { implicit request: Request[AnyContent] =>
     val card = Try[JsObject](request.body.asJson.get("card").as[JsObject])
-    controller.state.activePlayer match {
-      case None => BadRequest("No active player")
-      case Some(player) =>
-        card match {
-          case Success(c) => parser.parseCardPlay(c)
-          case Failure(f) => None
-        } match {
-          case None => BadRequest("Invalid card")
-          case Some(c) =>
-            controller.playCard(player, c)
-            Ok(controller.state.toJson)
+    val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])
+
+    uuid match
+      case Success(u) => LobbyObject.getLobby(u) match {
+        case Some(lobby) => {
+          lobby.gameState.activePlayer match {
+            case None => BadRequest("No active player")
+            case Some(player) =>
+              card match {
+                case Success(c) => parser.parseCardPlay(c)
+                case Failure(f) => None
+              } match {
+                case None => BadRequest("Invalid card")
+                case Some(c) =>
+                  val nextState = controller.playCard(lobby.gameState, player, c)
+                  LobbyObject.setLobby(u, lobby.setGameState(nextState))
+                  Ok(nextState.toJson)
+              }
+          }
         }
-    }
-  }
+        case None => BadRequest("Invalid lobby uuid")
+      }
+      case Failure(f) => BadRequest("Invalid lobby uuid")
 
-  def loadGame = Action { implicit request: Request[AnyContent] =>
-    // TODO load from token
-    val stateJson = request.body.asJson
 
-    val stateToLoad = stateJson match
-      case Some(json) => Some(GameStateDeserializer.fromJson(json.as[JsObject]))
-      case None => None
-
-    controller.loadGame(stateToLoad)
-    Ok(controller.state.toJson)
-  }
-  
-  def saveGame = Action { implicit request: Request[AnyContent] =>
-    // TODO save with token
-    controller.saveGame()
-    Ok(controller.state.toJson)
   }
 
   def play = Action { implicit request: Request[AnyContent] =>

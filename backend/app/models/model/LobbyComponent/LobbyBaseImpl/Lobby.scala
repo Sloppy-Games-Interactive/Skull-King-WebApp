@@ -23,6 +23,10 @@ object LobbyObject {
     lobbies += (newLobby.uuid -> newLobby)
     newLobby
   }
+  
+  def setLobby(uuid: UUID, lobby: ILobby): Unit = {
+    lobbies += (uuid -> lobby)
+  }
 }
 
 case class Lobby(
@@ -68,5 +72,7 @@ case class Lobby(
     this.copy(started = true)
   }
 
-  private def setPlayerLimit(n: Int): Lobby = this.copy(playerLimit = n)
+  private def setPlayerLimit(n: Int): ILobby = this.copy(playerLimit = n)
+  
+  def setGameState (state: IGameState): ILobby = this.copy(gameState = state)
 }

@@ -10,6 +10,7 @@ import de.htwg.se.skullking.controller.ControllerComponent.BaseControllerImpl.Co
 
 import java.util.UUID
 
+// TODO: Remove this class and use the LobbyObject directly
 class Controller(using state: IGameState) extends BaseController with ILobbyController {
   override val undoManager = UndoManager()
   private var playerIDs: Int = 0

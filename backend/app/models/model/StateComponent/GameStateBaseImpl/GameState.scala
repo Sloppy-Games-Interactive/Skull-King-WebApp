@@ -18,7 +18,7 @@ case class GameState(
   lastTrickWinner: Option[IPlayer] = None
 ) extends IGameState {
   def handleEvent(event: GameStateEvent): IGameState = event match {
-    case SetPlayerLimitEvent(n) if phase == Phase.PrepareGame && players.isEmpty => setPlayerLimit(n)
+    case SetPlayerLimitEvent(n) if phase == Phase.PrepareGame && (players.length <= n) => setPlayerLimit(n)
     case AddPlayerEvent(player) if phase == Phase.PrepareGame && playerLimit > 0 => addPlayer(player)
     case SetPredictionEvent(player, prediction) if phase == Phase.PrepareTricks => setPrediction(player, prediction)
     case PlayCardEvent(player, card) if phase == Phase.PlayTricks => playCard(player, card)

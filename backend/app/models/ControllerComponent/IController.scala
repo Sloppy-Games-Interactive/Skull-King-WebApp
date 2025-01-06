@@ -14,19 +14,19 @@ trait IController() extends Observable {
 
   def handleState(state: IGameState): Unit
 
-  def newGame: Unit
+  def newGame: IGameState
   
-  def setPlayerLimit(limit: Int): Unit
+  def setPlayerLimit(state: IGameState, limit: Int): IGameState
   
-  def addPlayer(name: String): Unit
+  def addPlayer(state: IGameState, name: String): IGameState
 
-  def playCard(player: IPlayer, card: ICard): Unit
+  def playCard(state: IGameState, player: IPlayer, card: ICard): IGameState
   
-  def setPrediction(player: IPlayer, prediction: Int): Unit
+  def setPrediction(state: IGameState, player: IPlayer, prediction: Int): IGameState
   
   def saveGame(saveState: Option[IGameState] = None): Unit
   
-  def loadGame(loadState: Option[IGameState] = None): Unit
+  def loadGame(loadState: Option[IGameState] = None): IGameState
   
   def quit: Unit
 }

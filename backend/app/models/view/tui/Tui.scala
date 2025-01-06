@@ -33,11 +33,11 @@ class Tui(controller: IController) extends Observer {
     println(row.map(_.toString).mkString(" | "))
   }
 
-  def printStatusScreen(): Unit = {
-    val players = controller.state.players
-    val round = controller.state.round
-    val phase = controller.state.phase
-    val currentTrick = controller.state.activeTrick
+  def printStatusScreen(state: IGameState): Unit = {
+    val players = state.players
+    val round = state.round
+    val phase = state.phase
+    val currentTrick = state.activeTrick
 
     // print players in table format, columns for player name, prediction, score, and hand
     val playerTable = Seq("Name", "Prediction", "Score", "Hand", "Active") +: players.map { player =>
@@ -101,9 +101,13 @@ class Tui(controller: IController) extends Observer {
 
       case ControllerEvents.LoadGame => {
         println("Game loaded.")
-        printStatusScreen()
+        state match
+          case Some(state) => printStatusScreen(state)
+          case None =>
       }
-      case _ => printStatusScreen()
+      case _ => state match
+        case Some(state) => printStatusScreen(state)
+        case None =>
     }
   }
 }

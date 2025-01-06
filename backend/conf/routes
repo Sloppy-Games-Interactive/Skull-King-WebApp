@@ -9,11 +9,9 @@
 GET      /                           controllers.PlayController.index
 
 GET      /rules                      controllers.PlayController.rules
-GET      /status                     controllers.PlayController.status
 ## Play the game
 GET      /play                      controllers.PlayController.play
 ## Start a new game
-POST     /new-game                   controllers.PlayController.newGame
 POST     /new-lobby                  controllers.PlayController.newLobby
 POST     /set-player-limit           controllers.PlayController.setPlayerLimit
 POST     /join-lobby                 controllers.PlayController.joinLobby
@@ -22,8 +20,6 @@ POST     /join-lobby                 controllers.PlayController.joinLobby
 ## Set prediction of player for the current round
 POST     /set-prediction             controllers.PlayController.setPrediction
 POST     /play-card                  controllers.PlayController.playCard
-POST     /save-game                  controllers.PlayController.saveGame
-POST     /load-game                  controllers.PlayController.loadGame
 
 GET      /ws                         controllers.WebSocketController.socket
 

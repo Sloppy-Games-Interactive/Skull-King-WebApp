@@ -19,24 +19,16 @@ class AddPlayerCommand(val state: IGameState, player: IPlayer) extends Command {
   }
 }
 
-class NewGameCommand(val state: IGameState) extends Command {
-  var memento: IGameState = state
+class NewGameCommand extends Command {
   override def doStep: IGameState = summon[IGameState]
-  override def undoStep: IGameState = memento
-  override def redoStep: IGameState = {
-    memento = state
-    doStep
-  }
+  override def undoStep: IGameState = ???
+  override def redoStep: IGameState = ???
 }
 
-class LoadGameCommand(val state: IGameState, val gameState: IGameState) extends Command {
-  var memento: IGameState = state
-  override def doStep: IGameState = gameState
-  override def undoStep: IGameState = memento
-  override def redoStep: IGameState = {
-    memento = state
-    doStep
-  }
+class LoadGameCommand(val state: IGameState) extends Command {
+  override def doStep: IGameState = state
+  override def undoStep: IGameState = ???
+  override def redoStep: IGameState = ???
 }
 
 class PlayCardCommand(val state: IGameState, player: IPlayer, card: ICard) extends Command {

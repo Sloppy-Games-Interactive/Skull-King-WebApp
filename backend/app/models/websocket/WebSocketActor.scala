@@ -6,6 +6,7 @@ import de.htwg.se.skullking.util.{ObservableEvent, Observer}
 import org.apache.pekko.actor.{Actor, ActorRef, Props}
 import org.apache.pekko.stream.Materializer
 import de.htwg.se.skullking.modules.Default.given
+import models.model.LobbyComponent.LobbyBaseImpl.LobbyObject
 import play.api.libs.json.{Format, JsError, JsString, JsSuccess, JsValue, Json}
 
 import java.util.UUID
@@ -43,7 +44,7 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
 
   override def update(e: ObservableEvent, state: Option[IGameState] = None): Unit = {
     e match {
-      case _ => 
+      case _ =>
         state match
           case Some(state) => clients.foreach(_._2 ! transportProtocol(WebSocketEvent.State,
             List(UUID.fromString(clientId)), UUID.fromString(clientId), state.toJson).toString)
@@ -71,32 +72,46 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
       println(s"Received message from client $clientId: " + msg)
       // TODO: Implement error handling if for example [object Object] is sent
       val jsonData = Json.parse(msg)
-      // TODO: fix as[String] to as[WebSocketEvent]
-      val event = (jsonData \ "event").as[String]
-      event match {
-        case event if event == WebSocketEvent.State.toString =>
-          out ! transportProtocol(WebSocketEvent.State, List(UUID.fromString(clientId)), 
-            UUID.fromString(clientId), controller.state.toJson).toString
-//        case "play" =>
-//          val data = (jsonData \ "data").as[JsValue]
-//          controller.play(data)
-//        case "join" =>
-//          val data = (jsonData \ "data").as[JsValue]
-//          controller.join(data)
-//        case "leave" =>
-//          val data = (jsonData \ "data").as[JsValue]
-//          controller.leave(data)
-          // TODO: use WebSocketEvent if fixed (not string)
-        case event if event == WebSocketEvent.Message.toString =>
-          println(s"Received message from client $clientId")
-          val data = (jsonData \ "data").as[JsValue]
-          println(data)
-          val client = (jsonData \ "toClients").as[List[UUID]]
-          // TODO: allow for multiple clients not just the first one
-          clients.get(client.head.toString).foreach(_ ! transportProtocol(WebSocketEvent.Message, client, UUID.fromString(clientId), data).toString)
+      val lobbyUUID = (jsonData \ "lobbyUuid").as[UUID]
+      
+      lobbyUUID match {
+        case lobbyUUID if lobbyUUID != null =>
+          LobbyObject.getLobby(lobbyUUID) match {
+            case Some(lobby) =>
+              val state = lobby.gameState
+              // TODO: fix as[String] to as[WebSocketEvent]
+              val event = (jsonData \ "event").as[String]
+              event match {
+                case event if event == WebSocketEvent.State.toString =>
+                  out ! transportProtocol(WebSocketEvent.State, List(UUID.fromString(clientId)),
+                    UUID.fromString(clientId), state.toJson).toString
+                //        case "play" =>
+                //          val data = (jsonData \ "data").as[JsValue]
+                //          controller.play(data)
+                //        case "join" =>
+                //          val data = (jsonData \ "data").as[JsValue]
+                //          controller.join(data)
+                //        case "leave" =>
+                //          val data = (jsonData \ "data").as[JsValue]
+                //          controller.leave(data)
+                // TODO: use WebSocketEvent if fixed (not string)
+                case event if event == WebSocketEvent.Message.toString =>
+                  println(s"Received message from client $clientId")
+                  val data = (jsonData \ "data").as[JsValue]
+                  println(data)
+                  val client = (jsonData \ "toClients").as[List[UUID]]
+                  // TODO: allow for multiple clients not just the first one
+                  clients.get(client.head.toString).foreach(_ ! transportProtocol(WebSocketEvent.Message, client, UUID.fromString(clientId), data).toString)
 
+                case _ =>
+                  out ! Json.obj("error" -> "Invalid event").toString
+              }
+              
+            case None =>
+              out ! Json.obj("error" -> "Invalid lobby uuid").toString
+          }
         case _ =>
-          out ! Json.obj("error" -> "Invalid event").toString
+          out ! Json.obj("error" -> "Invalid lobby uuid").toString
       }
   }
 

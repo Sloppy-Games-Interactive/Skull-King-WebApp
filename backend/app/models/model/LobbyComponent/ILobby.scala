@@ -16,5 +16,6 @@ trait ILobby {
   def joinLobby(player: IPlayer, uuid: UUID): Boolean
   def leaveLobby(player: IPlayer): Boolean
   def startGame: Unit
+  def setGameState(state: IGameState): ILobby
 }
 
