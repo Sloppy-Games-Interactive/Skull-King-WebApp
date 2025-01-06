@@ -50,7 +50,7 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
   override def preStart(): Unit = {
     clients += clientId -> out
     val clientIdJson = Json.obj("playerId" -> clientId)
-    out ! clientIdJson.toString
+    out ! transportProtocol(WebSocketEvent.Connected, List(UUID.fromString(clientId)), UUID.fromString(clientId), clientIdJson).toString
     println(s"Connected with client $clientId")
     //out ! s"Connected with client $clientId"
   }
@@ -82,7 +82,7 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
 //        case "leave" =>
 //          val data = (jsonData \ "data").as[JsValue]
 //          controller.leave(data)
-          // TODO: user WebSocketEvent if fixed (not string)
+          // TODO: use WebSocketEvent if fixed (not string)
         case event if event == WebSocketEvent.Message.toString =>
           println(s"Received message from client $clientId")
           val data = (jsonData \ "data").as[JsValue]

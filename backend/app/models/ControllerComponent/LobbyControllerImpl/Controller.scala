@@ -1,4 +1,4 @@
-package de.htwg.se.skullking.controller.ControllerComponent.BaseControllerImpl
+package models.ControllerComponent.LobbyControllerImpl
 
 import de.htwg.se.skullking.controller.ControllerComponent.*
 import de.htwg.se.skullking.model.CardComponent.ICard
@@ -7,14 +7,14 @@ import de.htwg.se.skullking.model.PlayerComponent.{IPlayer, IPlayerFactory}
 import de.htwg.se.skullking.model.StateComponent.{IGameState, Phase}
 import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.util.UndoManager
-import models.model.LobbyComponent.ILobby
+import models.model.LobbyComponent.LobbyBaseImpl.Lobby
 
 class Controller(using var state: IGameState) extends IController {
-  val undoManager = UndoManager()
+  override val undoManager = UndoManager()
+  val lobby: Lobby = Lobby()
   private var playerIDs: Int = 0
-  var lobby = null
 
-   def handleState(): Unit = {
+  override def handleState(): Unit = {
     state.phase match {
       case Phase.PrepareGame if state.playerLimit == 0 => notifyObservers(ControllerEvents.PromptPlayerLimit)
       case Phase.PrepareGame => notifyObservers(ControllerEvents.PromptPlayerName)
@@ -24,55 +24,58 @@ class Controller(using var state: IGameState) extends IController {
     }
   }
 
-   def undo: Unit = {
+  override def undo: Unit = {
     undoManager.undoStep
     notifyObservers(ControllerEvents.Undo)
     handleState()
   }
 
-   def redo: Unit = {
+  override def redo: Unit = {
     undoManager.redoStep
     notifyObservers(ControllerEvents.Redo)
     handleState()
   }
-  
-   def newLobby(name: String, playerLimit: Int): Unit = {
-    println("This is the base controller: newLobby not implemented")
 
-  }
-
-   def newGame: Unit = {
+  override def newGame: Unit = {
     undoManager.doStep(new NewGameCommand(this))
     notifyObservers(ControllerEvents.NewGame)
     handleState()
   }
+
+  def newLobby(name: String, playerLimit: Int): Unit = {
+    //undoManager.doStep(new NewLobbyCommand(this))
+    lobby.createLobby(name, playerLimit)
+    notifyObservers(ControllerEvents.NewLobby)
+    //print(state.toJson)
+    handleState()
+  }
   
-   def setPlayerLimit(limit: Int): Unit = {
+  override def setPlayerLimit(limit: Int): Unit = {
     undoManager.doStep(new SetPlayerLimitCommand(this, limit))
     notifyObservers(ControllerEvents.PlayerLimitSet)
     handleState()
   }
 
-   def addPlayer(name: String): Unit = {
+  override def addPlayer(name: String): Unit = {
     undoManager.doStep(new AddPlayerCommand(this, summon[IPlayerFactory].create(playerIDs, name)))
     playerIDs += 1
     notifyObservers(ControllerEvents.PlayerAdded)
     handleState()
   }
 
-   def playCard(player: IPlayer, card: ICard): Unit = {
+  override def playCard(player: IPlayer, card: ICard): Unit = {
     undoManager.doStep(new PlayCardCommand(this, player, card))
     notifyObservers(ControllerEvents.CardPlayed)
     handleState()
   }
 
-   def setPrediction(player: IPlayer, prediction: Int): Unit = {
+  override def setPrediction(player: IPlayer, prediction: Int): Unit = {
     undoManager.doStep(new SetPredictionCommand(this, player, prediction))
     notifyObservers(ControllerEvents.PredictionSet)
     handleState()
   }
 
-   def saveGame(saveState: Option[IGameState] = None): Unit = {
+  override def saveGame(saveState: Option[IGameState] = None): Unit = {
     val stateToSave = saveState match {
       case Some(s) => s
       case None => state
@@ -83,7 +86,7 @@ class Controller(using var state: IGameState) extends IController {
     handleState()
   }
   
-   def loadGame(loadState: Option[IGameState] = None): Unit = {
+  override def loadGame(loadState: Option[IGameState] = None): Unit = {
     val stateToLoad = loadState match {
       case Some(s) => s
       case None => summon[IFileIO].load
@@ -94,7 +97,7 @@ class Controller(using var state: IGameState) extends IController {
     handleState()
   }
   
-   def quit: Unit = {
+  override def quit: Unit = {
     saveGame()
     notifyObservers(ControllerEvents.Quit)
   }

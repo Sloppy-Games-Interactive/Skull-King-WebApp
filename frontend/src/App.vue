@@ -65,6 +65,11 @@ watch(data, (newData) => {
   const parsedData = JSON.parse(newData);
   //console.log('parsedData:', parsedData)
   switch (parsedData.event) {
+    case WebSocketEvent.CONNECTED:
+      console.log('connected:', parsedData.data)
+      // save playerId in in session cookie
+      document.cookie = `playerId=${parsedData.data.playerId}`
+      break;
     case WebSocketEvent.STATE:
       //console.log('state:', parsedData.data)
       gameState.updateGameState(new GameState(parsedData.data))
