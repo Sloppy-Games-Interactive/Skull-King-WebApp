@@ -1,13 +1,11 @@
 package models.ControllerComponent.LobbyControllerImpl
 
 import de.htwg.se.skullking.controller.ControllerComponent.*
-import de.htwg.se.skullking.model.CardComponent.ICard
-import de.htwg.se.skullking.model.FileIOComponent.IFileIO
 import de.htwg.se.skullking.model.PlayerComponent.{IPlayer, IPlayerFactory}
 import de.htwg.se.skullking.model.StateComponent.{IGameState, Phase}
 import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.util.UndoManager
-import models.model.LobbyComponent.LobbyBaseImpl.{Lobby, LobbyObject}
+import models.model.LobbyComponent.LobbyBaseImpl.LobbyObject
 import de.htwg.se.skullking.controller.ControllerComponent.BaseControllerImpl.Controller as BaseController
 
 import java.util.UUID
@@ -21,7 +19,7 @@ class Controller(using state: IGameState) extends BaseController with ILobbyCont
     LobbyObject.createLobby(uuid, playerLimit)
     notifyObservers(ControllerEvents.NewLobby)
     //print(state.toJson)
-    handleState()
+    handleState(state)
   }
 
   override def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean = {

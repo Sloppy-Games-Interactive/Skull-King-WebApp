@@ -12,52 +12,40 @@ import models.model.LobbyComponent.ILobby
 class Controller(using var state: IGameState) extends IController {
   val undoManager = UndoManager()
   
-   def handleState(): Unit = {
+   def handleState(state: IGameState): Unit = {
     state.phase match {
-      case Phase.PrepareGame if state.playerLimit == 0 => notifyObservers(ControllerEvents.PromptPlayerLimit)
-      case Phase.PrepareGame => notifyObservers(ControllerEvents.PromptPlayerName)
-      case Phase.PrepareTricks => notifyObservers(ControllerEvents.PromptPrediction)
-      case Phase.PlayTricks => notifyObservers(ControllerEvents.PromptCardPlay)
-      case Phase.EndGame => notifyObservers(ControllerEvents.PromptNewGame)
+      case Phase.PrepareGame if state.playerLimit == 0 => notifyObservers(ControllerEvents.PromptPlayerLimit, Option(state))
+      case Phase.PrepareGame => notifyObservers(ControllerEvents.PromptPlayerName, Option(state))
+      case Phase.PrepareTricks => notifyObservers(ControllerEvents.PromptPrediction, Option(state))
+      case Phase.PlayTricks => notifyObservers(ControllerEvents.PromptCardPlay, Option(state))
+      case Phase.EndGame => notifyObservers(ControllerEvents.PromptNewGame, Option(state))
     }
   }
 
   override def addPlayer(name: String): Unit = ???
 
-   def undo: Unit = {
-    undoManager.undoStep
-    notifyObservers(ControllerEvents.Undo)
-    handleState()
-  }
-
-   def redo: Unit = {
-    undoManager.redoStep
-    notifyObservers(ControllerEvents.Redo)
-    handleState()
-  }
-
    def newGame: Unit = {
     state = undoManager.doStep(new NewGameCommand(state))
-    notifyObservers(ControllerEvents.NewGame)
-    handleState()
+    notifyObservers(ControllerEvents.NewGame, Option(state))
+    handleState(state)
   }
   
    def setPlayerLimit(limit: Int): Unit = {
     state = undoManager.doStep(new SetPlayerLimitCommand(state, limit))
-    notifyObservers(ControllerEvents.PlayerLimitSet)
-    handleState()
+    notifyObservers(ControllerEvents.PlayerLimitSet, Option(state))
+    handleState(state)
   }
 
    def playCard(player: IPlayer, card: ICard): Unit = {
     state = undoManager.doStep(new PlayCardCommand(state, player, card))
-    notifyObservers(ControllerEvents.CardPlayed)
-    handleState()
+    notifyObservers(ControllerEvents.CardPlayed, Option(state))
+    handleState(state)
   }
 
    def setPrediction(player: IPlayer, prediction: Int): Unit = {
     state = undoManager.doStep(new SetPredictionCommand(state, player, prediction))
-    notifyObservers(ControllerEvents.PredictionSet)
-    handleState()
+    notifyObservers(ControllerEvents.PredictionSet, Option(state))
+    handleState(state)
   }
 
    def saveGame(saveState: Option[IGameState] = None): Unit = {
@@ -67,8 +55,8 @@ class Controller(using var state: IGameState) extends IController {
     }
     
     summon[IFileIO].save(stateToSave)
-    notifyObservers(ControllerEvents.SaveGame)
-    handleState()
+    notifyObservers(ControllerEvents.SaveGame, Option(state))
+    handleState(state)
   }
   
    def loadGame(loadState: Option[IGameState] = None): Unit = {
@@ -78,8 +66,8 @@ class Controller(using var state: IGameState) extends IController {
     }
 
     state = undoManager.doStep(new LoadGameCommand(state, stateToLoad))
-    notifyObservers(ControllerEvents.LoadGame)
-    handleState()
+    notifyObservers(ControllerEvents.LoadGame, Option(state))
+    handleState(state)
   }
   
    def quit: Unit = {

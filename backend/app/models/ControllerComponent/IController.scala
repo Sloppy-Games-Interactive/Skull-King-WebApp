@@ -12,11 +12,7 @@ trait IController() extends Observable {
   var state: IGameState
   val undoManager: UndoManager
 
-  def handleState(): Unit
-
-  def undo: Unit
-
-  def redo: Unit
+  def handleState(state: IGameState): Unit
 
   def newGame: Unit
   
@@ -42,7 +38,7 @@ trait ILobbyController extends IController {
 
 }
 
-enum ControllerEvents extends ObservableEvent {
+enum ControllerEvents extends ObservableEvent() {
   case NewGame
   case NewLobby
   case PromptPlayerLimit

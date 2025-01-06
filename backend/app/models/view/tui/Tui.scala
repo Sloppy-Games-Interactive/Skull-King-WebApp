@@ -2,6 +2,7 @@ package de.htwg.se.skullking.view.tui
 
 import de.htwg.se.skullking.controller.ControllerComponent.{ControllerEvents, IController}
 import de.htwg.se.skullking.model.PlayerComponent.IPlayer
+import de.htwg.se.skullking.model.StateComponent.IGameState
 import de.htwg.se.skullking.util.{ObservableEvent, Observer}
 
 import scala.util.{Success, Try}
@@ -59,7 +60,7 @@ class Tui(controller: IController) extends Observer {
     println()
   }
 
-  override def update(e: ObservableEvent): Unit = {
+  override def update(e: ObservableEvent, state: Option[IGameState] = None): Unit = {
     e match {
       case ControllerEvents.Quit => {
         println("Goodbye!")
@@ -74,22 +75,28 @@ class Tui(controller: IController) extends Observer {
         prompter.promptPlayerName
       }
       case ControllerEvents.PromptPrediction => {
-        controller.state.activePlayer match {
-          case Some(player) => {
-            promptState = PromptState.Prediction
-            prompter.promptPrediction(player.name, controller.state.round)
-          }
-          case None => println("No active player.")
-        }
+        state match
+          case Some(state) =>
+            state.activePlayer match {
+              case Some(player) => {
+                promptState = PromptState.Prediction
+                prompter.promptPrediction(player.name, state.round)
+              }
+              case None => println("No active player.")
+            }
+          case None =>
       }
       case ControllerEvents.PromptCardPlay => {
-        controller.state.activePlayer match {
-          case Some(player) => {
-            promptState = PromptState.CardPlay
-            prompter.promptCardPlay(player)
-          }
-          case None => println("No active player.")
-        }
+        state match
+          case Some(state) =>
+            state.activePlayer match {
+              case Some(player) => {
+                promptState = PromptState.CardPlay
+                prompter.promptCardPlay(player)
+              }
+              case None => println("No active player.")
+            }
+          case None =>
       }
 
       case ControllerEvents.LoadGame => {

@@ -1,6 +1,7 @@
 package models.websocket
 
 import de.htwg.se.skullking.controller.ControllerComponent.IController
+import de.htwg.se.skullking.model.StateComponent.IGameState
 import de.htwg.se.skullking.util.{ObservableEvent, Observer}
 import org.apache.pekko.actor.{Actor, ActorRef, Props}
 import org.apache.pekko.stream.Materializer
@@ -40,10 +41,13 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
   val controller: IController = summon[IController]
   controller.add(this)
 
-  override def update(e: ObservableEvent): Unit = {
+  override def update(e: ObservableEvent, state: Option[IGameState] = None): Unit = {
     e match {
-      case _ => clients.foreach(_._2 ! transportProtocol(WebSocketEvent.State, 
-        List(UUID.fromString(clientId)), UUID.fromString(clientId), controller.state.toJson).toString)
+      case _ => 
+        state match
+          case Some(state) => clients.foreach(_._2 ! transportProtocol(WebSocketEvent.State,
+            List(UUID.fromString(clientId)), UUID.fromString(clientId), state.toJson).toString)
+          case None =>
     }
   }
 
