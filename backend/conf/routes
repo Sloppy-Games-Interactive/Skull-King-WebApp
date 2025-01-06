@@ -11,6 +11,7 @@ GET      /                           controllers.PlayController.index
 GET      /rules                      controllers.PlayController.rules
 ## Play the game
 GET      /play                      controllers.PlayController.play
+POST     /status             controllers.PlayController.getStatus()
 ## Start a new game
 POST     /new-lobby                  controllers.PlayController.newLobby
 POST     /set-player-limit           controllers.PlayController.setPlayerLimit

@@ -40,6 +40,14 @@ const router = createRouter({
       component: () => import('@/views/pre-game/GameLobbyView.vue'),
     },
     {
+      path: '/join-lobby',
+      name: 'join-lobby',
+      meta: {
+        bg: 'bg-tavern',
+      },
+      component: () => import('@/views/pre-game/JoinLobbyView.vue'),
+    },
+    {
       path: '/play',
       name: 'play',
       meta: {

@@ -9,7 +9,7 @@ import de.htwg.se.skullking.model.StateComponent.GameStateDeserializer
 import de.htwg.se.skullking.util.RoutesUtil
 import de.htwg.se.skullking.view.tui.{Parser, Tui}
 import models.model.LobbyComponent.LobbyBaseImpl.{Lobby, LobbyObject}
-import play.api.libs.json.JsObject
+import play.api.libs.json.{JsObject, Json}
 
 import java.util.UUID
 import scala.language.postfixOps
@@ -36,10 +36,21 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
     val uuid = UUID.randomUUID()
     controller.newLobby(uuid, 2)
     // print last added lobby (maybe vulnerable to race conditions exploits)
-    Ok(uuid.toString)
+    // print uuid as json
+    Ok(Json.toJson(Map("uuid" -> uuid.toString)))
   }
   
-  
+def getStatus() = Action { implicit request: Request[AnyContent] =>
+  val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])
+  //val uuid = request.cookies.get("lobbyUuid"
+  uuid match
+    case Success(u) => LobbyObject.getLobby(u) match {
+      case Some(lobby) => Ok(lobby.gameState.toJson: JsObject)
+      case None => BadRequest("Invalid lobby uuid")
+    }
+    case Failure(f) => BadRequest("Invalid lobby uuid")
+  }
+
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
     val limit = Try[Int](request.body.asJson.get("limit").as[Int])
     val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])

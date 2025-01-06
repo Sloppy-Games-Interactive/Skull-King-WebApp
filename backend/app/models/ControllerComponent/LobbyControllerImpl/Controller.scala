@@ -23,6 +23,8 @@ class Controller(using state: IGameState) extends BaseController with ILobbyCont
     handleState(state)
   }
 
+
+
   override def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean = {
     LobbyObject.getLobby(lobbyUuid)
      match
