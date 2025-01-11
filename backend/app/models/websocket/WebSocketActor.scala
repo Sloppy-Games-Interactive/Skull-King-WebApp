@@ -43,14 +43,11 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
   controller.add(this)
 
   override def update(e: ObservableEvent, state: Option[IGameState] = None): Unit = {
-    println("Event: " + e)
     e match {
       case _ =>
         state match
           case Some(state) => clients.foreach(_._2 ! transportProtocol(WebSocketEvent.State,
             List(UUID.fromString(clientId)), UUID.fromString(clientId), state.toJson).toString)
-            println("State: " + state.toJson)
-            print("from: " + clientId)
           case None =>
     }
   }

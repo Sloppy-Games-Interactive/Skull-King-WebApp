@@ -86,23 +86,28 @@ export const API_INJECTION_KEY = Symbol() as InjectionKey<ApiService>;
 
 export class ApiService extends BaseApiService {
   constructor(
-    private lobbyStore: Store | undefined
+    private lobby: Store | undefined
   ) {
     // TODO: get url from env variable or something
     super( 'http://localhost:9000')
   }
 
   get lobbyUuid(): string | undefined {
-    if (!this.lobbyStore) {
-      this.lobbyStore = useLobbyStore();
+    if (!this.lobby) {
+      this.lobby = useLobbyStore();
     }
 
-    return this.lobbyStore.lobbyUuid
+    return this.lobby.lobbyUuid
     // return getCookieValue('lobbyUuid') ?? undefined
   }
 
   get playerUuid(): string | undefined {
-    return getCookieValue('playerId') ?? undefined
+    if (!this.lobby) {
+      this.lobby = useLobbyStore();
+    }
+
+    return this.lobby.playerUuid
+    //return getCookieValue('playerId') ?? undefined
   }
 
   async getStatus(lobbyUuid: typeof uuid): Promise<GameState> {
@@ -129,6 +134,11 @@ export class ApiService extends BaseApiService {
 
   async joinLobby(lobbyUuid: string, name: string): Promise<GameState> {
     const state = await this.post('/join-lobby', { lobbyUuid, playerUuid: this.playerUuid, name: name })
+    return new GameState(state);
+  }
+
+  async startGame(): Promise<GameState> {
+    const state = await this.post('/start-game', { lobbyUuid: this.lobbyUuid })
     return new GameState(state);
   }
 

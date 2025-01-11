@@ -24,6 +24,10 @@ const close = () => {
 const gameState = useGameStateStore()
 const api = inject(API_INJECTION_KEY) as ApiService
 const playCard = async () => {
+  if (!canPlay) {
+    return;
+  }
+
   if (!props.card) {
     return
   }
@@ -31,6 +35,10 @@ const playCard = async () => {
   const state = await api.playCard(props.card)
   gameState.updateGameState(state);
 }
+
+const canPlay = computed(() => {
+  return gameState.me && gameState.activePlayer && (gameState.me.id === gameState.activePlayer.id);
+})
 </script>
 
 <template>
@@ -44,6 +52,7 @@ const playCard = async () => {
         <v-row justify="center">
           <v-col cols="auto">
             <v-btn
+              :disabled="!canPlay"
               height="72"
               min-width="164"
               @click="playCard"

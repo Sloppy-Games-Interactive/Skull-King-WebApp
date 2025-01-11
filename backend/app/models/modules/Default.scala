@@ -23,8 +23,8 @@ import models.model.LobbyComponent.LobbyBaseImpl.Lobby
 
 object Default {
   given IGameState = GameState()
-  given IController = Controller(using summon[IGameState])
-  given ILobbyController = Controller(using summon[IGameState])
+  given IController = Controller()
+  given ILobbyController = Controller()
 
   given IHand = Hand()
   given IDeck = Deck()

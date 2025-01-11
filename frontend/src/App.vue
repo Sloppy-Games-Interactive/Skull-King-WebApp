@@ -8,6 +8,7 @@ import type { JsonValue } from 'type-fest';
 import { v4 as uuid } from 'uuid';
 
 import { GameState } from '@/core/model/GameState'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
 
 const route = useRoute()
 
@@ -53,6 +54,7 @@ const { status, data, send, open, close } = useWebSocket('ws://localhost:9000/ws
 
 
 const gameState = useGameStateStore()
+const lobby = useLobbyStore()
 
 watch(data, (newData) => {
   if (newData === 'pong') {
@@ -67,8 +69,7 @@ watch(data, (newData) => {
   switch (parsedData.event) {
     case WebSocketEvent.CONNECTED:
       console.log('connected:', parsedData.data)
-      // save playerId in in session cookie
-      document.cookie = `playerId=${parsedData.data.playerId}`
+      lobby.setPlayerUuid(parsedData.data.playerId)
       break;
     case WebSocketEvent.STATE:
       //console.log('state:', parsedData.data)

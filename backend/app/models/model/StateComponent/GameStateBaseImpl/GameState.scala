@@ -22,6 +22,7 @@ case class GameState(
     case AddPlayerEvent(player) if phase == Phase.PrepareGame && playerLimit > 0 => addPlayer(player)
     case SetPredictionEvent(player, prediction) if phase == Phase.PrepareTricks => setPrediction(player, prediction)
     case PlayCardEvent(player, card) if phase == Phase.PlayTricks => playCard(player, card)
+    case StartGameEvent() if phase == Phase.PrepareGame => startGame
     case _ => this
   }
 
@@ -29,16 +30,23 @@ case class GameState(
 
   def activeTrick: Option[ITrick] = tricks.headOption
 
+  private def startGame: GameState = {
+    if (players.length == playerLimit && playerLimit > 1) {
+      prepareRound
+    } else {
+      this
+    }
+  }
+
   private def changePhase(nextPhase: Phase): GameState = this.copy(phase = nextPhase)
 
   private def setPlayerLimit(n: Int): GameState = this.copy(playerLimit = n)
 
-  override def addPlayer(player: IPlayer): IGameState = {
-    val nextState = this.copy(players = players :+ player)
-    if (players.length < playerLimit - 1) {
-      nextState
+  def addPlayer(player: IPlayer): GameState = {
+    if (players.length == playerLimit) {
+      this
     } else {
-      nextState.prepareRound
+      this.copy(players = players :+ player)
     }
   }
 
@@ -72,7 +80,7 @@ case class GameState(
     if updatedPlayers.forall(_.prediction.isDefined) then
       this.copy(players = determineRoundStartPlayer(updatedPlayers, round)).startTrick
     else
-      this.copy(players = setNextPlayerActive(updatedPlayers))
+      this.copy(players = updatedPlayers)
   }
 
   private def startTrick: GameState = {

@@ -28,6 +28,9 @@ const items = computed(() => {
   const round = gameStateStore.round
   return Array.from({ length: round + 1 }, (_, i) => i)
 })
+
+// TODO parallelize setPrediction -> set prediction for player with uuid
+// TODO add waiting overlay
 </script>
 
 <template>
@@ -41,7 +44,7 @@ const items = computed(() => {
       style="background-color: rgba(255, 255, 255, 0.5)"
     >
       <CardList
-        :cards="gameStateStore.activePlayer?.hand?.cards ?? []"
+        :cards="gameStateStore.me?.hand?.cards ?? []"
         :card-size="CardSize.small"
       />
 

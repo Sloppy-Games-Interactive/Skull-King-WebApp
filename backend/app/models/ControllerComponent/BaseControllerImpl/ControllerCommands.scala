@@ -60,3 +60,13 @@ class SetPredictionCommand(val state: IGameState, player: IPlayer, prediction: I
     doStep
   }
 }
+
+class StartGameCommand(val state: IGameState) extends Command {
+  var memento: IGameState = state
+  override def doStep: IGameState = state.handleEvent(StartGameEvent())
+  override def undoStep: IGameState = memento
+  override def redoStep: IGameState = {
+    memento = state
+    doStep
+  }
+}

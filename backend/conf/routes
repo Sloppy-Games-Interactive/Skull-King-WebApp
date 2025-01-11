@@ -16,8 +16,7 @@ POST     /status             controllers.PlayController.getStatus()
 POST     /new-lobby                  controllers.PlayController.newLobby
 POST     /set-player-limit           controllers.PlayController.setPlayerLimit
 POST     /join-lobby                 controllers.PlayController.joinLobby
-## Set name of player
-#POST     /set-player-name            controllers.PlayController.setPlayerName
+POST     /start-game                 controllers.PlayController.startGame
 ## Set prediction of player for the current round
 POST     /set-prediction             controllers.PlayController.setPrediction
 POST     /play-card                  controllers.PlayController.playCard

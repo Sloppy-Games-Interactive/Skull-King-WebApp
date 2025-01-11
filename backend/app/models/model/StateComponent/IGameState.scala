@@ -22,6 +22,7 @@ case class SetPlayerLimitEvent(n: Int) extends GameStateEvent
 case class AddPlayerEvent(player: IPlayer) extends GameStateEvent
 case class SetPredictionEvent(player: IPlayer, prediction: Int) extends GameStateEvent
 case class PlayCardEvent(player: IPlayer, card: ICard) extends GameStateEvent
+case class StartGameEvent() extends GameStateEvent
 
 
 object GameStateDeserializer extends Deserializer[IGameState] {

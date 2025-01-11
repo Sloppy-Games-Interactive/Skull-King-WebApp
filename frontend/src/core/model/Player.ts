@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 
 export interface PlayerInterface extends Serializable<PlayerInterface> {
-  id: number
+  id: string
   name: string
   profilePicUrl: string
   uuid: typeof uuid
@@ -33,7 +33,7 @@ export class Hand implements HandInterface {
 }
 
 export class Player implements PlayerInterface {
-  readonly id: number
+  readonly id: string
   readonly name: string
   readonly profilePicUrl: string
   readonly hand: HandInterface

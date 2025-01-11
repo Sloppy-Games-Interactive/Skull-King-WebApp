@@ -12,6 +12,7 @@ trait ILobby {
   val players: List[IPlayer]
   val playerLimit: Int
   val gameState: IGameState
+  val uuid: UUID
   
   def joinLobby(player: IPlayer, uuid: UUID): ILobby
   def leaveLobby(player: IPlayer): Boolean

@@ -7,40 +7,34 @@ import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.util.UndoManager
 import models.model.LobbyComponent.LobbyBaseImpl.LobbyObject
 import de.htwg.se.skullking.controller.ControllerComponent.BaseControllerImpl.Controller as BaseController
+import models.model.LobbyComponent.ILobby
 
 import java.util.UUID
 
 // TODO: Remove this class and use the LobbyObject directly
-class Controller(using state: IGameState) extends BaseController with ILobbyController {
+class Controller extends BaseController with ILobbyController {
   override val undoManager = UndoManager()
-  private var playerIDs: Int = 0
 
   def newLobby(uuid: UUID, playerLimit: Int): Unit = {
     //undoManager.doStep(new NewLobbyCommand(this))
     LobbyObject.createLobby(uuid, playerLimit)
     notifyObservers(ControllerEvents.NewLobby)
     //print(state.toJson)
-    handleState(state)
+    handleState(summon[IGameState])
   }
 
 
 
-  override def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean = {
-    LobbyObject.getLobby(lobbyUuid)
-     match
-      case None =>
-        false
-      case Some(lobby) =>
+  override def joinLobby(player: String, playerUuid: UUID, lobby: ILobby): IGameState = {
         if (lobby.players.length < lobby.playerLimit) {
-          val nextLobby = lobby.joinLobby(summon[IPlayerFactory].create(playerUuid, player), lobbyUuid)
+          val nextLobby = lobby.joinLobby(summon[IPlayerFactory].create(playerUuid, player), lobby.uuid)
           notifyObservers(ControllerEvents.PlayerAdded, Option(nextLobby.gameState))
           handleState(nextLobby.gameState)
-          true
+          nextLobby.gameState
         } else {
-          false
+          lobby.gameState
         }
-    
   }
   
-  override def leaveLobby(player: IPlayer): Boolean = ???
+  override def leaveLobby(player: IPlayer): IGameState = ???
 }

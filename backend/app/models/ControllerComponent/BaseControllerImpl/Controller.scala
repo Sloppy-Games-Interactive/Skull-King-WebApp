@@ -9,10 +9,10 @@ import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.util.UndoManager
 import models.model.LobbyComponent.ILobby
 
-class Controller(using var state: IGameState) extends IController {
+class Controller extends IController {
   val undoManager = UndoManager()
 
-   def handleState(state: IGameState): Unit = {
+  def handleState(state: IGameState): Unit = {
     state.phase match {
       case Phase.PrepareGame if state.playerLimit == 0 => notifyObservers(ControllerEvents.PromptPlayerLimit, Option(state))
       case Phase.PrepareGame => notifyObservers(ControllerEvents.PromptPlayerName, Option(state))
@@ -22,38 +22,38 @@ class Controller(using var state: IGameState) extends IController {
     }
   }
 
-   def addPlayer(state: IGameState, name: String): IGameState = ??? 
+  def addPlayer(state: IGameState, name: String): IGameState = ???
 
-   def newGame: IGameState = {
+  def newGame: IGameState = {
     val nextState = undoManager.doStep(new NewGameCommand)
     notifyObservers(ControllerEvents.NewGame, Option(nextState))
     handleState(nextState)
     nextState
   }
-  
-   def setPlayerLimit(state: IGameState, limit: Int): IGameState = {
+
+  def setPlayerLimit(state: IGameState, limit: Int): IGameState = {
     val nextState = undoManager.doStep(new SetPlayerLimitCommand(state, limit))
     notifyObservers(ControllerEvents.PlayerLimitSet, Option(nextState))
     handleState(nextState)
-     nextState
+    nextState
   }
 
-   def playCard(state: IGameState, player: IPlayer, card: ICard): IGameState = {
+  def playCard(state: IGameState, player: IPlayer, card: ICard): IGameState = {
     val nextState = undoManager.doStep(new PlayCardCommand(state, player, card))
     notifyObservers(ControllerEvents.CardPlayed, Option(nextState))
     handleState(nextState)
     nextState
   }
 
-   def setPrediction(state: IGameState, player: IPlayer, prediction: Int): IGameState = {
+  def setPrediction(state: IGameState, player: IPlayer, prediction: Int): IGameState = {
     val nextState = undoManager.doStep(new SetPredictionCommand(state, player, prediction))
     notifyObservers(ControllerEvents.PredictionSet, Option(nextState))
     handleState(nextState)
     nextState
   }
 
-   def saveGame(saveState: Option[IGameState] = None): Unit = {
-     saveState match {
+  def saveGame(saveState: Option[IGameState] = None): Unit = {
+    saveState match {
       case Some(stateToSave) => {
         summon[IFileIO].save(stateToSave)
         notifyObservers(ControllerEvents.SaveGame, Option(stateToSave))
@@ -61,8 +61,8 @@ class Controller(using var state: IGameState) extends IController {
       case None =>
     }
   }
-  
-   def loadGame(loadState: Option[IGameState] = None): IGameState = {
+
+  def loadGame(loadState: Option[IGameState] = None): IGameState = {
     val stateToLoad = loadState match {
       case Some(s) => s
       case None => summon[IFileIO].load
@@ -70,11 +70,18 @@ class Controller(using var state: IGameState) extends IController {
     val nextState = undoManager.doStep(new LoadGameCommand(stateToLoad))
     notifyObservers(ControllerEvents.LoadGame, Option(nextState))
     handleState(nextState)
-     nextState
-   }
-  
-   def quit: Unit = {
+    nextState
+  }
+
+  def quit: Unit = {
     saveGame()
     notifyObservers(ControllerEvents.Quit)
+  }
+
+  def startGame(state: IGameState): IGameState = {
+    val nextState = undoManager.doStep(new StartGameCommand(state))
+    notifyObservers(ControllerEvents.NewGame, Option(nextState))
+    handleState(nextState)
+    nextState
   }
 }

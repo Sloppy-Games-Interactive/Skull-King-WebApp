@@ -9,7 +9,6 @@ import models.model.LobbyComponent.ILobby
 import java.util.UUID
 
 trait IController() extends Observable {
-  var state: IGameState
   val undoManager: UndoManager
 
   def handleState(state: IGameState): Unit
@@ -28,12 +27,14 @@ trait IController() extends Observable {
   
   def loadGame(loadState: Option[IGameState] = None): IGameState
   
+  def startGame(state: IGameState): IGameState
+  
   def quit: Unit
 }
 
 trait ILobbyController extends IController {
-  def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean
-  def leaveLobby(player: IPlayer): Boolean
+  def joinLobby(player: String, playerUuid: UUID, lobby: ILobby): IGameState
+  def leaveLobby(player: IPlayer): IGameState
   def newLobby(UUID: UUID, playerLimit: Int): Unit
 
 }
