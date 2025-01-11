@@ -6,23 +6,22 @@
 # An example controller showing a sample home page
 
 ## Test description
-GET      /                           controllers.GameController.index
+GET      /                           controllers.PlayController.index
 
-GET      /rules                      controllers.GameController.rules
-GET      /status                     controllers.GameController.status
+GET      /rules                      controllers.PlayController.rules
 ## Play the game
-GET      /play                      controllers.GameController.play
+GET      /play                      controllers.PlayController.play
+POST     /status             controllers.PlayController.getStatus()
 ## Start a new game
-POST     /new-game                   controllers.GameController.newGame
-POST     /set-player-limit           controllers.GameController.setPlayerLimit
-## Set name of player
-POST     /set-player-name            controllers.GameController.setPlayerName
+POST     /new-lobby                  controllers.PlayController.newLobby
+POST     /set-player-limit           controllers.PlayController.setPlayerLimit
+POST     /join-lobby                 controllers.PlayController.joinLobby
+POST     /start-game                 controllers.PlayController.startGame
 ## Set prediction of player for the current round
-POST     /set-prediction             controllers.GameController.setPrediction
-POST     /play-card                  controllers.GameController.playCard
-POST     /save-game                  controllers.GameController.saveGame
-POST     /load-game                  controllers.GameController.loadGame
+POST     /set-prediction             controllers.PlayController.setPrediction
+POST     /play-card                  controllers.PlayController.playCard
 
+GET      /ws                         controllers.WebSocketController.socket
 
 # Map static resources from the /public folder to the /assets URL path
 #-- skip

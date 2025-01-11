@@ -42,7 +42,7 @@ const gameState = useGameStateStore()
             class="m-9"
             :username="player.name"
             :score="player.score"
-            profile-picture="https://media.istockphoto.com/id/816752606/photo/tv-test-card-or-test-pattern-generic.jpg?s=612x612&w=0&k=20&c=63Jcx_5bFnvBw9elRDLrLKjtDYXr70pKtUK0jXJ2_uY="
+            :profile-picture="player.profilePicUrl"
           />
         </div>
       </div>

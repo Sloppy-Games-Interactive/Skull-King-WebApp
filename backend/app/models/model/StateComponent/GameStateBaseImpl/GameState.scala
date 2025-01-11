@@ -18,10 +18,11 @@ case class GameState(
   lastTrickWinner: Option[IPlayer] = None
 ) extends IGameState {
   def handleEvent(event: GameStateEvent): IGameState = event match {
-    case SetPlayerLimitEvent(n) if phase == Phase.PrepareGame && players.isEmpty => setPlayerLimit(n)
+    case SetPlayerLimitEvent(n) if phase == Phase.PrepareGame && (players.length <= n) => setPlayerLimit(n)
     case AddPlayerEvent(player) if phase == Phase.PrepareGame && playerLimit > 0 => addPlayer(player)
     case SetPredictionEvent(player, prediction) if phase == Phase.PrepareTricks => setPrediction(player, prediction)
     case PlayCardEvent(player, card) if phase == Phase.PlayTricks => playCard(player, card)
+    case StartGameEvent() if phase == Phase.PrepareGame => startGame
     case _ => this
   }
 
@@ -29,16 +30,23 @@ case class GameState(
 
   def activeTrick: Option[ITrick] = tricks.headOption
 
+  private def startGame: GameState = {
+    if (players.length == playerLimit && playerLimit > 1) {
+      prepareRound
+    } else {
+      this
+    }
+  }
+
   private def changePhase(nextPhase: Phase): GameState = this.copy(phase = nextPhase)
 
   private def setPlayerLimit(n: Int): GameState = this.copy(playerLimit = n)
 
-  private def addPlayer(player: IPlayer): IGameState = {
-    val nextState = this.copy(players = players :+ player)
-    if (players.length < playerLimit - 1) {
-      nextState
+  def addPlayer(player: IPlayer): GameState = {
+    if (players.length == playerLimit) {
+      this
     } else {
-      nextState.prepareRound
+      this.copy(players = players :+ player)
     }
   }
 
@@ -65,14 +73,14 @@ case class GameState(
 
   private def setPrediction(player: IPlayer, newPrediction: Int): GameState = {
     val updatedPlayers = players.map {
-      case p if p.name == player.name => p.setPrediction(newPrediction)
+      case p if p.id == player.id => p.setPrediction(newPrediction)
       case p => p
     }
 
     if updatedPlayers.forall(_.prediction.isDefined) then
       this.copy(players = determineRoundStartPlayer(updatedPlayers, round)).startTrick
     else
-      this.copy(players = setNextPlayerActive(updatedPlayers))
+      this.copy(players = updatedPlayers)
   }
 
   private def startTrick: GameState = {
@@ -94,7 +102,7 @@ case class GameState(
         val (playedCard, updatedPlayer) = player.playCard(card)
         val updatedTrick = trick.play(playedCard, updatedPlayer)
         val updatedPlayers = players.map {
-          case p if p.name == updatedPlayer.name => updatedPlayer
+          case p if p.id == updatedPlayer.id => updatedPlayer
           case p => p
         }
 
@@ -123,7 +131,7 @@ case class GameState(
     val updatedPlayers = players.map { player =>
       val wonTricks = for {
         trick <- tricks
-        winner <- trick.winner if winner.name == player.name
+        winner <- trick.winner if winner.id == player.id
       } yield trick
 
       val numTricksWon = wonTricks.length
@@ -165,7 +173,7 @@ case class GameState(
   private def determineTrickStartPlayer(players: List[IPlayer], roundNumber: Int, lastWinner: Option[IPlayer]): List[IPlayer] = {
     lastWinner match {
       case Some(winner) => players.map {
-        case p if p.name == winner.name => p.setActive(true)
+        case p if p.id == winner.id => p.setActive(true)
         case p => p.setActive(false)
       }
       case None => determineRoundStartPlayer(players, roundNumber)
@@ -182,7 +190,7 @@ case class GameState(
   private def setNextPlayerActive(players: List[IPlayer]): List[IPlayer] = {
     val nextPlayer = nextActive(players)
     players.map {
-      case p if nextPlayer.isDefined && p.name == nextPlayer.get.name => p.setActive(true)
+      case p if nextPlayer.isDefined && p.id == nextPlayer.get.id => p.setActive(true)
       case p => p.setActive(false)
     }
   }
@@ -192,6 +200,7 @@ case class GameState(
     players.lift(nextIndex)
   }
 }
+
 
 object GameStateFactory extends IGameStateFactory {
   def apply(

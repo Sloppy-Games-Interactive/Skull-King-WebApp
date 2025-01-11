@@ -15,11 +15,7 @@ const postPlayerName = async () => {
 
   const state = await api.setPlayerName(playerNameInput.value)
   gameState.updateGameState(state)
-  if (state.players.length === state.playerLimit) {
-    // await router.push('/game-lobby')
-    await router.push('/play')
-    return
-  }
+  await router.push('/game-lobby')
   playerNameInput.value = ''
 }
 
@@ -56,9 +52,9 @@ const rules = {
           <v-btn
             height="72"
             min-width="164"
-            @click.stop.prevent="$router.push('/new-game')"
+            @click.stop.prevent="router.push('/')"
           >
-            Back
+            Cancel
           </v-btn>
         </v-col>
       </v-row>

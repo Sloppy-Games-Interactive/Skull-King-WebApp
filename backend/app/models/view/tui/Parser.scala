@@ -29,6 +29,18 @@ class Parser {
       }
     }
   }
+  
+  def parsePlayerUUID(input: String): Option[String] = {
+    val tryUUID = Try(input.trim)
+
+    tryUUID match {
+      case Success(uuid) if uuid.nonEmpty => Some(uuid)
+      case _ => {
+        println("Player UUID must not be empty.")
+        None
+      }
+    }
+  }
 
   def parsePrediction(input: Int, round: Int): Option[Int] = {
 

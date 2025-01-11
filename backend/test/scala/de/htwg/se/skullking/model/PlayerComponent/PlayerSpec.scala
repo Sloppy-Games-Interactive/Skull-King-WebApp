@@ -1,5 +1,6 @@
 package de.htwg.se.skullking.model.PlayerComponent
 
+
 import de.htwg.se.skullking.model.CardComponent.CardBaseImpl.CardFactory
 import de.htwg.se.skullking.model.CardComponent.Suit
 import de.htwg.se.skullking.model.PlayerComponent.PlayerBaseImpl.{Hand, Player}
@@ -13,21 +14,22 @@ import scala.xml.Elem
 class PlayerSpec extends AnyWordSpec {
   "Player" should {
     "have defaults" in {
-      val p1 = Player("")
+      val p1 = Player(0, "")
       p1.name should be("")
+      p1.id should be(0)
       p1.hand.count should be(0)
       p1.score should be(0)
       p1.prediction should be(None)
     }
 
     "have a name" in {
-      val p1 = Player("p1", Hand(List()), 9, Some(0))
+      val p1 = Player(0, "p1", hand = Hand(List()), score = 9, prediction = Some(0))
       p1.name should be("p1")
     }
 
     "have resettable hand" in {
       val cards = List(CardFactory(Suit.Red, 1), CardFactory(Suit.Blue, 2), CardFactory(Suit.Red, 3))
-      val p1 = Player("p1", Hand(cards), 9)
+      val p1 = Player(0, "p1", hand = Hand(cards), score = 9)
       val p1reset = p1.resetHand
 
       p1.hand.count should be(3)
@@ -39,12 +41,12 @@ class PlayerSpec extends AnyWordSpec {
     }
 
     "have a score" in {
-      val p1 = Player("p1", Hand(List()), 9)
+      val p1 = Player(0, "p1", hand = Hand(List()), score = 9, prediction = Some(0))
       p1.score should be(9)
     }
 
     "have a resettable prediction" in {
-      val p1 = Player("p1", Hand(List()), 9, Some(0))
+      val p1 = Player(0, "p1", hand = Hand(List()), score = 9, prediction = Some(0))
       val p1reset = p1.resetPrediction
 
       p1.prediction should be(Some(0))
@@ -53,16 +55,16 @@ class PlayerSpec extends AnyWordSpec {
 
     "have a toString" in {
       val hand = Hand(List(CardFactory(Suit.Red, 1), CardFactory(Suit.Blue, 2), CardFactory(Suit.Red, 3)))
-      val p1 = Player("p1", hand, 9, Some(0))
+      val p1 = Player(0, "p1", hand = hand, score = 9, prediction = Some(0))
       p1.toString should be(s"p1: 9, ${hand.toString}, prediction: 0")
 
-      val p2 = Player("p2", hand, 9)
+      val p2 = Player(0, "p2", hand = hand, score = 9)
       p2.toString should be(s"p2: 9, ${hand.toString}, prediction: -")
     }
 
     "be serializable as json" in {
       val hand = Hand(List(CardFactory(Suit.Red, 1), CardFactory(Suit.Blue, 2), CardFactory(Suit.Red, 3)))
-      val p1 = Player("p1", hand, 9, Some(0), true)
+      val p1 = Player(0, "p1", hand = hand, score = 9, prediction = Some(0), active = true)
       val json = p1.toJson
 
       (json \ "name").as[String] should be("p1")
@@ -82,7 +84,7 @@ class PlayerSpec extends AnyWordSpec {
 
     "be serializable as xml" in {
       val hand = Hand(List(CardFactory(Suit.Red, 1), CardFactory(Suit.Blue, 2), CardFactory(Suit.Red, 3)))
-      val p1 = Player("p1", hand, 9, Some(0), true)
+      val p1 = Player(0, "p1", hand = hand, score = 9, prediction = Some(0), active = true)
       val xml = p1.toXml
 
       (xml \ "name").text should be("p1")

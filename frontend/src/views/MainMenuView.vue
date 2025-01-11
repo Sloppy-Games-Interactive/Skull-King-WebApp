@@ -3,16 +3,20 @@ import { inject } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import { useGameStateStore } from '@/core/stores/gameState'
 import router from '@/core/router'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
 
 const joinGame = (event: MouseEvent) => {
   console.log('joinGame')
 }
 
 const { updateGameState } = useGameStateStore()
+const lobbyStore = useLobbyStore();
 const api = inject(API_INJECTION_KEY) as ApiService
 
 const newGame = async (event: MouseEvent) => {
-  const state = await api.newGame()
+  const uuid = await api.newGame()
+  lobbyStore.setLobbyUuid(uuid)
+  const state = await api.getStatus(uuid)
 
   updateGameState(state)
   await router.push('/new-game')
@@ -31,8 +35,8 @@ const newGame = async (event: MouseEvent) => {
       <a class="btn text-5xl btn-primary wood-btn" @click.stop.prevent="newGame"
         >New Game</a
       >
-      <a class="btn text-5xl btn-primary wood-btn disabled" @click.stop.prevent="joinGame"
-        >Join Game</a>
+      <router-link to="/join-lobby" class="btn text-5xl btn-primary wood-btn"
+        >Join Game</router-link>
 
       <router-link to="/settings" class="btn text-5xl btn-primary wood-btn"
         >Settings</router-link>

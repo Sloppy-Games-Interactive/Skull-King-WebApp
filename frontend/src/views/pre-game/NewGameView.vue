@@ -50,7 +50,7 @@ const rules = {
             min-width="164"
             @click.stop.prevent="router.push('/')"
           >
-            Back
+            Cancel
           </v-btn>
         </v-col>
       </v-row>

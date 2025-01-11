@@ -1,7 +1,9 @@
 package de.htwg.se.skullking.util
 
+import de.htwg.se.skullking.model.StateComponent.IGameState
+
 trait Command {
-  def doStep: Unit
-  def undoStep: Unit
-  def redoStep: Unit
+  def doStep: IGameState
+  def undoStep: IGameState
+  def redoStep: IGameState
 }

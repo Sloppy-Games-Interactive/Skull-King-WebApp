@@ -68,8 +68,8 @@ const showPlayCardOverlay = (card: CardInterface) => {
   </div>
   <!-- hand cards -->
   <CardList
-    hover-effects="true"
-    :cards="gameState.activePlayer?.hand?.cards ?? []"
+    :hover-effects="true"
+    :cards="gameState.me?.hand?.cards ?? []"
     :on-click="showPlayCardOverlay"
   />
 </template>

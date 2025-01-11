@@ -23,20 +23,20 @@ class GameStateSpec extends AnyWordSpec {
 
     "handle AddPlayerEvent correctly" in {
       val gameState = GameState(playerLimit = 2)
-      val updatedGameState = gameState.handleEvent(AddPlayerEvent(Player("Alice")))
+      val updatedGameState = gameState.handleEvent(AddPlayerEvent(Player(0, "Alice")))
       updatedGameState.players.map(_.name) should contain("Alice")
     }
 
     "handle SetPredictionEvent correctly" in {
-      val player = Player("Alice")
+      val player = Player(0, "Alice")
       val gameState = GameState(phase = Phase.PrepareTricks, players = List(player))
       val updatedGameState = gameState.handleEvent(SetPredictionEvent(player, 3))
       updatedGameState.players.head.prediction should be(Some(3))
     }
 
     "handle PlayCardEvent correctly" in {
-      val player = Player("Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
-      val player2 = Player("Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
+      val player = Player(0, "Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
+      val player2 = Player(0, "Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
@@ -50,15 +50,15 @@ class GameStateSpec extends AnyWordSpec {
 
     "ignore events that are not applicable in the current phase" in {
       val gameState = GameState(phase = Phase.EndGame)
-      val updatedGameState = gameState.handleEvent(AddPlayerEvent(Player("Alice")))
+      val updatedGameState = gameState.handleEvent(AddPlayerEvent(Player(0, "Alice")))
       updatedGameState should be(gameState)
     }
 
     "end the round correctly when all tricks are played" in {
       val r1 = CardFactory(Suit.Red, 1)
       val r2 = CardFactory(Suit.Red, 2)
-      val player = Player("Alice", hand = Hand(List(r1)))
-      val player2 = Player("Bob", hand = Hand(List(r2)))
+      val player = Player(0, "Alice", hand = Hand(List(r1)))
+      val player2 = Player(0, "Bob", hand = Hand(List(r2)))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
@@ -83,8 +83,8 @@ class GameStateSpec extends AnyWordSpec {
     "play n tricks for round n" in {
       val r1 = CardFactory(Suit.Red, 1)
       val r2 = CardFactory(Suit.Red, 2)
-      val player = Player("Alice", hand = Hand(List(r1)), prediction = Some(1))
-      val player2 = Player("Bob", hand = Hand(List(r2)), prediction = Some(1))
+      val player = Player(0, "Alice", hand = Hand(List(r1)), prediction = Some(1))
+      val player2 = Player(0, "Bob", hand = Hand(List(r2)), prediction = Some(1))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
@@ -102,8 +102,8 @@ class GameStateSpec extends AnyWordSpec {
     }
 
     "calculate correct scores when predicting 0" in {
-      val player = Player("Alice", hand = Hand(List(CardFactory(Suit.Red, 1))), prediction = Some(0))
-      val player2 = Player("Bob", hand = Hand(List(CardFactory(Suit.Red, 2))), prediction = Some(0))
+      val player = Player(0, "Alice", hand = Hand(List(CardFactory(Suit.Red, 1))), prediction = Some(0))
+      val player2 = Player(0, "Bob", hand = Hand(List(CardFactory(Suit.Red, 2))), prediction = Some(0))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
@@ -129,8 +129,8 @@ class GameStateSpec extends AnyWordSpec {
     }
 
     "calculate correct scores when predicting 1" in {
-      val player = Player("Alice", hand = Hand(List(CardFactory(Suit.Red, 1))), prediction = Some(1))
-      val player2 = Player("Bob", hand = Hand(List(CardFactory(Suit.Red, 2))), prediction = Some(1))
+      val player = Player(0, "Alice", hand = Hand(List(CardFactory(Suit.Red, 1))), prediction = Some(1))
+      val player2 = Player(0, "Bob", hand = Hand(List(CardFactory(Suit.Red, 2))), prediction = Some(1))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
@@ -156,8 +156,8 @@ class GameStateSpec extends AnyWordSpec {
     }
 
     "end the game correctly when all rounds are played" in {
-      val player = Player("Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
-      val player2 = Player("Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
+      val player = Player(0, "Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
+      val player2 = Player(0, "Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
@@ -181,8 +181,8 @@ class GameStateSpec extends AnyWordSpec {
     }
 
     "be serializable as json" in {
-      val player = Player("Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
-      val player2 = Player("Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
+      val player = Player(0, "Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
+      val player2 = Player(0, "Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
@@ -214,8 +214,8 @@ class GameStateSpec extends AnyWordSpec {
     }
 
     "be xml serializable" in {
-      val player = Player("Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
-      val player2 = Player("Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
+      val player = Player(0, "Alice", hand = Hand(List(CardFactory(Suit.Red, 1))))
+      val player2 = Player(0, "Bob", hand = Hand(List(CardFactory(Suit.Red, 2))))
       val gameState = GameState(
         phase = Phase.PlayTricks,
         players = List(player, player2),
