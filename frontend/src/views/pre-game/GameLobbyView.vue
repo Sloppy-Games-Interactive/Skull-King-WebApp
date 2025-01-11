@@ -11,13 +11,20 @@ const postPlayerLimit = async () => {
   const state = await api.setPlayerLimit(playerLimitInput.value);
   gameState.updateGameState(state);
 }
+
+// TODO wait for players
 </script>
 
 <template>
   <div class="text-center gap-5">
     <h2>game lobby</h2>
+
+    <ul>
+      <li v-for="player in gameState.players">{{ player.name }}</li>
+    </ul>
+
     <router-link to="/play" class="btn text-5xl btn-primary wood-btn"
-    >Next</router-link
+    >Start Game</router-link
     >
     <router-link to="/join-game" class="btn text-5xl btn-primary wood-btn"
     >Back</router-link

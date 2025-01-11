@@ -132,9 +132,13 @@ def getStatus() = Action { implicit request: Request[AnyContent] =>
               }
           }
         }
-        case None => BadRequest("Invalid lobby uuid")
+        case None => 
+          println("Keine Lobby gefunden: " + u)
+          BadRequest("Lobby not found")
       }
-      case Failure(f) => BadRequest("Invalid lobby uuid")
+      case Failure(f) => 
+        println("Invalid lobby uuid: " + f)
+        BadRequest("Invalid lobby uuid")
 
 
   }

@@ -28,10 +28,13 @@ class Controller(using state: IGameState) extends BaseController with ILobbyCont
   override def joinLobby(player: String, playerUuid: UUID, lobbyUuid: UUID): Boolean = {
     LobbyObject.getLobby(lobbyUuid)
      match
-      case None => false
+      case None =>
+        false
       case Some(lobby) =>
         if (lobby.players.length < lobby.playerLimit) {
-          lobby.joinLobby(summon[IPlayerFactory].create(playerUuid, player), lobbyUuid)
+          val nextLobby = lobby.joinLobby(summon[IPlayerFactory].create(playerUuid, player), lobbyUuid)
+          notifyObservers(ControllerEvents.PlayerAdded, Option(nextLobby.gameState))
+          handleState(nextLobby.gameState)
           true
         } else {
           false

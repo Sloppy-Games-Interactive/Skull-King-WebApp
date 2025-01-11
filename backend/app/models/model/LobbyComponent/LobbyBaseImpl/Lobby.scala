@@ -14,7 +14,9 @@ object LobbyObject {
   // TODO: HashMap not allowed for controller print, because its not a linked list
   val lobbies: mutable.Map[UUID, ILobby] = mutable.Map()
 
-  def getLobby(uuid: UUID): Option[ILobby] = lobbies.get(uuid)
+  def getLobby(uuid: UUID): Option[ILobby] = {
+    lobbies.get(uuid)
+  }
 
   def createLobby(uuid: UUID, playerLimit: Int): ILobby = {
     val newLobby = {
@@ -41,14 +43,15 @@ case class Lobby(
   started: Boolean = false
 ) extends ILobby  {
 
-  override def joinLobby(player: IPlayer, uuid: UUID): Boolean = {
+  override def joinLobby(player: IPlayer, uuid: UUID): ILobby = {
     val lobby = LobbyObject.lobbies(uuid)
 
     if (players.length < playerLimit) {
-      LobbyObject.lobbies += (uuid -> this.copy(players = players :+ player, gameState = lobby.gameState.addPlayer(player)))
-      true
+      val nextLobby = this.copy(players = players :+ player, gameState = lobby.gameState.addPlayer(player))
+      LobbyObject.lobbies += (uuid -> nextLobby)
+      nextLobby
     } else {
-      false
+      lobby
     }
   }
 

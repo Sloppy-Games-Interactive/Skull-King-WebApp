@@ -1,34 +1,19 @@
 <script setup lang="ts">
-import {inject, ref} from "vue";
-import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
-import {useGameStateStore} from "@/core/stores/gameState";
-import { v4 as uuid } from 'uuid';
+import {ref} from "vue";
 import router from '@/core/router'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
 
-
-const api = inject(API_INJECTION_KEY) as ApiService
-const gameState = useGameStateStore();
-
-const playerNameInput = ref('')
 const lobbyIdInput = ref('')
+const lobbyStore = useLobbyStore()
 
 const join = async () => {
-  if (!playerNameInput.value) {
-    return
-  }
+  lobbyStore.setLobbyUuid(lobbyIdInput.value)
 
-  const state = await api.joinLobby(lobbyIdInput.value.toString, playerNameInput.value)
-  gameState.updateGameState(state)
-  await router.push('/play')
+  await router.push('/join-game')
 }
 </script>
 
 <template>
-<v-text-field
-  v-model="playerNameInput"
-  class="w-3/4 mx-auto"
-  label="Name"
-/>
   <v-text-field
     v-model="lobbyIdInput"
     class="w-3/4 mx-auto"
