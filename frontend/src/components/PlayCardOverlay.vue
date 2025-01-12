@@ -6,6 +6,7 @@ import ParallaxWrapper from '@/components/utils/ParallaxWrapper.vue'
 import { computed, inject } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import { useGameStateStore } from '@/core/stores/gameState'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
 
 const props = defineProps<{
   card: CardInterface | null
@@ -22,9 +23,11 @@ const close = () => {
 }
 
 const gameState = useGameStateStore()
+const lobby = useLobbyStore()
+
 const api = inject(API_INJECTION_KEY) as ApiService
 const playCard = async () => {
-  if (!canPlay) {
+  if (!canPlay.value) {
     return;
   }
 
@@ -32,12 +35,11 @@ const playCard = async () => {
     return
   }
 
-  const state = await api.playCard(props.card)
-  gameState.updateGameState(state);
+  await api.playCard(props.card)
 }
 
 const canPlay = computed(() => {
-  return gameState.me && gameState.activePlayer && (gameState.me.id === gameState.activePlayer.id);
+  return lobby.me && lobby.me.active;
 })
 </script>
 

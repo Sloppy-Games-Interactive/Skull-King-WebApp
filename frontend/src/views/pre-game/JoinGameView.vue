@@ -1,22 +1,19 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
-import { useGameStateStore } from '@/core/stores/gameState'
 import router from '@/core/router'
 
 const api = inject(API_INJECTION_KEY) as ApiService
-const gameState = useGameStateStore()
 
 const playerNameInput = ref('')
-const postPlayerName = async () => {
-  if (!playerNameInput.value) {
+const postPlayerName = () => {
+  if (!playerNameInput.value.trim()) {
     return
   }
 
-  const state = await api.setPlayerName(playerNameInput.value)
-  gameState.updateGameState(state)
-  await router.push('/game-lobby')
-  playerNameInput.value = ''
+  api.joinLobby(playerNameInput.value).then(() => {
+    router.push('/game-lobby')
+  }).catch(() => {})
 }
 
 const rules = {

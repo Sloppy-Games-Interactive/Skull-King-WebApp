@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import PauseMenu from '@/components/PauseMenu.vue'
 import Card from '@/components/cards/Card.vue'
-import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 import { useGameStateStore } from '@/core/stores/gameState'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { type CardInterface, CardSize, StandardCard } from '@/core/model/Card'
 import { ref } from 'vue'
 import CardList from '@/components/cards/CardList.vue'
@@ -11,6 +11,7 @@ import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
 import PlayerStatusMenu from "@/components/PlayerStatusMenu.vue";
 
 const gameState = useGameStateStore()
+const lobby = useLobbyStore()
 
 const randomNumbers = Array(100)
   .fill(0)
@@ -69,7 +70,7 @@ const showPlayCardOverlay = (card: CardInterface) => {
   <!-- hand cards -->
   <CardList
     :hover-effects="true"
-    :cards="gameState.me?.hand?.cards ?? []"
+    :cards="lobby.me?.hand?.cards ?? []"
     :on-click="showPlayCardOverlay"
   />
 </template>

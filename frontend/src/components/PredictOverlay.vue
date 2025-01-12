@@ -6,26 +6,27 @@ import { useGameStateStore } from '@/core/stores/gameState'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import Modal from '@/components/utils/Modal.vue'
 import { Phase } from '@/core/model/GameState'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
 
 const api = inject(API_INJECTION_KEY) as ApiService
-const gameStateStore = useGameStateStore()
+const gameState = useGameStateStore();
+const lobby = useLobbyStore()
 
 const isModalOpen = computed(() => {
   return (
-    gameStateStore.activePlayer && gameStateStore.phase === Phase.PrepareTricks
+    gameState.activePlayer && gameState.phase === Phase.PrepareTricks
   )
 })
 
 const setPrediction = async (prediction: number) => {
-  const state = await api.setPrediction(prediction)
-  gameStateStore.updateGameState(state)
+  await api.setPrediction(prediction)
 }
 
 const prediction = ref(0)
 
 // list items numers of round
 const items = computed(() => {
-  const round = gameStateStore.round
+  const round = gameState.round
   return Array.from({ length: round + 1 }, (_, i) => i)
 })
 
@@ -44,7 +45,7 @@ const items = computed(() => {
       style="background-color: rgba(255, 255, 255, 0.5)"
     >
       <CardList
-        :cards="gameStateStore.me?.hand?.cards ?? []"
+        :cards="lobby.me?.hand?.cards ?? []"
         :card-size="CardSize.small"
       />
 

@@ -2,22 +2,21 @@ import './assets/main.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
 import App from './App.vue'
 import router from './core/router'
 import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
-
-// Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {initFontAwesomeLibrary} from "@/core/icons/icons";
+import { VSnackbarQueue } from 'vuetify/labs/components'
 
 const vuetify = createVuetify({
   components,
   directives,
+  VSnackbarQueue,
 })
 
 initFontAwesomeLibrary()

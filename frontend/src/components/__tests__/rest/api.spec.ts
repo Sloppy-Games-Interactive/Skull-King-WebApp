@@ -86,30 +86,4 @@ describe('ApiService', () => {
     const gameState = await apiService.playCard(card)
     expect(gameState).toBeInstanceOf(GameState)
   })
-
-  it('saves the game successfully', async () => {
-    const mockResponse = { round: 1, phase: 'start', playerLimit: 4, roundLimit: 10, players: [], deck: { cards: [] }, tricks: [] }
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockResponse),
-      })
-    ) as jest.Mock
-
-    const apiService = new ApiService()
-    const gameState = await apiService.saveGame()
-    expect(gameState).toBeInstanceOf(GameState)
-  })
-
-  it('loads the game successfully', async () => {
-    const mockResponse = { round: 1, phase: 'start', playerLimit: 4, roundLimit: 10, players: [], deck: { cards: [] }, tricks: [] }
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockResponse),
-      })
-    ) as jest.Mock
-
-    const apiService = new ApiService()
-    const gameState = await apiService.loadGame()
-    expect(gameState).toBeInstanceOf(GameState)
-  })
 })

@@ -30,15 +30,15 @@ export default function useResizeCard(
   const targetWidth = 747
   const targetHeight = 1122
 
-  let scaleRatio = computed(() =>
+  const scaleRatio = computed(() =>
     Math.min(
       availableWidth.value / targetWidth,
       availableHeight.value / targetHeight,
     ),
   )
 
-  let scaledWidth = computed(() => targetWidth * scaleRatio.value)
-  let scaledHeight = computed(() => targetHeight * scaleRatio.value)
+  const scaledWidth = computed(() => targetWidth * scaleRatio.value)
+  const scaledHeight = computed(() => targetHeight * scaleRatio.value)
 
   const style = computed<ResizeCardStyle>(() => {
     return {

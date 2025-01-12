@@ -4,14 +4,16 @@ import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
 import {useGameStateStore} from "@/core/stores/gameState";
 import { Phase } from '@/core/model/GameState'
 import router from '@/core/router'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
+import { useClipboard } from '@vueuse/core'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore();
+const lobby = useLobbyStore()
 
 const playerLimitInput = ref(2);
 const postPlayerLimit = async () => {
-  const state = await api.setPlayerLimit(playerLimitInput.value);
-  gameState.updateGameState(state);
+  await api.setPlayerLimit(playerLimitInput.value);
 }
 
 // TODO wait for players
@@ -30,9 +32,10 @@ watch(() => gameState.phase, (currentPhase) => {
 })
 
 const startGame = async () => {
-  const state = await api.startGame();
-  gameState.updateGameState(state);
+  await api.startGame();
 }
+
+const { text, copy, copied, isSupported } = useClipboard({ source: lobby.lobbyUuid })
 </script>
 
 <template>
@@ -48,17 +51,24 @@ const startGame = async () => {
         <li v-for="player in gameState.players" :key="player.id">{{ player.name }}</li>
       </ul>
 
-      <v-btn
-        v-if="gameState.hostPlayer && gameState.me && (gameState.me.id === gameState.hostPlayer.id)"
-        :disabled="!hasEnoughPlayers"
-        class="btn text-5xl btn-primary wood-btn"
-        :class="{'disabled': !hasEnoughPlayers}"
-        @click.stop.prevent="startGame"
-      >Start Game</v-btn>
+      <button @click="copy(lobby.lobbyUuid)" style="margin-bottom: 50px;">
+        copy uuid
+      </button>
 
-      <router-link to="/" class="btn text-5xl btn-primary wood-btn"
-      >Leave</router-link
-      >
+
+      <div>
+        <v-btn
+          v-if="lobby.isHost"
+          :disabled="!hasEnoughPlayers"
+          class="btn text-5xl btn-primary wood-btn"
+          :class="{'disabled': !hasEnoughPlayers}"
+          @click.stop.prevent="startGame"
+        >Start Game</v-btn>
+
+        <router-link to="/" class="btn text-5xl btn-primary wood-btn"
+        >Leave</router-link
+        >
+      </div>
     </div>
   </v-card>
 </template>

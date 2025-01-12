@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
-import {computed, nextTick, ref} from 'vue'
+import {computed, ref} from 'vue'
 import { GameState, type GameStateInterface, Phase } from '@/core/model/GameState'
 import type { DeckInterface } from '@/core/model/Deck'
 import type { TrickInterface } from '@/core/model/Trick'
 import type { PlayerInterface } from '@/core/model/Player'
 import { useSessionStorage } from '@vueuse/core'
-import { useLobbyStore } from '@/core/stores/lobbyStore'
 
 export const useGameStateStore = defineStore('gameState', () => {
   const sessionStorage = useSessionStorage<GameStateInterface | null>(
@@ -54,26 +53,6 @@ export const useGameStateStore = defineStore('gameState', () => {
     return undefined
   })
 
-  const hostPlayer = computed<PlayerInterface | undefined>(() => {
-    return players.value[0] ?? undefined
-  })
-
-
-  const lobbyStore = useLobbyStore();
-  const me = computed<PlayerInterface | undefined>(() => {
-    if (!lobbyStore.playerUuid) {
-      return undefined;
-    }
-
-    for (const player of players.value) {
-      if (player.id === lobbyStore.playerUuid) {
-        return player
-      }
-    }
-
-    return undefined
-  })
-
   const currentTrick = computed<TrickInterface | undefined>(() => {
     return tricks.value[0] ?? undefined
   })
@@ -87,8 +66,6 @@ export const useGameStateStore = defineStore('gameState', () => {
     deck,
     tricks,
     activePlayer,
-    hostPlayer,
-    me,
     currentTrick,
     updateGameState,
   }

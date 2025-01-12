@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
-import { useGameStateStore } from '@/core/stores/gameState'
 import router from '@/core/router'
 
 const api = inject(API_INJECTION_KEY) as ApiService
-const gameState = useGameStateStore()
 
 const playerLimitInput = ref(2)
 const postPlayerLimit = async () => {
-  const state = await api.setPlayerLimit(Number.parseInt(playerLimitInput.value))
-  gameState.updateGameState(state)
+  await api.setPlayerLimit(Number.parseInt(playerLimitInput.value))
   await router.push('/join-game')
 }
 

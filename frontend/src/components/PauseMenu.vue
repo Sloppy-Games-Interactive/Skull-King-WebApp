@@ -2,7 +2,6 @@
 import { inject, ref } from 'vue'
 import Modal from '@/components/utils/Modal.vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
-import { useGameStateStore } from '@/core/stores/gameState'
 
 const isModalOpen = ref(false)
 
@@ -14,11 +13,9 @@ function closeModal() {
   isModalOpen.value = false
 }
 
-const gameState = useGameStateStore()
 const api = inject(API_INJECTION_KEY) as ApiService
 const fetchGameStateUpdate = async () => {
-  const state = await api.getStatus()
-  gameState.updateGameState(state)
+  await api.getStatus()
 }
 </script>
 

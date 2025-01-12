@@ -1,24 +1,46 @@
 import type {EventBusKey} from "@vueuse/core";
 import {type GameStateInterface} from "@/core/model/GameState";
 
-
-export enum EventName {
-  GameStateChange = 'game-state-change',
-  PromptPrediction = 'prompt-prediction',
+export interface Event<T> {
+  name: T
 }
 
-export interface Event {
-  name: EventName
+export enum GameStateEventName {
+  GameStateChange,
+  PromptPrediction,
+  UpdateState,
+  SetPlayerLimit,
+  SetPlayerName,
+  JoinLobby,
+  StartGame,
+  SetPrediction,
+  PlayCard,
 }
 
-export class GameStateEvent implements Event {
+export class GameStateEvent implements Event<GameStateEventName> {
   constructor(
-    public readonly name: EventName,
-    public readonly currentState?: GameStateInterface,
-    public readonly oldState?: GameStateInterface
+    public readonly name: GameStateEventName,
+    public readonly state?: GameStateInterface,
   ) {}
 }
 
-export const GameStateStoreChangeBus: EventBusKey<GameStateEvent> = Symbol()
-
 export const GameStateBus: EventBusKey<GameStateEvent> = Symbol()
+
+export enum ErrorEventName {
+  ValidationError,
+  WrongInput,
+  ServerError,
+  NetworkError,
+  UnknownError,
+
+}
+
+export class ErrorEvent implements Event<ErrorEventName> {
+  constructor(
+    public readonly name: ErrorEventName,
+    public readonly message?: string,
+    public readonly code?: string | number
+  ) {}
+}
+
+export const ErrorBus: EventBusKey<ErrorEvent> = Symbol()

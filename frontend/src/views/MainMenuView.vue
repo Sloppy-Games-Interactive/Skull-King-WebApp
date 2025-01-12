@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import { inject } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
-import { useGameStateStore } from '@/core/stores/gameState'
 import router from '@/core/router'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 
-const joinGame = (event: MouseEvent) => {
-  console.log('joinGame')
-}
 
-const { updateGameState } = useGameStateStore()
 const lobbyStore = useLobbyStore();
 const api = inject(API_INJECTION_KEY) as ApiService
 
 const newGame = async (event: MouseEvent) => {
   const uuid = await api.newGame()
   lobbyStore.setLobbyUuid(uuid)
-  const state = await api.getStatus(uuid)
+  await api.getStatus()
 
-  updateGameState(state)
   await router.push('/new-game')
 }
 </script>
