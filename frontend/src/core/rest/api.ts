@@ -5,7 +5,6 @@ import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useEventBus } from '@vueuse/core'
 import { ErrorBus, ErrorEvent, ErrorEventName, GameStateBus, GameStateEvent, GameStateEventName } from '@/core/event-bus'
 import type { GameStateInterface } from '@/core/model/GameState'
-import { useGameStateStore } from '@/core/stores/gameState'
 
 abstract class BaseApiService {
   logger = new Logger({ name: "SkullKingLogger" });
@@ -85,7 +84,6 @@ abstract class BaseApiService {
 export const API_INJECTION_KEY = Symbol() as InjectionKey<ApiService>;
 
 type UseLobbyStoreType = ReturnType<typeof useLobbyStore>
-type UseGameStateStoreType = ReturnType<typeof useGameStateStore>
 
 export class ApiService extends BaseApiService {
   constructor(
@@ -108,7 +106,7 @@ export class ApiService extends BaseApiService {
   }
 
   private handleStateUpdate(event: GameStateEventName,state: GameStateInterface) {
-    this.gameStateBus.emit(new GameStateEvent(event, state, this.gameState.currentGameState ?? undefined))
+    this.gameStateBus.emit(new GameStateEvent(event, state))
   }
 
   get lobbyUuid(): string | undefined {
