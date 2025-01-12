@@ -39,7 +39,7 @@ function showRoundChange(round: number) {
 }
 
 bus.on(async (event: GameStateEvent) => {
-  if (!event.oldState || !event.state) {
+  if (!event.state) {
     return;
   }
 

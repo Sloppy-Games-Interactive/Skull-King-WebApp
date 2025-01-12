@@ -9,7 +9,7 @@ case class Player(
   id: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000"),
   name: String,
   // TODO: change default profile pic
-  profilePicUrl: String = "https://api.dicebear.com/9.x/bottts/svg",
+  profilePicUrl: String = "",
   // maybe the server should generate the UUID and send it to the client not the other way around
   hand: IHand = Hand(),
   score: Int = 0,

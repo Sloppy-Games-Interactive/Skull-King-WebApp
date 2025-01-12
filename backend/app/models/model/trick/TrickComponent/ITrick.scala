@@ -58,7 +58,8 @@ trait ITrick extends Serializable{
       )
     }
     Json.obj(
-      "stack" -> stackJson
+      "stack" -> stackJson,
+      "winner" -> this.winner.map(_.toJson)
     )
   }
 

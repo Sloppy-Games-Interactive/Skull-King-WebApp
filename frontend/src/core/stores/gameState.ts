@@ -45,6 +45,10 @@ export const useGameStateStore = defineStore('gameState', () => {
     currentGameState.value = state
   }
 
+  const updatePlayers = (players: PlayerInterface[]) => {
+    players.value = players
+  }
+
   const activePlayer = computed<PlayerInterface | undefined>(() => {
     for (const player of players.value) {
       if (player.active) {
@@ -71,5 +75,6 @@ export const useGameStateStore = defineStore('gameState', () => {
     activePlayer,
     currentTrick,
     updateGameState,
+    updatePlayers,
   }
 })

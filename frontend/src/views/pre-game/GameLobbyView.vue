@@ -60,8 +60,8 @@ const copyLobbyIdToClipboard = () => {
       <h1 class="text-6xl font-bold pt-10">Game Lobby</h1>
 
       <div class="grid place-items-center my-8">
-        <PlayerStatusRow v-for="player in gameState.players" :key="player.id"
-                         :profile-picture="player.profilePicUrl"
+        <PlayerStatusRow v-for="(player, idx) in gameState.players" :key="player.id"
+                         :profile-picture="`http://localhost:5173/images/profiles/${idx + 1}.png`"
                          :username="player.name" class="min-w-[15em] my-5"/>
       </div>
 

@@ -6,7 +6,7 @@ export enum Suit {
   Blue = 'Blue',
   Black = 'Black',
   Escape = 'Escape',
-  SkullKing = 'Skullking',
+  SkullKing = 'SkullKing',
   Pirate = 'Pirate',
   Mermaid = 'Mermaid',
   Joker = 'Joker',

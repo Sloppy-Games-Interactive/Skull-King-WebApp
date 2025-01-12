@@ -4,6 +4,7 @@ import type { Serializable, SerializableJson } from '@/core/model/Serializable'
 
 export interface TrickInterface extends Serializable<TrickInterface> {
   stack: TrickElementInterface[]
+  winner: PlayerInterface | null
 }
 
 export interface TrickElementInterface
@@ -31,14 +32,17 @@ export class TrickElement implements TrickElementInterface {
 
 export class Trick implements TrickInterface {
   readonly stack: TrickElementInterface[]
+  readonly winner: PlayerInterface | null
 
-  constructor({ stack }: SerializableJson<TrickInterface>) {
+  constructor({ stack, winner }: SerializableJson<TrickInterface>) {
     this.stack = stack.map(element => new TrickElement(element))
+    this.winner = winner ? new Player(winner) : null
   }
 
   toJSON(): SerializableJson<TrickInterface> {
     return {
       stack: this.stack,
+      winner: this.winner,
     }
   }
 }

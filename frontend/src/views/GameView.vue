@@ -10,6 +10,7 @@ import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
 import PlayerStatusMenu from "@/components/PlayerStatusMenu.vue";
 import PhaseChangeOverlay from '@/components/PhaseChangeOverlay.vue'
+import ScoreView from '@/components/ScoreView.vue'
 
 
 const gameState = useGameStateStore()
@@ -48,14 +49,7 @@ const showPlayCardOverlay = (card: CardInterface) => {
     <div class="ui">
       <div class="grid grid-cols-3">
         <div class="col-span-2">
-          <div class="w-full h-full flex align-center justify-center p-3 text-white vertical-mid text-center text-3xl bg-white/40 rounded-br-lg backdrop-blur-2xl">
-            <template v-if="lobby.me?.active">
-              It's your turn!
-            </template>
-            <template v-else>
-              {{ gameState.activePlayer?.name }} is playing a card.
-            </template>
-          </div>
+          <ScoreView/>
         </div>
 
         <div class="justify-self-end p-3">

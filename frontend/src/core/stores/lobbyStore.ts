@@ -22,8 +22,22 @@ export const useLobbyStore = defineStore('lobby', () => {
     },
   )
 
+  const gameState = useGameStateStore()
+
   const lobbyUuid = ref<string | undefined>(sessionStorage.value?.lobbyUuid ?? undefined);
   const playerUuid = ref<string | undefined>(sessionStorage.value?.playerUuid ?? undefined);
+
+  const initRandomProfiles = () => {
+    const numbers: number[] = Array.from({ length: 9 }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+
+    const players: PlayerInterface[] = [];
+    gameState.players.forEach((player) => {
+      player.profilePicUrl = numbers.pop() as unknown as string; // todo build url
+      players.push(player);
+    });
+
+    gameState.updatePlayers(players)
+  }
 
   const setLobbyUuid = (uuid: string | undefined) => {
     lobbyUuid.value = uuid;
@@ -42,8 +56,6 @@ export const useLobbyStore = defineStore('lobby', () => {
       playerUuid: uuid,
     }
   }
-
-  const gameState = useGameStateStore()
   const me = computed<PlayerInterface | undefined>(() => {
     if (!playerUuid.value) {
       return undefined;
@@ -73,6 +85,7 @@ export const useLobbyStore = defineStore('lobby', () => {
     setPlayerUuid,
     hostPlayer,
     isHost,
-    me
+    me,
+    initRandomProfiles,
   }
 })

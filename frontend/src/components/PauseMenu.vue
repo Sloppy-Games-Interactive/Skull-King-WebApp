@@ -26,6 +26,7 @@ function leave() {
     <fa-icon icon="bars" />
   </AppButton>
 
+  <!-- needed for the backdrop -->
   <Modal :open="isModalOpen" :on-click="closeModal"></Modal>
 
   <Teleport to="body">
@@ -38,8 +39,6 @@ function leave() {
         <div class="mx-auto">
           <div class="grid items-center mt-10 gap-5 px-3">
             <AppButton @click="closeModal"> Resume </AppButton>
-
-            <AppButton class="disabled" @click.stop.prevent> Scores </AppButton>
 
             <AppButton @click.stop.prevent="leave"> Main Menu </AppButton>
           </div>
