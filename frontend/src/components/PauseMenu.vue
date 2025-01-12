@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import Modal from '@/components/utils/Modal.vue'
 import AppButton from '@/components/utils/AppButton.vue'
 import router from '@/core/router'
+import { FontAwesomeIcon as FaIcon } from '@fortawesome/vue-fontawesome'
+import { ButtonSize } from '@/components/utils/enums'
 
 const isModalOpen = ref(false)
 
@@ -20,9 +22,9 @@ function leave() {
 </script>
 
 <template>
-  <button class="btn text-5xl btn-primary wood-btn" @click="openModal">
-    Menu
-  </button>
+  <AppButton :size="ButtonSize.SMALL" @click="openModal">
+    <fa-icon icon="bars" />
+  </AppButton>
 
   <Modal :open="isModalOpen" :on-click="closeModal"></Modal>
 
@@ -34,23 +36,12 @@ function leave() {
         @click.stop="closeModal"
       >
         <div class="mx-auto">
-          <div class="grid items-center mt-10 gap-5">
-            <AppButton
-              @click="closeModal"
-            >
-              Resume
-            </AppButton>
+          <div class="grid items-center mt-10 gap-5 px-3">
+            <AppButton @click="closeModal"> Resume </AppButton>
 
-            <AppButton
-              class="disabled"
-              @click.stop.prevent
-            >
-              Scores
-            </AppButton>
+            <AppButton class="disabled" @click.stop.prevent> Scores </AppButton>
 
-            <AppButton @click.stop.prevent="leave">
-              Main Menu
-            </AppButton>
+            <AppButton @click.stop.prevent="leave"> Main Menu </AppButton>
           </div>
         </div>
       </div>
@@ -63,8 +54,7 @@ function leave() {
 
 .slide-enter-active,
 .slide-leave-active {
-  transition:
-    transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .slide-enter-from,

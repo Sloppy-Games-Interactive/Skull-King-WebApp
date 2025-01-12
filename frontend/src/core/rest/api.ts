@@ -90,7 +90,6 @@ type UseGameStateStoreType = ReturnType<typeof useGameStateStore>
 export class ApiService extends BaseApiService {
   constructor(
     private lobby?: UseLobbyStoreType | undefined,
-    private gameState?: UseGameStateStoreType | undefined,
     private gameStateBus = useEventBus<GameStateEvent>(GameStateBus),
     private errorBus = useEventBus<ErrorEvent>(ErrorBus)
   ) {
@@ -109,10 +108,6 @@ export class ApiService extends BaseApiService {
   }
 
   private handleStateUpdate(event: GameStateEventName,state: GameStateInterface) {
-    if (!this.gameState) {
-      this.gameState = useGameStateStore()
-    }
-
     this.gameStateBus.emit(new GameStateEvent(event, state, this.gameState.currentGameState ?? undefined))
   }
 

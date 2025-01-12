@@ -77,7 +77,7 @@ const dimensionsStyle = computed(() => {
 
 <template>
   <div class="card textured" :style="Object.assign(style, dimensionsStyle)" :class="classes">
-    <div v-if="typeof value === 'number'" class="values top">
+    <div v-if="cardType === 'standard'" class="values top">
       <div class="value textured">{{ props.value }}</div>
     </div>
     <div class="inner textured light">
@@ -85,7 +85,7 @@ const dimensionsStyle = computed(() => {
 
       <div class="image"></div>
     </div>
-    <div v-if="typeof value === 'number'" class="values bottom">
+    <div v-if="cardType === 'standard'" class="values bottom">
       <div class="value textured">{{ props.value }}</div>
     </div>
   </div>

@@ -14,7 +14,7 @@ withDefaults(defineProps<{
 <template>
 <Teleport to="body">
   <Transition name="fade">
-    <div v-if="open" class="modal-backdrop" :class="classes + ` z-[${zIndex}]`" @click.stop.prevent="onClick">
+    <div v-if="open" class="modal-backdrop" :class="classes" :style="`z-index: ${zIndex}`" @click.stop.prevent="onClick">
       <slot></slot>
     </div>
   </Transition>
@@ -42,7 +42,6 @@ withDefaults(defineProps<{
 }
 
 .modal-backdrop {
-  z-index: 999;
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
   width: 100%;

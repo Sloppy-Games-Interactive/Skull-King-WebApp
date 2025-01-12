@@ -70,7 +70,6 @@ export const useGameStateStore = defineStore('gameState', () => {
     lastTrickWinner,
     activePlayer,
     currentTrick,
-    currentGameState,
     updateGameState,
   }
 })

@@ -40,7 +40,7 @@ const items = computed(() => {
     :open="isModalOpen ?? false"
     classes="flex justify-center items-center"
   >
-    <div v-if="lobby.me?.prediction !== null" class="text-5xl text-white">
+    <div v-if="lobby.me?.prediction !== null" class="text-5xl text-white p-6 text-center">
       Waiting for other players
     </div>
 
@@ -69,7 +69,7 @@ const items = computed(() => {
         <v-col cols="auto" class="my-4">
           <AppButton
             @click.stop.prevent="setPrediction(prediction)"
-            >set prediction</AppButton
+            >Set prediction</AppButton
           >
         </v-col>
       </v-row>

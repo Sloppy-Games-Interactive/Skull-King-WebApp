@@ -11,6 +11,7 @@ import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
 import PlayerStatusMenu from "@/components/PlayerStatusMenu.vue";
 import PhaseChangeOverlay from '@/components/PhaseChangeOverlay.vue'
 
+
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
 
@@ -35,53 +36,63 @@ const showPlayCardOverlay = (card: CardInterface) => {
 </script>
 
 <template>
-  <PhaseChangeOverlay></PhaseChangeOverlay>
+  <KeepAlive><PhaseChangeOverlay :key="0" /></KeepAlive>
   <PredictOverlay></PredictOverlay>
   <PlayCardOverlay
     :card="playCard as CardInterface"
     @close="playCard = null"
   ></PlayCardOverlay>
 
-  <div class="grid grid-cols-3 md:grid-cols-6">
-    <div class="ml-10 mt-10 ml-auto fixed left-0 top-0 align-middle z-[9]">
-      <PlayerStatusMenu />
+
+  <div class="game-view-container w-full h-full">
+    <div class="ui">
+      <div class="grid grid-cols-3">
+        <div class="col-span-2">
+          <div class="w-full h-full flex align-center justify-center p-3 text-white vertical-mid text-center text-3xl bg-white/40 rounded-br-lg backdrop-blur-2xl">
+            <template v-if="lobby.me?.active">
+              It's your turn!
+            </template>
+            <template v-else>
+              {{ gameState.activePlayer?.name }} is playing a card.
+            </template>
+          </div>
+        </div>
+
+        <div class="justify-self-end p-3">
+          <PauseMenu/>
+        </div>
+
+      </div>
     </div>
-
-
-    <div class="mr-10 mt-10 ml-auto fixed right-0 top-0 align-middle z-[10]">
-      <PauseMenu />
-    </div>
-  </div>
-
-  <h3 class="text-4xl mx-auto font-bold text-white">{{gameState.activePlayer?.name}} it's your turn</h3>
-
-  <!-- table -->
-  <div class="flex justify-center items-center">
-    <div
-      class="relative h-[300px] md:h-[400px] flex justify-center items-center"
-      ref="container"
-      :key="(gameState.currentTrick?.stack ?? []).length"
-    >
-      <Card
-        v-for="(stackEntry, idx) in gameState.currentTrick?.stack ?? []"
-        :key="
+    <div class="game-view-table">
+      <div
+        class="relative h-[300px] md:h-[400px] flex justify-center items-center"
+        ref="container"
+        :key="(gameState.currentTrick?.stack ?? []).length"
+      >
+        <Card
+          v-for="(stackEntry, idx) in gameState.currentTrick?.stack ?? []"
+          :key="
           stackEntry.player.name +
           stackEntry.card.suit +
           ((stackEntry.card as StandardCard)?.value ?? '')
         "
-        class="absolute"
-        :card="stackEntry.card"
-        :size="CardSize.medium"
-        :style="{ transform: `rotate(${getRandomRotationAngle(idx)}deg` }"
-      ></Card>
+          class="absolute"
+          :card="stackEntry.card"
+          :size="CardSize.small"
+          :style="{ transform: `rotate(${getRandomRotationAngle(idx)}deg` }"
+        ></Card>
+      </div>
+    </div>
+    <div class="hand w-full">
+      <CardList
+        :hover-effects="true"
+        :cards="lobby.me?.hand?.cards ?? []"
+        :on-click="showPlayCardOverlay"
+        :card-size="CardSize.small"
+      />
     </div>
   </div>
-  <!-- hand cards -->
-  <CardList
-    :hover-effects="true"
-    :cards="lobby.me?.hand?.cards ?? []"
-    :on-click="showPlayCardOverlay"
-  />
 </template>
 
 <style scoped lang="scss">
@@ -89,4 +100,22 @@ select {
   color: black;
   width: auto;
 }
+
+.game-view-container {  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 3fr 3fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "ui ui ui"
+    "table table table"
+    "hand hand hand";
+}
+
+.game-view-table { grid-area: table; }
+
+.hand { grid-area: hand; }
+
+.ui { grid-area: ui; }
+
 </style>

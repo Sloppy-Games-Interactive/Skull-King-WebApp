@@ -79,7 +79,7 @@ const copyLobbyIdToClipboard = () => {
         >Start Game</AppButton>
 
         <div v-else>
-          <p class="text-2xl font-semibold">Waiting for host to start the game</p>
+          <p class="text-2xl font-semibold px-3">Waiting for host to start the game</p>
         </div>
       </div>
     </div>

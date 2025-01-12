@@ -63,7 +63,7 @@ const style = computed(() => {
 
 <template>
   <div :style="style">
-    <SpecialCard v-if="props.card.isSpecial" :suit="props.card.suit as SpecialSuit" />
+    <SpecialCard v-if="props.card.isSpecial || (props.card as StandardCardType).value === 0" :suit="props.card.suit as SpecialSuit" />
     <StandardCard
       v-else
       :suit="props.card.suit as StandardSuit"

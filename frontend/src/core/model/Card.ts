@@ -6,7 +6,7 @@ export enum Suit {
   Blue = 'Blue',
   Black = 'Black',
   Escape = 'Escape',
-  SkullKing = 'SkullKing',
+  SkullKing = 'Skullking',
   Pirate = 'Pirate',
   Mermaid = 'Mermaid',
   Joker = 'Joker',
@@ -154,14 +154,24 @@ export interface JokerCardInterface extends SpecialCardInterface {
 
 export abstract class Card implements CardInterface {
   readonly suit: Suit
-  readonly isSpecial: boolean
-  readonly isTrump: boolean
 
   constructor({ suit, isSpecial, isTrump }: SerializableJson<CardInterface>) {
     this.suit = suit
     this.isSpecial = isSpecial
     this.isTrump = isTrump
   }
+
+  get isSpecial() {
+    return isSpecialSuit(this.suit)
+  }
+
+  set isSpecial(v: boolean) {}
+
+  get isTrump() {
+    return this.suit === Suit.Black
+  }
+
+  set isTrump(v: boolean) {}
 
   toJSON(): SerializableJson<CardInterface> {
     return {

@@ -3,7 +3,6 @@ import Modal from '@/components/utils/Modal.vue'
 import { ref } from 'vue'
 import { useEventBus } from '@vueuse/core'
 import { GameStateBus, GameStateEvent } from '@/core/event-bus'
-import { Phase } from '@/core/model/GameState'
 import type { PlayerInterface } from '@/core/model/Player'
 import { useGameStateStore } from '@/core/stores/gameState'
 
@@ -45,36 +44,27 @@ bus.on(async (event: GameStateEvent) => {
   }
 
   const state = event.state;
-  const oldState = event.oldState
-
   const noPlayerHasPredicted = state.players.every(p => typeof p.prediction !== 'number')
+
   if (state.lastTrickWinner && (noPlayerHasPredicted || (gameState.currentTrick && gameState.currentTrick.stack.length === 0))) {
     await showLastTrickWinner(state.lastTrickWinner)
   }
-  // val noPlayerHasPredicted = controller.state.players.forall(p => p.prediction.isEmpty)
-  // val activeTrick = controller.state.activeTrick
-  // if (noPlayerHasPredicted || (activeTrick.isDefined && activeTrick.get.stack.isEmpty)) {
-  //   displayTrickWinnerModal()
-  // }
 
-  // val noPlayerHasPredicted = controller.state.players.forall(p => p.prediction.isEmpty)
-  // if (controller.state.tricks.isEmpty && noPlayerHasPredicted) {
-
-  const isEnteringPrepareTricks = state.phase === Phase.PrepareTricks
-  const isRoundChange = state.round !== oldState.round
-
-  console.log('PHASE OVERLAY', event)
   if (noPlayerHasPredicted && (!gameState.currentTrick)) {
     await showRoundChange(state.round)
   }
 })
+
+if (gameState.players.every(p => typeof p.prediction !== 'number') && !gameState.currentTrick) {
+  showRoundChange(gameState.round)
+}
 </script>
 
 <template>
   <Modal :open="open"
          classes="flex justify-center items-center"
-         :z-index="10000">
-    <div class="text-5xl text-white">{{text}}</div>
+         :z-index="100000">
+    <div class="text-7xl text-white p-6 text-center">{{text}}</div>
   </Modal>
 </template>
 
