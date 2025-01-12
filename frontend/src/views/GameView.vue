@@ -27,6 +27,10 @@ const playCard = ref<CardInterface | null>(null)
 const showPlayCardOverlay = (card: CardInterface) => {
   playCard.value = card
 }
+
+//todo get sessionstorage
+//gameStore.updateGameState
+//if not working: nextTick?
 </script>
 
 <template>
@@ -76,8 +80,6 @@ const showPlayCardOverlay = (card: CardInterface) => {
 </template>
 
 <style scoped lang="scss">
-@use 'src/assets/buttons';
-
 select {
   color: black;
   width: auto;

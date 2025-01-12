@@ -11,12 +11,10 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {initFontAwesomeLibrary} from "@/core/icons/icons";
-import { VSnackbarQueue } from 'vuetify/labs/components'
 
 const vuetify = createVuetify({
   components,
   directives,
-  VSnackbarQueue,
 })
 
 initFontAwesomeLibrary()

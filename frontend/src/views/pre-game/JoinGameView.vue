@@ -2,6 +2,7 @@
 import { inject, ref } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import router from '@/core/router'
+import AppButton from '@/components/utils/AppButton.vue'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 
@@ -36,23 +37,19 @@ const rules = {
     <v-container>
       <v-row justify="center">
         <v-col cols="auto">
-          <v-btn
-            height="72"
-            min-width="164"
+          <AppButton
             @click.stop.prevent="postPlayerName"
           >
             Next
-          </v-btn>
+          </AppButton>
         </v-col>
 
         <v-col cols="auto">
-          <v-btn
-            height="72"
-            min-width="164"
+          <AppButton
             @click.stop.prevent="router.push('/')"
           >
             Cancel
-          </v-btn>
+        </AppButton>
         </v-col>
       </v-row>
     </v-container>
@@ -60,5 +57,4 @@ const rules = {
 </template>
 
 <style scoped lang="scss">
-@use '../../assets/buttons';
 </style>

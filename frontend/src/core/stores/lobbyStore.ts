@@ -27,10 +27,20 @@ export const useLobbyStore = defineStore('lobby', () => {
 
   const setLobbyUuid = (uuid: string | undefined) => {
     lobbyUuid.value = uuid;
+
+    sessionStorage.value = {
+      lobbyUuid: uuid,
+      playerUuid: playerUuid.value,
+    }
   }
 
   const setPlayerUuid = (uuid: string | undefined) => {
     playerUuid.value = uuid;
+
+    sessionStorage.value = {
+      lobbyUuid: lobbyUuid.value,
+      playerUuid: uuid,
+    }
   }
 
   const gameState = useGameStateStore()

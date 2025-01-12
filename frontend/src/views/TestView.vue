@@ -3,11 +3,12 @@
 import { ref } from 'vue'
 
 import PlayerLobbyList from '@/components/PlayerLobbyList.vue'
+import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 
 </script>
 
 <template>
-  <PlayerLobbyList player-img="" player-name="test"></PlayerLobbyList>
+  <PlayerStatusRow username="username" profile-picture="https://api.dicebear.com/9.x/bottts/png" />
 </template>
 
 <style scoped lang="scss">

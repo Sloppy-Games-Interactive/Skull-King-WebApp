@@ -6,30 +6,29 @@ import de.htwg.se.skullking.util.{ObservableEvent, Observer}
 import org.apache.pekko.actor.{Actor, ActorRef, Props}
 import org.apache.pekko.stream.Materializer
 import de.htwg.se.skullking.modules.Default.given
+import models.model.LobbyComponent.ILobby
 import models.model.LobbyComponent.LobbyBaseImpl.LobbyObject
 import play.api.libs.json.{Format, JsError, JsString, JsSuccess, JsValue, Json}
 
 import java.util.UUID
 import scala.collection.mutable
+import scala.util.{Failure, Success, Try}
 
-enum WebSocketEvent {
-  case Connected
-  case Disconnected
-  case State
-  case Play
-  case Join
-  case Leave
-  case Message
-  case Error
+object WebSocketEvent extends Enumeration {
+  type WebSocketEvent = Value
+
+  val Connected,
+      Disconnected,
+      State,
+      Play,
+      Join,
+      Leave,
+      Message,
+      Error,
+      SetUuid = Value
 
   // Not Working???
-  implicit val format: Format[WebSocketEvent] = new Format[WebSocketEvent] {
-    def reads(json: JsValue) = json match {
-      case JsString(s) => JsSuccess(WebSocketEvent.valueOf(s))
-      case _ => JsError("Invalid WebSocketEvent")
-    }
-    def writes(event: WebSocketEvent) = JsString(event.toString)
-  }
+  implicit val Format: Format[WebSocketEvent] = Json.formatEnum(this)
 }
 
 object WebSocketActor {
@@ -38,7 +37,7 @@ object WebSocketActor {
 }
 
 class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) extends Actor with Observer {
-  private val clientId: String = UUID.randomUUID().toString
+  private var clientId: String = UUID.randomUUID().toString
   val controller: ILobbyController = summon[ILobbyController]
   controller.add(this)
 
@@ -72,50 +71,78 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
       println(s"Received message from client $clientId: " + msg)
       // TODO: Implement error handling if for example [object Object] is sent
       val jsonData = Json.parse(msg)
-      val lobbyUUID = (jsonData \ "lobbyUuid").as[UUID]
-      
-      lobbyUUID match {
-        case lobbyUUID if lobbyUUID != null =>
-          LobbyObject.getLobby(lobbyUUID) match {
-            case Some(lobby) =>
-              val state = lobby.gameState
-              // TODO: fix as[String] to as[WebSocketEvent]
-              val event = (jsonData \ "event").as[String]
-              event match {
-                case event if event == WebSocketEvent.State.toString =>
-                  out ! transportProtocol(WebSocketEvent.State, List(UUID.fromString(clientId)),
-                    UUID.fromString(clientId), state.toJson).toString
-                //        case "play" =>
-                //          val data = (jsonData \ "data").as[JsValue]
-                //          controller.play(data)
-                //        case "join" =>
-                //          val data = (jsonData \ "data").as[JsValue]
-                //          controller.join(data)
-                //        case "leave" =>
-                //          val data = (jsonData \ "data").as[JsValue]
-                //          controller.leave(data)
-                // TODO: use WebSocketEvent if fixed (not string)
-                case event if event == WebSocketEvent.Message.toString =>
-                  println(s"Received message from client $clientId")
-                  val data = (jsonData \ "data").as[JsValue]
-                  println(data)
-                  val client = (jsonData \ "toClients").as[List[UUID]]
-                  // TODO: allow for multiple clients not just the first one
-                  clients.get(client.head.toString).foreach(_ ! transportProtocol(WebSocketEvent.Message, client, UUID.fromString(clientId), data).toString)
 
-                case _ =>
-                  out ! Json.obj("error" -> "Invalid event").toString
-              }
-              
-            case None =>
-              out ! Json.obj("error" -> "Invalid lobby uuid").toString
+      (jsonData \ "event").as[WebSocketEvent.WebSocketEvent] match {
+        case WebSocketEvent.State => {
+          getLobby(jsonData) match {
+            case Some(lobby) => {
+              out ! transportProtocol(
+                WebSocketEvent.State,
+                List(UUID.fromString(clientId)),
+                UUID.fromString(clientId),
+                lobby.gameState.toJson
+              ).toString
+            }
+            case None => out ! Json.obj("error" -> "Lobby not found").toString
           }
-        case _ =>
-          out ! Json.obj("error" -> "Invalid lobby uuid").toString
+
+
+          //        case "play" =>
+          //          val data = (jsonData \ "data").as[JsValue]
+          //          controller.play(data)
+          //        case "join" =>
+          //          val data = (jsonData \ "data").as[JsValue]
+          //          controller.join(data)
+          //        case "leave" =>
+          //          val data = (jsonData \ "data").as[JsValue]
+          //          controller.leave(data)
+        }
+        case WebSocketEvent.Message => {
+          println(s"Received message from client $clientId")
+          val data = (jsonData \ "data").as[JsValue]
+
+          getLobby(jsonData) match {
+            case Some(lobby) => {
+              println(data)
+              val lobbyPlayerIds = lobby.players.map(p => p.id)
+              clients
+                .filter(c => c._1 != clientId && lobbyPlayerIds.contains(c._1))
+                .foreach(_._2 ! transportProtocol(
+                  WebSocketEvent.Message,
+                  lobbyPlayerIds,
+                  UUID.fromString(clientId),
+                  data).toString
+                )
+            }
+            case None => out ! Json.obj("error" -> "Lobby not found").toString
+          }
+        }
+        case WebSocketEvent.SetUuid => {
+          val newClientId = (jsonData \ "data").as[String]
+          clients -= clientId
+          clientId = newClientId
+          clients += newClientId -> out
+          out ! Json.obj("playerId" -> newClientId).toString
+        }
+        case _ => out ! Json.obj("error" -> "Invalid event").toString
       }
   }
 
-  def transportProtocol(event: WebSocketEvent, toClients: List[UUID], fromClient: UUID, data: JsValue): JsValue = {
+  def getLobby(jsonData: JsValue): Option[ILobby] = {
+    Try[UUID]((jsonData \ "lobbyUuid").as[UUID]) match {
+      case Success(lobbyUuid) => {
+        lobbyUuid match {
+          case lobbyUUID if lobbyUUID != null => LobbyObject.getLobby(lobbyUUID)
+          case _ => None
+        }
+      }
+      case Failure(f) => None
+    }
+
+
+  }
+
+  def transportProtocol(event: WebSocketEvent.WebSocketEvent, toClients: List[UUID], fromClient: UUID, data: JsValue): JsValue = {
     Json.obj(
       "event" -> event.toString,
       "toClients" -> toClients,

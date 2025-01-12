@@ -6,7 +6,11 @@ import { useWebSocket } from '@vueuse/core'
 import type { JsonValue } from 'type-fest';
 
 export function useWebsocketHandler() {
-  const { status, data, send, open, close } = useWebSocket('ws://localhost:9000/ws', {
+  const gameState = useGameStateStore()
+  const lobby = useLobbyStore()
+
+  const { status, data, send, open, close } =
+    useWebSocket('ws://localhost:9000/ws', {
     heartbeat: {
       message: 'ping',
       interval: 1000,
@@ -18,7 +22,7 @@ export function useWebsocketHandler() {
       onFailed() {
         alert('Failed to connect WebSocket after 3 retries')
       },
-    }
+    },
   })
 
   enum WebSocketEvent {
@@ -30,6 +34,7 @@ export function useWebsocketHandler() {
     LEAVE = 'Leave',
     Message = 'Message',
     ERROR = 'Error',
+    SET_UUID = 'SetUuid',
   }
 
   function transportProtocol(
@@ -44,9 +49,6 @@ export function useWebsocketHandler() {
     };
   }
 
-  const gameState = useGameStateStore()
-  const lobby = useLobbyStore()
-
   watch(data, (newData) => {
     if (newData === 'pong') {
       return;
@@ -59,6 +61,20 @@ export function useWebsocketHandler() {
     //console.log('parsedData:', parsedData)
     switch (parsedData.event) {
       case WebSocketEvent.CONNECTED:
+        // console.log('EXISTING UUIDS', lobby.playerUuid, lobby.lobbyUuid)
+        // if (lobby.playerUuid) {
+        //   send(
+        //     JSON.stringify(
+        //       transportProtocol(WebSocketEvent.SET_UUID, [], 'server', {
+        //         lobbyId: lobby.lobbyUuid,
+        //         data: lobby.playerUuid
+        //       }),
+        //     ),
+        //   )
+        //
+        //   return;
+        // }
+
         console.log('connected:', parsedData.data)
         lobby.setPlayerUuid(parsedData.data.playerId)
         break;

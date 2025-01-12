@@ -86,7 +86,7 @@ type UseLobbyStoreType = ReturnType<typeof useLobbyStore>
 
 export class ApiService extends BaseApiService {
   constructor(
-    private lobby: UseLobbyStoreType | undefined,
+    private lobby?: UseLobbyStoreType | undefined,
     private gameStateBus = useEventBus<GameStateEvent>(GameStateBus),
     private errorBus = useEventBus<ErrorEvent>(ErrorBus)
   ) {

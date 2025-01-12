@@ -3,6 +3,8 @@ import { inject } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import router from '@/core/router'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
+import AppButton from '@/components/utils/AppButton.vue'
+import { ButtonSize } from '@/components/utils/enums'
 
 
 const lobbyStore = useLobbyStore();
@@ -26,20 +28,19 @@ const newGame = async (event: MouseEvent) => {
     </h1>
 
     <div class="grid justify-center gap-5">
-      <a class="btn text-5xl btn-primary wood-btn" @click.stop.prevent="newGame"
-        >New Game</a
-      >
-      <router-link to="/join-lobby" class="btn text-5xl btn-primary wood-btn"
-        >Join Game</router-link>
+      <AppButton @click.stop.prevent="newGame" :size="ButtonSize.LARGE"
+        >New Game</AppButton>
 
-      <router-link to="/settings" class="btn text-5xl btn-primary wood-btn"
-        >Settings</router-link>
+      <AppButton @click.stop.prevent="router.push('/join-lobby')" :size="ButtonSize.LARGE"
+      >Join Game</AppButton>
+
+      <AppButton @click.stop.prevent="router.push('/settings')" :size="ButtonSize.LARGE"
+        >Settings</AppButton>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@use 'src/assets/buttons';
 .title {
   font-family: var(--title-font-family), serif;
 }

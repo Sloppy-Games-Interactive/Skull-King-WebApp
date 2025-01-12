@@ -7,6 +7,7 @@ import { computed, inject } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import { useGameStateStore } from '@/core/stores/gameState'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
+import AppButton from '@/components/utils/AppButton.vue'
 
 const props = defineProps<{
   card: CardInterface | null
@@ -28,24 +29,29 @@ const lobby = useLobbyStore()
 const api = inject(API_INJECTION_KEY) as ApiService
 const playCard = async () => {
   if (!canPlay.value) {
-    return;
+    return
   }
 
   if (!props.card) {
     return
   }
 
+  close()
+
   await api.playCard(props.card)
 }
 
 const canPlay = computed(() => {
-  return lobby.me && lobby.me.active;
+  return lobby.me && lobby.me.active
 })
 </script>
 
 <template>
-  <Modal :open="show" :on-click="close"
-         classes="flex justify-center items-center">
+  <Modal
+    :open="show"
+    :on-click="close"
+    classes="flex justify-center items-center"
+  >
     <div v-if="card" @click.stop="close()" class="play-card-container">
       <ParallaxWrapper @click.stop>
         <Card :card="card" :size="CardSize.large"></Card>
@@ -53,24 +59,16 @@ const canPlay = computed(() => {
       <v-container>
         <v-row justify="center">
           <v-col cols="auto">
-            <v-btn
-              :disabled="!canPlay"
-              height="72"
-              min-width="164"
-              @click="playCard"
+            <AppButton
+              v-if="canPlay"
+              @click.stop.prevent="playCard"
             >
               Play
-            </v-btn>
+            </AppButton>
           </v-col>
 
           <v-col cols="auto">
-            <v-btn
-              height="72"
-              min-width="164"
-              @click.stop.prevent="close"
-            >
-              Close
-            </v-btn>
+            <AppButton @click.stop.prevent="close"> Close </AppButton>
           </v-col>
         </v-row>
       </v-container>

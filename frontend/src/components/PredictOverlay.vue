@@ -7,6 +7,7 @@ import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import Modal from '@/components/utils/Modal.vue'
 import { Phase } from '@/core/model/GameState'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
+import AppButton from '@/components/utils/AppButton.vue'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore();
@@ -39,7 +40,12 @@ const items = computed(() => {
     :open="isModalOpen ?? false"
     classes="flex justify-center items-center"
   >
+    <div v-if="lobby.me?.prediction !== null" class="text-5xl text-white">
+      Waiting for other players
+    </div>
+
     <v-card
+      v-else
       class="w-3/4 lg:w-1/2 mx-auto mt-10 font-sans px-5 text-center"
       title="Set your prediction"
       style="background-color: rgba(255, 255, 255, 0.5)"
@@ -61,11 +67,9 @@ const items = computed(() => {
       </v-container>
       <v-row justify="center">
         <v-col cols="auto" class="my-4">
-          <v-btn
-            height="72"
-            min-width="164"
+          <AppButton
             @click.stop.prevent="setPrediction(prediction)"
-            >set prediction</v-btn
+            >set prediction</AppButton
           >
         </v-col>
       </v-row>

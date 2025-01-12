@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import router from '@/core/router'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
+import AppButton from '@/components/utils/AppButton.vue'
 
 const lobbyIdInput = ref('')
 const lobbyStore = useLobbyStore()
@@ -32,23 +33,19 @@ const join = async () => {
     <v-container>
       <v-row justify="center">
         <v-col cols="auto">
-          <v-btn
-            height="72"
-            min-width="164"
+          <AppButton
             @click.stop.prevent="join"
           >
             Next
-          </v-btn>
+          </AppButton>
         </v-col>
 
         <v-col cols="auto">
-          <v-btn
-            height="72"
-            min-width="164"
+          <AppButton
             @click.stop.prevent="router.push('/')"
           >
             Cancel
-          </v-btn>
+          </AppButton>
         </v-col>
       </v-row>
     </v-container>

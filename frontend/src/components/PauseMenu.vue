@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 import Modal from '@/components/utils/Modal.vue'
-import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
+import AppButton from '@/components/utils/AppButton.vue'
+import router from '@/core/router'
 
 const isModalOpen = ref(false)
 
@@ -13,9 +14,8 @@ function closeModal() {
   isModalOpen.value = false
 }
 
-const api = inject(API_INJECTION_KEY) as ApiService
-const fetchGameStateUpdate = async () => {
-  await api.getStatus()
+function leave() {
+  router.push('/')
 }
 </script>
 
@@ -34,32 +34,23 @@ const fetchGameStateUpdate = async () => {
         @click.stop="closeModal"
       >
         <div class="mx-auto">
-          <h1 class="text-5xl text-center text-white">Pause Menu</h1>
-          <div class="flex flex-col items-center mt-10">
-            <button
-              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px]"
+          <div class="grid items-center mt-10 gap-5">
+            <AppButton
               @click="closeModal"
             >
               Resume
-            </button>
+            </AppButton>
 
-            <button
-              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px] disabled"
+            <AppButton
+              class="disabled"
               @click.stop.prevent
             >
               Scores
-            </button>
-            <button
-              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px]"
-              @click="fetchGameStateUpdate"
-            >
-              Update
-            </button>
-            <router-link
-              to="/"
-              class="btn text-5xl btn-primary wood-btn w-full max-w-[300px] text-center"
-            >Main Menu</router-link
-            >
+            </AppButton>
+
+            <AppButton @click.stop.prevent="leave">
+              Main Menu
+            </AppButton>
           </div>
         </div>
       </div>
