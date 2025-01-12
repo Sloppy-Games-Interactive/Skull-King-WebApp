@@ -210,6 +210,7 @@ object GameStateFactory extends IGameStateFactory {
     roundLimit: Int,
     deck: IDeck,
     players: List[IPlayer],
-    tricks: List[ITrick]
-  ): IGameState = GameState(phase, playerLimit, players, round, tricks, deck, roundLimit)
+    tricks: List[ITrick],
+    lastTrickWinner: Option[IPlayer]
+  ): IGameState = GameState(phase, playerLimit, players, round, tricks, deck, roundLimit, lastTrickWinner)
 }

@@ -4,6 +4,8 @@ import { Logger } from "tslog";
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useEventBus } from '@vueuse/core'
 import { ErrorBus, ErrorEvent, ErrorEventName, GameStateBus, GameStateEvent, GameStateEventName } from '@/core/event-bus'
+import type { GameStateInterface } from '@/core/model/GameState'
+import { useGameStateStore } from '@/core/stores/gameState'
 
 abstract class BaseApiService {
   logger = new Logger({ name: "SkullKingLogger" });
@@ -83,10 +85,12 @@ abstract class BaseApiService {
 export const API_INJECTION_KEY = Symbol() as InjectionKey<ApiService>;
 
 type UseLobbyStoreType = ReturnType<typeof useLobbyStore>
+type UseGameStateStoreType = ReturnType<typeof useGameStateStore>
 
 export class ApiService extends BaseApiService {
   constructor(
     private lobby?: UseLobbyStoreType | undefined,
+    private gameState?: UseGameStateStoreType | undefined,
     private gameStateBus = useEventBus<GameStateEvent>(GameStateBus),
     private errorBus = useEventBus<ErrorEvent>(ErrorBus)
   ) {
@@ -102,6 +106,14 @@ export class ApiService extends BaseApiService {
     }
 
     this.errorBus.emit(new ErrorEvent(ErrorEventName.UnknownError, typeof e === 'string' ? e : undefined));
+  }
+
+  private handleStateUpdate(event: GameStateEventName,state: GameStateInterface) {
+    if (!this.gameState) {
+      this.gameState = useGameStateStore()
+    }
+
+    this.gameStateBus.emit(new GameStateEvent(event, state, this.gameState.currentGameState ?? undefined))
   }
 
   get lobbyUuid(): string | undefined {
@@ -124,7 +136,7 @@ export class ApiService extends BaseApiService {
     try {
       const state = await this.post('/status', { lobbyUuid: this.lobbyUuid })
 
-      this.gameStateBus.emit(new GameStateEvent(GameStateEventName.UpdateState), state)
+      this.handleStateUpdate(GameStateEventName.UpdateState, state)
     } catch (e) {
       this.handleError(e)
     }
@@ -141,7 +153,7 @@ export class ApiService extends BaseApiService {
     try {
       const state = await this.post('/set-player-limit', { lobbyUuid: this.lobbyUuid, limit: limit })
 
-      this.gameStateBus.emit(new GameStateEvent(GameStateEventName.SetPlayerLimit), state)
+      this.handleStateUpdate(GameStateEventName.SetPlayerLimit, state)
     } catch (e) {
       this.handleError(e)
     }
@@ -156,7 +168,7 @@ export class ApiService extends BaseApiService {
         name: name
       })
 
-      this.gameStateBus.emit(new GameStateEvent(GameStateEventName.SetPlayerName), state)
+      this.handleStateUpdate(GameStateEventName.SetPlayerName, state)
     } catch (e) {
       this.handleError(e)
     }
@@ -170,7 +182,7 @@ export class ApiService extends BaseApiService {
         name: name
       })
 
-      this.gameStateBus.emit(new GameStateEvent(GameStateEventName.JoinLobby), state)
+      this.handleStateUpdate(GameStateEventName.JoinLobby, state)
     } catch (e) {
       this.handleError(e)
       return Promise.reject()
@@ -181,7 +193,7 @@ export class ApiService extends BaseApiService {
     try {
       const state = await this.post('/start-game', { lobbyUuid: this.lobbyUuid })
 
-      this.gameStateBus.emit(new GameStateEvent(GameStateEventName.StartGame), state)
+      this.handleStateUpdate(GameStateEventName.StartGame, state)
     } catch (e) {
       this.handleError(e)
     }
@@ -195,7 +207,7 @@ export class ApiService extends BaseApiService {
         prediction: prediction
       })
 
-      this.gameStateBus.emit(new GameStateEvent(GameStateEventName.SetPrediction), state)
+      this.handleStateUpdate(GameStateEventName.SetPrediction, state)
     } catch (e) {
       this.handleError(e)
     }
@@ -205,7 +217,7 @@ export class ApiService extends BaseApiService {
     try {
       const state = await this.post('/play-card', { lobbyUuid: this.lobbyUuid, playerUuid: this.playerUuid, card: card })
 
-      this.gameStateBus.emit(new GameStateEvent(GameStateEventName.PlayCard), state)
+      this.handleStateUpdate(GameStateEventName.PlayCard, state)
     } catch (e) {
       this.handleError(e)
     }

@@ -2,17 +2,19 @@
 withDefaults(defineProps<{
   open: boolean,
   classes?: string,
-  onClick?: () => void
+  onClick?: () => void,
+  zIndex?: number
 }>(), {
   open: () => false,
-  classes: () => ''
+  classes: () => '',
+  zIndex: () => 999
 })
 </script>
 
 <template>
 <Teleport to="body">
   <Transition name="fade">
-    <div v-if="open" class="modal-backdrop" :class="classes" @click.stop.prevent="onClick">
+    <div v-if="open" class="modal-backdrop" :class="classes + ` z-[${zIndex}]`" @click.stop.prevent="onClick">
       <slot></slot>
     </div>
   </Transition>

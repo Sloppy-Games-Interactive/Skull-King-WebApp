@@ -49,7 +49,8 @@ object GameStateDeserializer extends Deserializer[IGameState] {
       roundLimit = roundLimit,
       deck = deck,
       players = players,
-      tricks = tricks
+      tricks = tricks,
+      lastTrickWinner = None
     )
   }
 
@@ -66,6 +67,7 @@ object GameStateDeserializer extends Deserializer[IGameState] {
     val deck = DeckDeserializer.fromJson((json \ "deck").as[JsObject])
     val players = (json \ "players").as[List[JsObject]].map(PlayerDeserializer.fromJson)
     val tricks = (json \ "tricks").as[List[JsObject]].map(TrickDeserializer.fromJson)
+    val lastTrickWinner = (json \ "lastTrickWinner").asOpt[JsObject].map(PlayerDeserializer.fromJson)
 
     GameStateFactory(
       round = round,
@@ -74,7 +76,8 @@ object GameStateDeserializer extends Deserializer[IGameState] {
       roundLimit = roundLimit,
       deck = deck,
       players = players,
-      tricks = tricks
+      tricks = tricks,
+      lastTrickWinner = lastTrickWinner
     )
   }
 }
@@ -109,7 +112,8 @@ trait IGameState extends Serializable{
       "roundLimit" -> roundLimit,
       "players" -> players.map(_.toJson),
       "deck" -> deck.toJson,
-      "tricks" -> tricks.map(_.toJson)
+      "tricks" -> tricks.map(_.toJson),
+      "lastTrickWinner" -> lastTrickWinner.map(_.toJson)
     )
   }
   
@@ -123,5 +127,5 @@ trait IGameState extends Serializable{
 }
 
 trait IGameStateFactory {
-  def apply(round: Int, phase: Phase, playerLimit: Int, roundLimit: Int, deck: IDeck, players: List[IPlayer], tricks: List[ITrick]): IGameState
+  def apply(round: Int, phase: Phase, playerLimit: Int, roundLimit: Int, deck: IDeck, players: List[IPlayer], tricks: List[ITrick], lastTrickWinner: Option[IPlayer]): IGameState
 }

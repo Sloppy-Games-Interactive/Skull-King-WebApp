@@ -28,6 +28,7 @@ export const useGameStateStore = defineStore('gameState', () => {
   const players = ref<PlayerInterface[]>(sessionStorage.value?.players ?? [])
   const deck = ref<DeckInterface | null>(sessionStorage.value?.deck ?? null)
   const tricks = ref<TrickInterface[]>(sessionStorage.value?.tricks ?? [])
+  const lastTrickWinner = ref<PlayerInterface | null>(sessionStorage.value?.lastTrickWinner ?? null)
 
   const updateGameState = (state: GameStateInterface) => {
     round.value = state.round
@@ -37,6 +38,7 @@ export const useGameStateStore = defineStore('gameState', () => {
     players.value = state.players
     deck.value = state.deck
     tricks.value = state.tricks
+    lastTrickWinner.value = state.lastTrickWinner
 
     sessionStorage.value = state
 
@@ -65,8 +67,10 @@ export const useGameStateStore = defineStore('gameState', () => {
     players,
     deck,
     tricks,
+    lastTrickWinner,
     activePlayer,
     currentTrick,
+    currentGameState,
     updateGameState,
   }
 })

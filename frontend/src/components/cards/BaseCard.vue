@@ -22,7 +22,7 @@ const props = defineProps<{
   cardHeight?: number,
 }>()
 
-const suitClass = computed(() => {
+const suitClass = computed<string>(() => {
   switch (props.suit) {
     case Suit.Black:
       return 'trump'
@@ -42,6 +42,8 @@ const suitClass = computed(() => {
       return 'pirate'
     case Suit.SkullKing:
       return 'skullKing'
+    default:
+      return ''
   }
 })
 

@@ -53,17 +53,16 @@ const copyLobbyIdToClipboard = () => {
 
 <template>
   <v-card
-    title="Game Lobby"
     class="w-3/4 h-3/4 mx-auto m-10 backdrop-blur-lg"
     style="background-color: rgba(255, 255, 255, 0.5);"
   >
     <div class="text-center gap-5">
-      <h2>game lobby</h2>
+      <h1 class="text-6xl font-bold pt-10">Game Lobby</h1>
 
-      <div>
+      <div class="grid place-items-center my-8">
         <PlayerStatusRow v-for="player in gameState.players" :key="player.id"
                          :profile-picture="player.profilePicUrl"
-                         :username="player.name"></PlayerStatusRow>
+                         :username="player.name" class="min-w-[15em] my-5"/>
       </div>
 
       <AppButton @click="copyLobbyIdToClipboard" style="margin-bottom: 50px;">
@@ -80,7 +79,7 @@ const copyLobbyIdToClipboard = () => {
         >Start Game</AppButton>
 
         <div v-else>
-          Waiting for host to start the game
+          <p class="text-2xl font-semibold">Waiting for host to start the game</p>
         </div>
       </div>
     </div>

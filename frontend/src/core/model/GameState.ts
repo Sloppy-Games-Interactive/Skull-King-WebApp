@@ -26,6 +26,7 @@ export interface GameStateInterface extends Serializable<GameStateInterface> {
   players: PlayerInterface[]
   deck: DeckInterface
   tricks: TrickInterface[]
+  lastTrickWinner: PlayerInterface | null
 }
 
 export class GameState implements GameStateInterface {
@@ -36,6 +37,7 @@ export class GameState implements GameStateInterface {
   readonly players
   readonly deck
   readonly tricks
+  readonly lastTrickWinner
 
   constructor({
     round,
@@ -45,6 +47,7 @@ export class GameState implements GameStateInterface {
     players,
     deck,
     tricks,
+    lastTrickWinner,
   }: SerializableJson<GameStateInterface>) {
     this.round = round
     this.phase = phase
@@ -53,6 +56,7 @@ export class GameState implements GameStateInterface {
     this.players = players.map(player => new Player(player))
     this.deck = new Deck(deck)
     this.tricks = tricks.map(trick => new Trick(trick))
+    this.lastTrickWinner = lastTrickWinner ? new Player(lastTrickWinner) : null
   }
 
   toJSON(): SerializableJson<GameStateInterface> {
@@ -64,6 +68,7 @@ export class GameState implements GameStateInterface {
       players: this.players,
       deck: this.deck,
       tricks: this.tricks,
+      lastTrickWinner: this.lastTrickWinner,
     }
   }
 }

@@ -9,6 +9,7 @@ import CardList from '@/components/cards/CardList.vue'
 import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
 import PlayerStatusMenu from "@/components/PlayerStatusMenu.vue";
+import PhaseChangeOverlay from '@/components/PhaseChangeOverlay.vue'
 
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
@@ -17,7 +18,7 @@ const randomNumbers = Array(100)
   .fill(0)
   .map(() => Math.random())
 
-const getRandomRotationAngle = (idx: number) => {
+function getRandomRotationAngle(idx: number) {
   const min = -8 // minimum rotation angle
   const max = 8 // maximum rotation angle
   return (randomNumbers[idx] ?? Math.random()) * (max - min) + min
@@ -34,6 +35,7 @@ const showPlayCardOverlay = (card: CardInterface) => {
 </script>
 
 <template>
+  <PhaseChangeOverlay></PhaseChangeOverlay>
   <PredictOverlay></PredictOverlay>
   <PlayCardOverlay
     :card="playCard as CardInterface"
@@ -50,6 +52,9 @@ const showPlayCardOverlay = (card: CardInterface) => {
       <PauseMenu />
     </div>
   </div>
+
+  <h3 class="text-4xl mx-auto font-bold text-white">{{gameState.activePlayer?.name}} it's your turn</h3>
+
   <!-- table -->
   <div class="flex justify-center items-center">
     <div

@@ -21,6 +21,7 @@ export class GameStateEvent implements Event<GameStateEventName> {
   constructor(
     public readonly name: GameStateEventName,
     public readonly state?: GameStateInterface,
+    public readonly oldState?: GameStateInterface,
   ) {}
 }
 

@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import PlayerStatusRow from "@/components/PlayerStatusRow.vue";
-import Modal from "@/components/utils/Modal.vue";
-import {inject, ref} from "vue";
+import {ref} from "vue";
 import {useGameStateStore} from "@/core/stores/gameState";
-import {API_INJECTION_KEY, ApiService} from "@/core/rest/api";
 
 const isModalOpen = ref(false)
 
