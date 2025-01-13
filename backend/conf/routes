@@ -1,0 +1,29 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+
+## Test description
+GET      /                           controllers.PlayController.index
+
+GET      /rules                      controllers.PlayController.rules
+## Play the game
+GET      /play                      controllers.PlayController.play
+POST     /status             controllers.PlayController.getStatus()
+## Start a new game
+POST     /new-lobby                  controllers.PlayController.newLobby
+POST     /set-player-limit           controllers.PlayController.setPlayerLimit
+POST     /join-lobby                 controllers.PlayController.joinLobby
+POST     /start-game                 controllers.PlayController.startGame
+## Set prediction of player for the current round
+POST     /set-prediction             controllers.PlayController.setPrediction
+POST     /play-card                  controllers.PlayController.playCard
+
+GET      /ws                         controllers.WebSocketController.socket
+
+# Map static resources from the /public folder to the /assets URL path
+#-- skip
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+

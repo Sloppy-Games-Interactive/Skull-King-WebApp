@@ -1,11 +1,36 @@
 services:
-  skullking:
-    build: .
-    environment:
-      - DISPLAY=host.docker.internal:0
-      - LIBGL_ALWAYS_INDIRECT=true
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/frontend.Dockerfile
+      args:
+        - CACHEBUST=${CACHEBUST}
+    working_dir: /app
+#    volumes:
+#      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - skullnet
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/backend.Dockerfile
+    working_dir: /app
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-    network_mode: host
-    stdin_open: true
-    tty: true
+      - ./backend:/app
+    ports:
+      - "9000:9000"
+      #- "443:9000" # TODO - check how to https/ssl
+    networks:
+      - skullnet
+
+# todo
+#  redis:
+#    image: redis
+
+# todo
+networks:
+  skullnet:
+    driver: bridge
