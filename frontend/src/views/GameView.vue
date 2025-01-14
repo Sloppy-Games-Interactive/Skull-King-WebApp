@@ -102,9 +102,6 @@ select {
 
 .game-view-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 3fr 3fr;
-  gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
     'ui ui ui'

@@ -16,7 +16,16 @@ defineProps<{
     />
     <div class="ml-16 flex w-full">
       <p class="text-3xl lg:text-4xl font-semibold text-white content-center">{{ player.name }}</p>
-      <p v-if="showScore" class="text-xl font-semibold text-white ml-auto content-center text-center mr-4 bg-[#3c2217] rounded-full w-12 h-12">{{ player.score }}</p>    </div>
+      <p v-if="showScore" class="text-xl font-semibold text-white ml-auto content-center text-center mr-4 bg-[#3c2217] rounded-full w-12 h-12">{{ player.score }}</p>
+
+<!--      <p class="text-2xl text-white mt-n5 mb-2 ml-2 text-center">-->
+<!--        Prediction: {{ player.prediction }} | Won tricks:-->
+<!--        {{-->
+<!--          gameState.tricks.filter(t => t.winner?.id === lobby.me?.id)-->
+<!--            .length-->
+<!--        }}-->
+<!--      </p>-->
+    </div>
   </div>
 </template>
 
