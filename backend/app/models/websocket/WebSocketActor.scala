@@ -117,11 +117,14 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
           }
         }
         case WebSocketEvent.SetUuid => {
-          val newClientId = (jsonData \ "data").as[String]
-          clients -= clientId
-          clientId = newClientId
-          clients += newClientId -> out
-          out ! Json.obj("playerId" -> newClientId).toString
+          val newClientId = (jsonData \ "data" \ "playerUuid").as[UUID].toString
+          if (newClientId != clientId) {
+            clients.update(newClientId, clients.remove(clientId).get)
+            clientId = newClientId
+            out ! Json.obj("playerId" -> newClientId).toString
+          } else {
+            out ! Json.obj("error" -> "Same UUID").toString
+          }
         }
         case _ => out ! Json.obj("error" -> "Invalid event").toString
       }

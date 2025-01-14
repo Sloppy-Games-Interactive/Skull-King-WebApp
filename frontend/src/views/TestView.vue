@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import Card from '@/components/cards/Card.vue'
+import { CardSize, Suit } from '@/core/model/Card'
+import {SpecialCard} from '@/core/model/Card'
 
-import { ref } from 'vue'
-
-import PlayerLobbyList from '@/components/PlayerLobbyList.vue'
-import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
-
+const c = new SpecialCard({suit: Suit.Pirate})
 </script>
 
 <template>
-  <PlayerStatusRow username="username" profile-picture="https://api.dicebear.com/9.x/bottts/png" />
+  <div style="display: flex">
+    <Card :card="null" :size="CardSize.medium"></Card>
+    <Card :card="c" :size="CardSize.medium"></Card>
+  </div>
 </template>
 
 <style scoped lang="scss">

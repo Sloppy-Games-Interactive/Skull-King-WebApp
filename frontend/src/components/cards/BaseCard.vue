@@ -8,18 +8,18 @@ import {
 import useResizeCard from '@/composables/resize-card'
 import { Suit } from '@/core/model/Card'
 
-type CardType = 'standard' | 'special'
+type CardType = 'standard' | 'special' | 'back'
 
 type CardValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
 
 const props = defineProps<{
   cardType: CardType
-  suit: Suit
+  suit?: Suit
   value?: CardValue
   text?: string
-  flipped?: boolean
-  cardWidth?: number,
-  cardHeight?: number,
+  subtext?: string
+  cardWidth?: number
+  cardHeight?: number
 }>()
 
 const suitClass = computed<string>(() => {
@@ -47,10 +47,7 @@ const suitClass = computed<string>(() => {
   }
 })
 
-const classes = computed(
-  () =>
-    props.cardType + ' ' + suitClass.value + ' ' + (props.flipped ? 'flipped' : ''),
-)
+const classes = computed(() => props.cardType + ' ' + suitClass.value)
 
 const $parent = useParentElement()
 
@@ -69,24 +66,41 @@ const { style } = useResizeCard(availableWidth, availableHeight)
 
 const dimensionsStyle = computed(() => {
   return {
-    '--card_max-width': props.cardWidth ? `${props.cardWidth}px` : style['--card_max-width'],
-    '--card_max-height': props.cardHeight ? `${props.cardHeight}px` : style['--card_max-height'],
+    '--card_max-width': props.cardWidth
+      ? `${props.cardWidth}px`
+      : style['--card_max-width'],
+    '--card_max-height': props.cardHeight
+      ? `${props.cardHeight}px`
+      : style['--card_max-height'],
   }
 })
+
+function isNonEmptyString(s: unknown): s is string {
+  return typeof s === 'string' && s.trim().length > 0
+}
 </script>
 
 <template>
-  <div class="card textured" :style="Object.assign(style, dimensionsStyle)" :class="classes">
+  <div
+    class="card textured"
+    :style="Object.assign(style, dimensionsStyle)"
+    :class="classes"
+  >
     <div v-if="cardType === 'standard'" class="values top">
-      <div class="value textured">{{ props.value }}</div>
+      <div class="value textured">{{ value }}</div>
     </div>
     <div class="inner textured light">
-      <div v-if="typeof text === 'string'" class="text">{{ props.text }}</div>
+      <div v-if="isNonEmptyString(text)" class="text">
+        {{ text }}
+        <div v-if="isNonEmptyString(subtext)" class="subtext">
+          {{ subtext }}
+        </div>
+      </div>
 
       <div class="image"></div>
     </div>
     <div v-if="cardType === 'standard'" class="values bottom">
-      <div class="value textured">{{ props.value }}</div>
+      <div class="value textured">{{ value }}</div>
     </div>
   </div>
 </template>
@@ -198,9 +212,32 @@ const dimensionsStyle = computed(() => {
   font-size: var(--text_font-size);
   width: 100%;
   text-align: center;
-  color: white;
-  background: linear-gradient(0deg, black, transparent);
+  color: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 80%), transparent);
   user-select: none;
+  z-index: 2;
+
+  .subtext {
+    font-size: 0.5em;
+    line-height: 0.5em;
+    margin-top: -0.3em;
+    padding-bottom: 0.5em;
+  }
+}
+
+.back .text {
+  font-family: var(--title-font-family), serif;
+}
+
+.back .inner:after {
+  content: '';
+  background: radial-gradient(circle, transparent 0%, rgba(0, 0, 0, 0.2) 95%);
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .image {
@@ -300,6 +337,16 @@ const dimensionsStyle = computed(() => {
   background-color: var(--card-color);
   .image {
     background-image: url('/images/cards/special/skull_king.jpeg');
+  }
+}
+
+.back {
+  --card-color: #161935;
+  --accent-color: #555;
+
+  background-color: var(--card-color);
+  .image {
+    background-image: url('/images/cards/back.jpeg');
   }
 }
 </style>

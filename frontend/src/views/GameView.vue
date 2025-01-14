@@ -8,10 +8,9 @@ import { ref } from 'vue'
 import CardList from '@/components/cards/CardList.vue'
 import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
-import PlayerStatusMenu from "@/components/PlayerStatusMenu.vue";
+import PlayerStatusMenu from '@/components/PlayerStatusMenu.vue'
 import PhaseChangeOverlay from '@/components/PhaseChangeOverlay.vue'
 import ScoreView from '@/components/ScoreView.vue'
-
 
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
@@ -37,48 +36,54 @@ const showPlayCardOverlay = (card: CardInterface) => {
 </script>
 
 <template>
-  <KeepAlive><PhaseChangeOverlay :key="0" /></KeepAlive>
-  <PredictOverlay></PredictOverlay>
-  <PlayCardOverlay
-    :card="playCard as CardInterface"
-    @close="playCard = null"
-  ></PlayCardOverlay>
-
+  <PhaseChangeOverlay />
+  <PredictOverlay />
+  <PlayCardOverlay :card="playCard as CardInterface" @close="playCard = null" />
 
   <div class="game-view-container w-full h-full">
     <div class="ui">
       <div class="grid grid-cols-3">
         <div class="col-span-2">
-          <ScoreView/>
+          <ScoreView />
         </div>
 
         <div class="justify-self-end p-3">
-          <PauseMenu/>
+          <PauseMenu />
         </div>
-
       </div>
     </div>
-    <div class="game-view-table">
+    <div class="game-view-table align-end">
       <div
         class="relative h-[300px] md:h-[400px] flex justify-center items-center"
         ref="container"
         :key="(gameState.currentTrick?.stack ?? []).length"
       >
+        <div
+          class="absolute bg-white/40"
+          style="transform: scale(1.1); border-radius: 8px"
+        >
+          <Card
+            style="opacity: 0.9; filter: grayscale(0.7)"
+            :card="undefined"
+            :size="CardSize.small"
+          />
+        </div>
+
         <Card
           v-for="(stackEntry, idx) in gameState.currentTrick?.stack ?? []"
           :key="
-          stackEntry.player.name +
-          stackEntry.card.suit +
-          ((stackEntry.card as StandardCard)?.value ?? '')
-        "
+            stackEntry.player.name +
+            stackEntry.card.suit +
+            ((stackEntry.card as StandardCard)?.value ?? '')
+          "
           class="absolute"
           :card="stackEntry.card"
           :size="CardSize.small"
           :style="{ transform: `rotate(${getRandomRotationAngle(idx)}deg` }"
-        ></Card>
+        />
       </div>
     </div>
-    <div class="hand w-full">
+    <div class="hand w-full align-end">
       <CardList
         :hover-effects="true"
         :cards="lobby.me?.hand?.cards ?? []"
@@ -95,21 +100,29 @@ select {
   width: auto;
 }
 
-.game-view-container {  display: grid;
+.game-view-container {
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 3fr 3fr;
   gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
-    "ui ui ui"
-    "table table table"
-    "hand hand hand";
+    'ui ui ui'
+    'table table table'
+    'hand hand hand';
 }
 
-.game-view-table { grid-area: table; }
+.game-view-table {
+  grid-area: table;
+  display: grid;
+}
 
-.hand { grid-area: hand; }
+.hand {
+  grid-area: hand;
+  display: grid;
+}
 
-.ui { grid-area: ui; }
-
+.ui {
+  grid-area: ui;
+}
 </style>

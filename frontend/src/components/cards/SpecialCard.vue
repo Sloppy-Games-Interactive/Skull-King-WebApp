@@ -21,6 +21,8 @@ const cardText = computed(() => {
       return 'Pirate'
     case Suit.SkullKing:
       return 'Skull King'
+    default:
+      return ''
   }
 })
 </script>
