@@ -4,13 +4,14 @@ import { watch } from 'vue'
 import { GameState } from '@/core/model/GameState'
 import { useWebSocket } from '@vueuse/core'
 import type { JsonValue } from 'type-fest';
+import { BACKEND_HOST, BACKEND_PORT } from '@/core/utils/Constants'
 
 export function useWebsocketHandler() {
   const gameState = useGameStateStore()
   const lobby = useLobbyStore()
 
   const { status, data, send, open, close } =
-    useWebSocket('ws://localhost:9000/ws', {
+    useWebSocket(`ws://${BACKEND_HOST}:${BACKEND_PORT}/ws`, {
     heartbeat: {
       message: 'ping',
       interval: 1000,

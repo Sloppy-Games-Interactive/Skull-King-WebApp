@@ -5,6 +5,8 @@ import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useEventBus } from '@vueuse/core'
 import { ErrorBus, ErrorEvent, ErrorEventName, GameStateBus, GameStateEvent, GameStateEventName } from '@/core/event-bus'
 import type { GameStateInterface } from '@/core/model/GameState'
+import { getEnv } from '@/core/utils/EnvLoader'
+import { BACKEND_URL } from '@/core/utils/Constants'
 
 abstract class BaseApiService {
   logger = new Logger({ name: "SkullKingLogger" });
@@ -91,8 +93,7 @@ export class ApiService extends BaseApiService {
     private gameStateBus = useEventBus<GameStateEvent>(GameStateBus),
     private errorBus = useEventBus<ErrorEvent>(ErrorBus)
   ) {
-    // TODO: get url from env variable or something
-    super('http://localhost:9000')
+    super(BACKEND_URL)
   }
 
   private handleError(e: unknown) {

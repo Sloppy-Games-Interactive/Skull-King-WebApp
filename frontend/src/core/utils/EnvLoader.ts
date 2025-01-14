@@ -1,5 +1,11 @@
+import process from 'node:process'
+
 export function getEnv(env: string): string {
-  // if vite or express
+
+  if (process.env && process.env[env]) {
+    return process.env[env] || '';
+  }
+
   if (import.meta.env) {
     return import.meta.env[env];
   } else {

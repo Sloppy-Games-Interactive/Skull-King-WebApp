@@ -1,6 +1,7 @@
+import { BACKEND_URL } from '@/core/utils/Constants.js'
 module.exports = {
   // options...
   devServer: {
-    proxy: 'http://localhost:9000',
+    proxy: BACKEND_URL,
   }
 }

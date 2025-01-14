@@ -6,6 +6,8 @@ import { useGameStateStore } from '@/core/stores/gameState'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { FontAwesomeIcon as FaIcon } from '@fortawesome/vue-fontawesome'
 import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
+import { getEnv } from '@/core/utils/EnvLoader'
+import { FRONTEND_URL } from '@/core/utils/Constants'
 
 
 const isModalOpen = ref(false)
@@ -20,7 +22,6 @@ function closeModal() {
 
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
-
 
 </script>
 
@@ -47,7 +48,7 @@ const lobby = useLobbyStore()
           <div class="grid items-center mt-5 gap-5 px-3">
             <p class="text-center text-4xl text-white mb-2">Round {{ gameState.round }}</p>
             <template v-for="(player, idx) of gameState.players" :key="(player.prediction ?? '') + gameState.tricks.filter(t => t.winner?.id === player.id).length">
-              <PlayerStatusRow :username="player.name" :profile-picture="`http://localhost:5173/images/profiles/${idx + 1}.png`" :score="player.score" />
+              <PlayerStatusRow :username="player.name" :profile-picture="`${FRONTEND_URL}/images/profiles/${idx + 1}.png`" :score="player.score" />
               <p class="text-2xl text-white mt-n5 mb-2 ml-2 text-center">Prediction: {{player.prediction}} | Won tricks: {{gameState.tricks.filter(t => t.winner?.id === player.id).length}}</p>
             </template>
           </div>
