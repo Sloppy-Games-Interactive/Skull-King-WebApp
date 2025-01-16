@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <div class="flex items-center p-1 lg:p-3 shadow rounded-lg max-w-sm ml-7 bg-[#573324]">
     <img
-      :src="`http://localhost:5173/images/profiles/${player.profilePic}`"
+      :src="`/images/profiles/${player.profilePic}`"
       alt="Profile Picture"
       class="w-16 lg:w-20 h-16 lg:h-20 rounded-full -ml-6 lg:-ml-10 border-2 border-amber-600 absolute object-cover bg-[#573324] border-solid"
     />
