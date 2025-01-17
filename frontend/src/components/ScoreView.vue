@@ -7,6 +7,8 @@ import { FontAwesomeIcon as FaIcon } from '@fortawesome/vue-fontawesome'
 import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 import AppButton from '@/components/utils/AppButton.vue'
 import { ButtonSize } from '@/components/utils/enums'
+import { getEnv } from '@/core/utils/EnvLoader'
+import { FRONTEND_URL } from '@/core/utils/Constants'
 
 const isModalOpen = ref(false)
 
@@ -20,6 +22,7 @@ function closeModal() {
 
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
+
 </script>
 
 <template>

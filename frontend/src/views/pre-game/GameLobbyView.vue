@@ -8,6 +8,7 @@ import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useClipboard } from '@vueuse/core'
 import AppButton from '@/components/utils/AppButton.vue'
 import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
+import { FRONTEND_URL } from '@/core/utils/Constants'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore();
