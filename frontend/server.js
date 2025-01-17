@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const port = process.env.PORT || 3000;//todo settle for a port that both vite and this will use
+const port = process.env.PORT || 5173;//3000;//todo settle for a port that both vite and this will use
 
 const distPath = path.join(__dirname, 'dist');
 console.log(`Serving static files from: ${distPath}`);
