@@ -8,6 +8,7 @@ import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useClipboard } from '@vueuse/core'
 import AppButton from '@/components/utils/AppButton.vue'
 import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
+import { FRONTEND_URL } from '@/core/utils/Constants'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore();
@@ -61,8 +62,8 @@ const copyLobbyIdToClipboard = () => {
 
       <div class="grid place-items-center my-8">
         <PlayerStatusRow v-for="(player, idx) in gameState.players" :key="player.id"
-                         :profile-picture="`http://localhost:5173/images/profiles/${idx + 1}.png`"
-                         :username="player.name" class="min-w-[15em] my-5"/>
+                         :player="player"
+                         :show-score="false" class="min-w-[15em] my-5"/>
       </div>
 
       <AppButton @click="copyLobbyIdToClipboard" style="margin-bottom: 50px;">

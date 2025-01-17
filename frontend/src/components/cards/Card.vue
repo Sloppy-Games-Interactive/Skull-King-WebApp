@@ -5,18 +5,20 @@ import {
   type SpecialCard as SpecialCardType,
   type StandardSuit,
   CardSize,
+  isSpecialSuit,
 } from '@/core/model/Card'
 import StandardCard from '@/components/cards/StandardCard.vue'
-import SpecialCard from "@/components/cards/SpecialCard.vue";
+import SpecialCard from '@/components/cards/SpecialCard.vue'
 import { computed } from 'vue'
+import CardBack from '@/components/cards/CardBack.vue'
 
 const props = defineProps<{
-  card: StandardCardType | SpecialCardType
+  card: StandardCardType | SpecialCardType | undefined
   size?: CardSize
 }>()
 
 // + 0.025 to prevent y-overflow
-const aspectRatio = 1122 / 747 + 0.025;
+const aspectRatio = 1122 / 747 + 0.025
 
 const dimensions = computed(() => {
   switch (props.size) {
@@ -56,18 +58,22 @@ const dimensions = computed(() => {
 const style = computed(() => {
   return {
     width: dimensions.value.width,
-    height: dimensions.value.height
+    height: dimensions.value.height,
   }
 })
 </script>
 
 <template>
   <div :style="style">
-    <SpecialCard v-if="props.card.isSpecial || (props.card as StandardCardType).value === 0" :suit="props.card.suit as SpecialSuit" />
+    <CardBack v-if="card === undefined" />
+    <SpecialCard
+      v-else-if="isSpecialSuit(card.suit)"
+      :suit="card.suit as SpecialSuit"
+    />
     <StandardCard
       v-else
-      :suit="props.card.suit as StandardSuit"
-      :value="(props.card as StandardCardType).value"
+      :suit="card.suit as StandardSuit"
+      :value="(card as StandardCardType).value"
     />
   </div>
 </template>

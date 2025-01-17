@@ -6,7 +6,6 @@ import { useWebsocketHandler } from '@/composables/websocket-handler'
 import { useEventBus } from '@vueuse/core'
 import { ErrorBus, ErrorEvent } from '@/core/event-bus'
 import { ref } from 'vue'
-import Snackbar from '@/components/Snackbar.vue'
 
 
 const route = useRoute()

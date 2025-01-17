@@ -4,7 +4,6 @@ import de.htwg.se.skullking.controller.ControllerComponent.{IController, ILobbyC
 import de.htwg.se.skullking.model.StateComponent.IGameState
 import de.htwg.se.skullking.util.{ObservableEvent, Observer}
 import org.apache.pekko.actor.{Actor, ActorRef, Props}
-import org.apache.pekko.stream.Materializer
 import de.htwg.se.skullking.modules.Default.given
 import models.model.LobbyComponent.ILobby
 import models.model.LobbyComponent.LobbyBaseImpl.LobbyObject
@@ -27,7 +26,6 @@ object WebSocketEvent extends Enumeration {
       Error,
       SetUuid = Value
 
-  // Not Working???
   implicit val Format: Format[WebSocketEvent] = Json.formatEnum(this)
 }
 
@@ -62,6 +60,7 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
   override def postStop(): Unit = {
     println(s"Disconnected with client $clientId")
     clients -= clientId
+    controller.remove(this)
   }
 
   def receive: Receive = {
@@ -118,11 +117,14 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
           }
         }
         case WebSocketEvent.SetUuid => {
-          val newClientId = (jsonData \ "data").as[String]
-          clients -= clientId
-          clientId = newClientId
-          clients += newClientId -> out
-          out ! Json.obj("playerId" -> newClientId).toString
+          val newClientId = (jsonData \ "data" \ "playerUuid").as[UUID].toString
+          if (newClientId != clientId) {
+            clients.update(newClientId, clients.remove(clientId).get)
+            clientId = newClientId
+            out ! Json.obj("playerId" -> newClientId).toString
+          } else {
+            out ! Json.obj("error" -> "Same UUID").toString
+          }
         }
         case _ => out ! Json.obj("error" -> "Invalid event").toString
       }

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import {computed, ref} from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { GameState, type GameStateInterface, Phase } from '@/core/model/GameState'
 import type { DeckInterface } from '@/core/model/Deck'
 import type { TrickInterface } from '@/core/model/Trick'
@@ -25,7 +25,7 @@ export const useGameStateStore = defineStore('gameState', () => {
   const phase = ref<Phase>(sessionStorage.value?.phase ?? Phase.None)
   const playerLimit = ref<number>(sessionStorage.value?.playerLimit ?? 0)
   const roundLimit = ref<number>(sessionStorage.value?.roundLimit ?? 0)
-  const players = ref<PlayerInterface[]>(sessionStorage.value?.players ?? [])
+  const players = reactive<PlayerInterface[]>(sessionStorage.value?.players ?? [])
   const deck = ref<DeckInterface | null>(sessionStorage.value?.deck ?? null)
   const tricks = ref<TrickInterface[]>(sessionStorage.value?.tricks ?? [])
   const lastTrickWinner = ref<PlayerInterface | null>(sessionStorage.value?.lastTrickWinner ?? null)
@@ -35,7 +35,7 @@ export const useGameStateStore = defineStore('gameState', () => {
     phase.value = state.phase
     playerLimit.value = state.playerLimit
     roundLimit.value = state.roundLimit
-    players.value = state.players
+    players.splice(0, players.length, ...state.players)
     deck.value = state.deck
     tricks.value = state.tricks
     lastTrickWinner.value = state.lastTrickWinner
@@ -45,12 +45,8 @@ export const useGameStateStore = defineStore('gameState', () => {
     currentGameState.value = state
   }
 
-  const updatePlayers = (players: PlayerInterface[]) => {
-    players.value = players
-  }
-
   const activePlayer = computed<PlayerInterface | undefined>(() => {
-    for (const player of players.value) {
+    for (const player of players) {
       if (player.active) {
         return player
       }
@@ -75,6 +71,5 @@ export const useGameStateStore = defineStore('gameState', () => {
     activePlayer,
     currentTrick,
     updateGameState,
-    updatePlayers,
   }
 })

@@ -14,7 +14,7 @@ object PlayerDeserializer extends Deserializer[IPlayer] {
   override def fromXml(xml: Elem): IPlayer = {
     val id = UUID.fromString((xml \ "id").text)
     val name = (xml \ "name").text
-    val profilePicUrl = (xml \ "profilePicUrl").text
+    val profilePic = (xml \ "profilePic").text
     val score = (xml \ "score").text.toInt
     val hand = HandDeserializer.fromXml((xml \ "Hand").head.asInstanceOf[Elem])
     val prediction = (xml \ "prediction").text match {
@@ -22,19 +22,19 @@ object PlayerDeserializer extends Deserializer[IPlayer] {
       case value => Some(value.toInt)
     }
     val active = (xml \ "active").text.toBoolean
-    val player = PlayerFactory.create(id, name).setHand(hand).setScore(score).setActive(active)
+    val player = PlayerFactory.create(id, name).setHand(hand).setScore(score).setActive(active).setProfilePic(profilePic)
     if (prediction.isDefined) player.setPrediction(prediction.get) else player
   }
 
   override def fromJson(json: JsObject): IPlayer = {
     val id = UUID.fromString((json \ "id").as[String])
     val name = (json \ "name").as[String]
-    val profilePicUrl = (json \ "profilePicUrl").as[String]
+    val profilePic = (json \ "profilePic").as[String]
     val score = (json \ "score").as[Int]
     val hand = HandDeserializer.fromJson((json \ "hand").as[JsObject])
     val prediction = (json \ "prediction").asOpt[Int]
     val active = (json \ "active").as[Boolean]
-    val player = PlayerFactory.create(id, name).setHand(hand).setScore(score).setActive(active)
+    val player = PlayerFactory.create(id, name).setHand(hand).setScore(score).setActive(active).setProfilePic(profilePic)
     if (prediction.isDefined) player.setPrediction(prediction.get) else player
   }
 }
@@ -42,7 +42,7 @@ object PlayerDeserializer extends Deserializer[IPlayer] {
 trait IPlayer extends Serializable{
   val id: UUID
   val name: String
-  val profilePicUrl: String
+  val profilePic: String
   val hand: IHand
   val score: Int
   val prediction: Option[Int]
@@ -52,7 +52,7 @@ trait IPlayer extends Serializable{
     <Player>
       <id>{id}</id>
       <name>{name}</name>
-      <profilePicUrl>{profilePicUrl}</profilePicUrl>
+      <profilePicUrl>{profilePic}</profilePicUrl>
       <score>{score}</score>
       {hand.toXml}
       {prediction match {
@@ -67,7 +67,7 @@ trait IPlayer extends Serializable{
     Json.obj(
       "id" -> id,
       "name" -> name,
-      "profilePicUrl" -> profilePicUrl,
+      "profilePic" -> profilePic,
       "score" -> score,
       "hand" -> hand.toJson,
       "prediction" -> prediction,
@@ -91,7 +91,7 @@ trait IPlayer extends Serializable{
   
   def setUUID(uuid: UUID): IPlayer
   
-  def setProfilePicUrl(url: String): IPlayer
+  def setProfilePic(url: String): IPlayer
 }
 
 trait IPlayerFactory {

@@ -8,8 +8,7 @@ import java.util.UUID
 case class Player(
   id: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000"),
   name: String,
-  // TODO: change default profile pic
-  profilePicUrl: String = "",
+  profilePic: String = "1.png",
   // maybe the server should generate the UUID and send it to the client not the other way around
   hand: IHand = Hand(),
   score: Int = 0,
@@ -40,7 +39,7 @@ case class Player(
 
   def setUUID(uuid: UUID): IPlayer = this.copy(id = uuid)
 
-  def setProfilePicUrl(url: String): IPlayer = this.copy(profilePicUrl = url)
+  def setProfilePic(url: String): IPlayer = this.copy(profilePic = url)
   
   override def toString: String = s"$name: $score, $hand, prediction: ${prediction.getOrElse("-")}"
 }

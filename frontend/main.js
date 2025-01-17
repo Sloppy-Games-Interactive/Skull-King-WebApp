@@ -4,6 +4,7 @@
 import { app, BrowserWindow } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { FRONTEND_URL } from '@/core/utils/Constants.js'
 
 // Define __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +26,10 @@ function createWindow() {
   });
 
   // load it from the vite dev server
-  mainWindow.loadURL('http://localhost:5173');
+
+  mainWindow.loadURL(FRONTEND_URL).catch((err) => {
+    console.error('Failed to load resource:', err);
+  });
 
   // Load the index.html from the dist directory (NOT WORKING)
   // const indexPath = path.join(__dirname, 'dist', 'index.html');
