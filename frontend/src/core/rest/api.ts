@@ -5,7 +5,6 @@ import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useEventBus } from '@vueuse/core'
 import { ErrorBus, ErrorEvent, ErrorEventName, GameStateBus, GameStateEvent, GameStateEventName } from '@/core/event-bus'
 import type { GameStateInterface } from '@/core/model/GameState'
-import { getEnv } from '@/core/utils/EnvLoader'
 import { BACKEND_URL } from '@/core/utils/Constants'
 
 abstract class BaseApiService {

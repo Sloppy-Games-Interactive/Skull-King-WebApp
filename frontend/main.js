@@ -4,7 +4,6 @@
 import { app, BrowserWindow } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { getEnv } from '@/core/utils/EnvLoader.js'
 import { FRONTEND_URL } from '@/core/utils/Constants.js'
 
 // Define __dirname
