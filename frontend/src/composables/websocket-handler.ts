@@ -15,9 +15,12 @@ export function useWebsocketHandler() {
   const online = useOnline()
   const needStatusUpdate = ref(false)
   const api = inject(API_INJECTION_KEY) as ApiService
+  const connectionRetryInterval = ref(1000)
+
+  const wsUrl = import.meta.env.VITE_WS_URL
 
   const { status, data, send, open, close } = useWebSocket(
-    'ws://localhost:9000/ws',
+    wsUrl,
     {
       heartbeat: {
         message: 'ping',
@@ -32,10 +35,25 @@ export function useWebsocketHandler() {
   )
 
   watch([online, status], () => {
-    if (online.value && status.value === 'CLOSED') {
-      open()
-      needStatusUpdate.value = true
-    }
+    // backoff algorithm
+    setTimeout(() => {
+      if (!online.value) {
+        return
+      }
+
+      if (status.value === 'CLOSED') {
+        connectionRetryInterval.value = Math.min(
+          connectionRetryInterval.value * 2,
+          10000,
+        )
+
+        open()
+        needStatusUpdate.value = true
+        return
+      }
+
+      connectionRetryInterval.value = 1000
+    }, connectionRetryInterval.value)
   })
 
   enum WebSocketEvent {
