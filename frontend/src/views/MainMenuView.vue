@@ -5,14 +5,21 @@ import router from '@/core/router'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import AppButton from '@/components/utils/AppButton.vue'
 import { ButtonSize } from '@/components/utils/enums'
+import { useGameStateStore } from '@/core/stores/gameState'
+import { useChatStore } from '@/core/stores/chatStore'
 
+const lobby = useLobbyStore();
+const gameState = useGameStateStore()
+const chat = useChatStore()
 
-const lobbyStore = useLobbyStore();
+gameState.clear()
+chat.clear()
+
 const api = inject(API_INJECTION_KEY) as ApiService
 
 const newGame = async (event: MouseEvent) => {
   const uuid = await api.newGame()
-  lobbyStore.setLobbyUuid(uuid)
+  lobby.setLobbyUuid(uuid)
   await api.getStatus()
 
   await router.push('/new-game')

@@ -60,6 +60,13 @@ export const useLobbyStore = defineStore('lobby', () => {
     )
   })
 
+  const clear = () => {
+    sessionStorage.value = null
+
+    lobbyUuid.value = undefined
+    playerUuid.value = undefined
+  }
+
   return {
     lobbyUuid,
     setLobbyUuid,
@@ -68,5 +75,6 @@ export const useLobbyStore = defineStore('lobby', () => {
     hostPlayer,
     isHost,
     me,
+    clear,
   }
 })
