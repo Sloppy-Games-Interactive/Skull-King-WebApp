@@ -14,7 +14,7 @@ RUN yarn install
 COPY . .
 
 # Build the application
-RUN yarn build
+RUN yarn build-only
 
 # Expose the port the application runs on
 EXPOSE 8080
