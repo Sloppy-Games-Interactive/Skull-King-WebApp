@@ -2,13 +2,17 @@ import { useGameStateStore } from '@/core/stores/gameState'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { inject, ref, watch } from 'vue'
 import { GameState } from '@/core/model/GameState'
-import { useOnline, useWebSocket } from '@vueuse/core'
+import { useEventBus, useOnline, useWebSocket } from '@vueuse/core'
 import type { JsonValue } from 'type-fest'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
+import { useChatStore } from '@/core/stores/chatStore'
+import { ChatBus, type ChatEvent, ChatEventName } from '@/core/event-bus'
+import { ChatMessage } from '@/core/model/Chat'
 
 export function useWebsocketHandler() {
   const gameState = useGameStateStore()
   const lobby = useLobbyStore()
+  const chat = useChatStore()
 
   const initialPlayerUuid = lobby.playerUuid
 
@@ -20,20 +24,17 @@ export function useWebsocketHandler() {
 
   const wsUrl = import.meta.env.VITE_WS_URL
 
-  const { status, data, send, open, close } = useWebSocket(
-    wsUrl,
-    {
-      heartbeat: {
-        message: 'ping',
-        interval: 1000,
-        pongTimeout: 1000,
-      },
-      autoReconnect: {
-        retries: 3,
-        delay: 1000,
-      },
+  const { status, data, send, open, close } = useWebSocket(wsUrl, {
+    heartbeat: {
+      message: 'ping',
+      interval: 1000,
+      pongTimeout: 1000,
     },
-  )
+    autoReconnect: {
+      retries: 3,
+      delay: 1000,
+    },
+  })
 
   watch([online, status], () => {
     if (timeout.value) {
@@ -80,7 +81,7 @@ export function useWebsocketHandler() {
     event: WebSocketEvent,
     toClients: string[] = [''],
     fromClient: string,
-    data: JsonValue = {},
+    data: object | JsonValue = {},
   ): JsonValue {
     return {
       event: event.toString(),
@@ -105,7 +106,7 @@ export function useWebsocketHandler() {
           send(
             JSON.stringify(
               transportProtocol(WebSocketEvent.SET_UUID, [], 'server', {
-                lobbyId: lobby.lobbyUuid,
+                lobbyUuid: lobby.lobbyUuid,
                 playerUuid: initialPlayerUuid,
               }),
             ),
@@ -123,14 +124,14 @@ export function useWebsocketHandler() {
         lobby.setPlayerUuid(parsedData.data.playerId)
         break
       case WebSocketEvent.STATE:
-        //console.log('state:', parsedData.data)
         gameState.updateGameState(new GameState(parsedData.data))
         break
       case WebSocketEvent.Message:
-        //console.log('message:', parsedData.data)
+        console.log('message:', parsedData.data)
+        chat.addMessage(parsedData.data)
         break
       default:
-        console.log('unknown event:', parsedData.event)
+        console.log('unknown event:', parsedData.event, parsedData)
     }
 
     // const parsedData = JSON.parse(newData);
@@ -143,18 +144,24 @@ export function useWebsocketHandler() {
     //gameState.updateGameState(new GameState(JSON.parse(newData)))
   })
 
-  const message = () => {
-    console.log('sending')
-    send('state')
-  }
+  const chatBus = useEventBus<ChatEvent>(ChatBus)
 
-  const sendMsgToClient = (client: string) => {
-    console.log('sending')
-    const data = JSON.stringify(
-      transportProtocol(WebSocketEvent.Message, [client], 'server', 'hello') ??
-        {},
-    )
-    console.log(data)
-    send(data)
-  }
+  chatBus.on(event => {
+    if (event.name === ChatEventName.Message) {
+      const message = new ChatMessage({
+        author: event.author,
+        message: event.message,
+      })
+
+      send(
+        JSON.stringify(
+          transportProtocol(WebSocketEvent.Message, [], 'server', {
+            lobbyUuid: lobby.lobbyUuid,
+            playerUuid: initialPlayerUuid,
+            data: message,
+          }),
+        ),
+      )
+    }
+  })
 }

@@ -100,17 +100,17 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
           println(s"Received message from client $clientId")
           val data = (jsonData \ "data").as[JsValue]
 
-          getLobby(jsonData) match {
+          getLobby(data) match {
             case Some(lobby) => {
               println(data)
-              val lobbyPlayerIds = lobby.players.map(p => p.id)
+              val lobbyPlayerIds = lobby.players.map(p => p.id.toString)
               clients
-                .filter(c => c._1 != clientId && lobbyPlayerIds.contains(c._1))
+                .filter(c => lobbyPlayerIds.contains(c._1))
                 .foreach(_._2 ! transportProtocol(
                   WebSocketEvent.Message,
-                  lobbyPlayerIds,
+                  lobby.players.map(p => p.id),
                   UUID.fromString(clientId),
-                  data).toString
+                  (data \ "data").as[JsValue]).toString
                 )
             }
             case None => out ! Json.obj("error" -> "Lobby not found").toString
