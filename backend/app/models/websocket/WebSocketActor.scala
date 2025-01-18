@@ -43,8 +43,13 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
     e match {
       case _ =>
         state match
-          case Some(state) => clients.foreach(_._2 ! transportProtocol(WebSocketEvent.State,
-            List(UUID.fromString(clientId)), UUID.fromString(clientId), state.toJson).toString)
+          case Some(state) => {
+            val lobbyPlayerIds = state.players.map(p => p.id.toString)
+            clients
+              .filter(c => c._1 != clientId && lobbyPlayerIds.contains(c._1))
+              .foreach(_._2 ! transportProtocol(WebSocketEvent.State,
+                List(UUID.fromString(clientId)), UUID.fromString(clientId), state.toJson).toString)
+          }
           case None =>
     }
   }
@@ -102,7 +107,6 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
 
           getLobby(data) match {
             case Some(lobby) => {
-              println(data)
               val lobbyPlayerIds = lobby.players.map(p => p.id.toString)
               clients
                 .filter(c => lobbyPlayerIds.contains(c._1))
