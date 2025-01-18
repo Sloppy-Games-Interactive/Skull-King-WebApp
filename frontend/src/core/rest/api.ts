@@ -21,6 +21,7 @@ abstract class BaseApiService {
     const response = await fetch(this.baseUrl + path, {
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin':'*'
       },
     })
 
@@ -36,6 +37,7 @@ abstract class BaseApiService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin':'*'
       },
       body: typeof data === 'undefined' ? '' : JSON.stringify(data),
       // for cookies sent with the request
@@ -58,6 +60,8 @@ abstract class BaseApiService {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin':'*'
+
       },
       body: typeof data === 'undefined' ? '' : JSON.stringify(data),
     })
