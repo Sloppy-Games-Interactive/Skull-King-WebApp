@@ -19,15 +19,13 @@ export const useGameStateStore = defineStore('gameState', () => {
     },
   )
 
-  const currentGameState = ref<null | GameStateInterface>(null)
-
   const round = ref<number>(sessionStorage.value?.round ?? 0)
   const phase = ref<Phase>(sessionStorage.value?.phase ?? Phase.None)
   const playerLimit = ref<number>(sessionStorage.value?.playerLimit ?? 0)
   const roundLimit = ref<number>(sessionStorage.value?.roundLimit ?? 0)
   const players = reactive<PlayerInterface[]>(sessionStorage.value?.players ?? [])
   const deck = ref<DeckInterface | null>(sessionStorage.value?.deck ?? null)
-  const tricks = ref<TrickInterface[]>(sessionStorage.value?.tricks ?? [])
+  const tricks = reactive<TrickInterface[]>(sessionStorage.value?.tricks ?? [])
   const lastTrickWinner = ref<PlayerInterface | null>(sessionStorage.value?.lastTrickWinner ?? null)
 
   const updateGameState = (state: GameStateInterface) => {
@@ -37,12 +35,10 @@ export const useGameStateStore = defineStore('gameState', () => {
     roundLimit.value = state.roundLimit
     players.splice(0, players.length, ...state.players)
     deck.value = state.deck
-    tricks.value = state.tricks
+    tricks.splice(0, tricks.length, ...state.tricks)
     lastTrickWinner.value = state.lastTrickWinner
 
     sessionStorage.value = state
-
-    currentGameState.value = state
   }
 
   const activePlayer = computed<PlayerInterface | undefined>(() => {
@@ -56,8 +52,21 @@ export const useGameStateStore = defineStore('gameState', () => {
   })
 
   const currentTrick = computed<TrickInterface | undefined>(() => {
-    return tricks.value[0] ?? undefined
+    return tricks[0] ?? undefined
   })
+
+  const clear = () => {
+    sessionStorage.value = null
+
+    round.value = 0
+    phase.value = Phase.None
+    playerLimit.value = 0
+    roundLimit.value = 0
+    players.splice(0, players.length)
+    deck.value = null
+    tricks.splice(0, tricks.length)
+    lastTrickWinner.value = null
+  }
 
   return {
     round,
@@ -71,5 +80,6 @@ export const useGameStateStore = defineStore('gameState', () => {
     activePlayer,
     currentTrick,
     updateGameState,
+    clear,
   }
 })
