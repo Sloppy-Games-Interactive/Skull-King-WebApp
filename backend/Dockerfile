@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies and build the project
-#RUN sbt clean compile
+RUN sbt clean compile
 
 # Expose the port the application runs on
 EXPOSE 9000
