@@ -5,7 +5,7 @@ import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useEventBus } from '@vueuse/core'
 import { ErrorBus, ErrorEvent, ErrorEventName, GameStateBus, GameStateEvent, GameStateEventName } from '@/core/event-bus'
 import type { GameStateInterface } from '@/core/model/GameState'
-import { BACKEND_URL } from '@/core/utils/Constants'
+import {API_PATH, BACKEND_URL} from '@/core/utils/Constants'
 
 abstract class BaseApiService {
   logger = new Logger({ name: "SkullKingLogger" });
@@ -21,7 +21,6 @@ abstract class BaseApiService {
     const response = await fetch(this.baseUrl + path, {
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin':'*'
       },
     })
 
@@ -37,7 +36,6 @@ abstract class BaseApiService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin':'*'
       },
       body: typeof data === 'undefined' ? '' : JSON.stringify(data),
       // for cookies sent with the request
@@ -60,7 +58,6 @@ abstract class BaseApiService {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin':'*'
 
       },
       body: typeof data === 'undefined' ? '' : JSON.stringify(data),
@@ -96,7 +93,7 @@ export class ApiService extends BaseApiService {
     private gameStateBus = useEventBus<GameStateEvent>(GameStateBus),
     private errorBus = useEventBus<ErrorEvent>(ErrorBus)
   ) {
-    super(BACKEND_URL)
+    super(BACKEND_URL + API_PATH)
   }
 
   private handleError(e: unknown) {
