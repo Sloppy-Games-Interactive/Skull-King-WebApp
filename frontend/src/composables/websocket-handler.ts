@@ -20,6 +20,7 @@ export function useWebsocketHandler() {
   const needStatusUpdate = ref(false)
   const api = inject(API_INJECTION_KEY) as ApiService
   const connectionRetryInterval = ref(1000)
+  const reconnecting = ref(false)
 
   const wsUrl = import.meta.env.VITE_WS_URL
 
@@ -36,6 +37,11 @@ export function useWebsocketHandler() {
   })
 
   watch([online, status], () => {
+    if (reconnecting.value) {
+      return
+    }
+    
+    reconnecting.value = true
     // backoff algorithm
     setTimeout(() => {
       if (!online.value) {
@@ -54,6 +60,7 @@ export function useWebsocketHandler() {
       }
 
       connectionRetryInterval.value = 1000
+      reconnecting.value = false
     }, connectionRetryInterval.value)
   })
 
