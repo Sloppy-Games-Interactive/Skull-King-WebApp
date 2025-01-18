@@ -1,5 +1,5 @@
 # Use an official Node.js image as a parent image
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Set the working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install dependencies
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
@@ -17,7 +17,7 @@ COPY . .
 RUN yarn build-only
 
 # Expose the port the application runs on
-EXPOSE 8080
+EXPOSE 5173
 
 # Define the command to run the application
-CMD ["yarn", "serve"]
+CMD ["node", "server.js"]
