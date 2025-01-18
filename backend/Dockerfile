@@ -1,5 +1,5 @@
 # Use an official Scala image as a parent image
-FROM hseeberger/scala-sbt:11.0.11_1.5.5_2.13.6
+FROM sbtscala/scala-sbt:eclipse-temurin-jammy-22_36_1.10.0_3.4.2
 
 # Set the working directory
 WORKDIR /app
