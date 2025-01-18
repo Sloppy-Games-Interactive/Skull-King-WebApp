@@ -16,7 +16,7 @@ export function useWebsocketHandler() {
   const needStatusUpdate = ref(false)
   const api = inject(API_INJECTION_KEY) as ApiService
   const connectionRetryInterval = ref(1000)
-  const reconnecting = ref(false)
+  const timeout = ref<null | NodeJS.Timeout>(null)
 
   const wsUrl = import.meta.env.VITE_WS_URL
 
@@ -36,14 +36,14 @@ export function useWebsocketHandler() {
   )
 
   watch([online, status], () => {
-    if (reconnecting.value) {
+    if (timeout.value) {
       return
     }
-    
-    reconnecting.value = true
+
     // backoff algorithm
-    setTimeout(() => {
+    timeout.value = setTimeout(() => {
       if (!online.value) {
+        timeout.value = null
         return
       }
 
@@ -55,11 +55,12 @@ export function useWebsocketHandler() {
 
         open()
         needStatusUpdate.value = true
+        timeout.value = null
         return
       }
 
       connectionRetryInterval.value = 1000
-      reconnecting.value = false
+      timeout.value = null
     }, connectionRetryInterval.value)
   })
 
