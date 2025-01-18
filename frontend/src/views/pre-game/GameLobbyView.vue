@@ -10,6 +10,7 @@ import AppButton from '@/components/utils/AppButton.vue'
 import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 import { useChatStore } from '@/core/stores/chatStore'
 import { ChatBus, ChatEvent, ChatEventName } from '@/core/event-bus'
+import ChatWindow from '@/components/ChatWindow.vue'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore()
@@ -75,10 +76,10 @@ const copyLobbyIdToClipboard = () => {
     class="w-3/4 h-3/4 mx-auto m-10 backdrop-blur-lg"
     style="background-color: rgba(255, 255, 255, 0.5)"
   >
-    <div class="text-center gap-5">
-      <h1 class="text-6xl font-bold pt-10">Game Lobby</h1>
+    <div class="text-center gap-5 _lobby-container h-full w-full p-3">
+      <!--      <h1 class="text-6xl font-bold pt-10">Game Lobby</h1>-->
 
-      <div class="grid place-items-center my-8">
+      <div class="grid place-items-center my-8 _players">
         <PlayerStatusRow
           v-for="(player, idx) in gameState.players"
           :key="player.id"
@@ -88,45 +89,53 @@ const copyLobbyIdToClipboard = () => {
         />
       </div>
 
-      <div>
-        <!-- Chat here -->
-        <div
-          v-for="(msg, idx) in chat.messages"
-          :key="idx">
-          {{ msg.author.name }}: {{ msg.message }}
-        </div>
-
-        <div class="grid place-items-center">
-          <v-textarea
-            v-model="message"
-            @keydown.enter.prevent="sendMessage"
-            placeholder="Type a message"
-            class="w-3/4"
-          ></v-textarea>
-        </div>
+      <div class="_chat">
+        <ChatWindow fill class="rounded-l" />
       </div>
 
-      <AppButton @click="copyLobbyIdToClipboard" style="margin-bottom: 50px">
-        {{ copyBtnText }}
-      </AppButton>
+      <div class="_buttons">
+        <div class="grid grid-flow-col align-center justify-center gap-10 pb-2">
+          <AppButton @click="copyLobbyIdToClipboard">
+            {{ copyBtnText }}
+          </AppButton>
+          <AppButton
+            v-if="lobby.isHost"
+            :disabled="!hasEnoughPlayers"
+            :class="{ disabled: !hasEnoughPlayers }"
+            @click.stop.prevent="startGame"
+            >Start Game</AppButton
+          >
 
-      <div>
-        <AppButton
-          v-if="lobby.isHost"
-          :disabled="!hasEnoughPlayers"
-          :class="{ disabled: !hasEnoughPlayers }"
-          @click.stop.prevent="startGame"
-          >Start Game</AppButton
-        >
-
-        <div v-else>
-          <p class="text-2xl font-semibold px-3">
-            Waiting for host to start the game
-          </p>
+          <div v-else>
+            <p class="text-2xl font-semibold px-3">
+              Waiting for host to start the game
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </v-card>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+._lobby-container {
+  display: grid;
+  grid-template-areas:
+    'players chat'
+    'buttons buttons';
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-columns: auto 1fr;
+}
+
+._players {
+  grid-area: players;
+}
+
+._chat {
+  grid-area: chat;
+}
+
+._buttons {
+  grid-area: buttons;
+}
+</style>
