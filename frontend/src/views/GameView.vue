@@ -4,7 +4,7 @@ import Card from '@/components/cards/Card.vue'
 import { useGameStateStore } from '@/core/stores/gameState'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { type CardInterface, CardSize, StandardCard } from '@/core/model/Card'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import CardList from '@/components/cards/CardList.vue'
 import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
@@ -12,9 +12,11 @@ import PhaseChangeOverlay from '@/components/PhaseChangeOverlay.vue'
 import ScoreView from '@/components/ScoreView.vue'
 import AppButton from '@/components/utils/AppButton.vue'
 import ChatWindow from '@/components/ChatWindow.vue'
+import { useChatStore } from '@/core/stores/chatStore'
 
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
+const chat = useChatStore()
 
 const randomNumbers = Array(100)
   .fill(0)
@@ -32,6 +34,22 @@ const showPlayCardOverlay = (card: CardInterface) => {
 }
 
 const showChat = ref(false)
+const unreadMessages = ref(false)
+
+function openChat() {
+  showChat.value = !showChat.value
+  unreadMessages.value = false
+}
+
+watch(
+  () => chat.messages,
+  () => {
+    if (!showChat.value) {
+      unreadMessages.value = true
+    }
+  },
+  { deep: true },
+)
 </script>
 
 <template>
@@ -58,14 +76,20 @@ const showChat = ref(false)
         :key="(gameState.currentTrick?.stack ?? []).length"
       >
         <div
-          class="absolute bg-white/40"
-          style="transform: scale(1.1); border-radius: 8px"
+          class="absolute rounded-lg bg-white/20 border-[30px] border-white/20 backdrop-blur-sm scale-[1.1]"
         >
-          <Card
-            style="opacity: 0.9; filter: grayscale(0.7)"
-            :card="undefined"
-            :size="CardSize.small"
-          />
+          <div
+            class="text-zinc-900 select-none text-center px-5 py-[6.5rem] rounded-lg shadow-white/10 m-[-2.5%] h-[105%] w-[105%]"
+            style="
+              font-family: var(--title-font-family), serif;
+              box-shadow: inset 0 0 0 5px var(--tw-shadow-color);
+            "
+          >
+            <div class="-rotate-45">
+              <p class="text-4xl">Skull King</p>
+              <p>Card Game</p>
+            </div>
+          </div>
         </div>
 
         <Card
@@ -83,8 +107,12 @@ const showChat = ref(false)
 
         <div class="absolute right-0 top-0 pr-3">
           <AppButton
-            class="text-xl mb-2"
-            @click.stop.prevent="showChat = !showChat"
+            class="text-xl mb-2 relative"
+            @click.stop.prevent="openChat"
+            ><span
+              v-if="unreadMessages"
+              class="absolute top-[-0.25rem] left-[-0.25rem] p-2 rounded-full bg-yellow-400"
+            ></span
             ><fa-icon icon="message"
           /></AppButton>
           <Transition name="slide">

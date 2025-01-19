@@ -5,7 +5,6 @@ import { type CardInterface, CardSize } from '@/core/model/Card'
 import ParallaxWrapper from '@/components/utils/ParallaxWrapper.vue'
 import { computed, inject } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
-import { useGameStateStore } from '@/core/stores/gameState'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import AppButton from '@/components/utils/AppButton.vue'
 
@@ -23,7 +22,6 @@ const close = () => {
   emit('close')
 }
 
-const gameState = useGameStateStore()
 const lobby = useLobbyStore()
 
 const api = inject(API_INJECTION_KEY) as ApiService

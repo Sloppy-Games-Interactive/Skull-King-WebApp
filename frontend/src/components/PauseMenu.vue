@@ -49,8 +49,6 @@ function leave() {
 </template>
 
 <style scoped lang="scss">
-@use 'src/assets/buttons';
-
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.3s ease;

@@ -25,14 +25,10 @@ const setPrediction = async (prediction: number) => {
 
 const prediction = ref(0)
 
-// list items numers of round
 const items = computed(() => {
   const round = gameState.round
   return Array.from({ length: round + 1 }, (_, i) => i)
 })
-
-// TODO parallelize setPrediction -> set prediction for player with uuid
-// TODO add waiting overlay
 </script>
 
 <template>
