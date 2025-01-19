@@ -7,6 +7,8 @@ import de.htwg.se.skullking.model.StateComponent.*
 import de.htwg.se.skullking.model.trick.TrickComponent.ITrick
 import de.htwg.se.skullking.modules.Default.given
 
+import java.util.UUID
+
 case class GameState(
   phase: Phase = Phase.PrepareGame,
   playerLimit: Int = 0,
@@ -48,6 +50,26 @@ case class GameState(
     } else {
       this.copy(players = players :+ player)
     }
+  }
+
+  def sanitizeState(player: Option[IPlayer | String | UUID]): IGameState = player match {
+    case Some(p: IPlayer) => sanitizeForPlayerId(p.id.toString)
+    case Some(id: String) => sanitizeForPlayerId(id)
+    case Some(id: UUID) => sanitizeForPlayerId(id.toString)
+    case None => sanitizeAll
+  }
+
+  private def sanitizeForPlayerId(id: String): IGameState = {
+    val sanitizedPlayers = players.map { player =>
+      if player.id.toString == id then player
+      else player.resetHand
+    }
+
+    this.copy(players = sanitizedPlayers, deck = summon[IDeck])
+  }
+
+  private def sanitizeAll: IGameState = {
+    this.copy(players = players.map(_.resetHand), deck = summon[IDeck])
   }
 
   private def prepareRound: GameState = {
