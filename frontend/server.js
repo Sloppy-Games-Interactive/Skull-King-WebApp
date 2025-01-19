@@ -2,6 +2,8 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import compression from 'compression';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,6 +13,12 @@ const port = process.env.PORT || 5173;//3000;//todo settle for a port that both 
 
 const distPath = path.join(__dirname, 'dist');
 console.log(`Serving static files from: ${distPath}`);
+
+app.use(compression());
+
+app.use(express.static(distPath, {
+  maxAge: '30d',
+}));
 
 // Serve static files from the 'dist' directory
 app.use(express.static(distPath));
