@@ -8,6 +8,7 @@ import de.htwg.se.skullking.modules.Default.given
 import de.htwg.se.skullking.modules.{Deserializer, Serializable}
 import play.api.libs.json.{JsObject, Json}
 
+import java.util.UUID
 import scala.xml.Elem
 
 enum Phase {
@@ -124,6 +125,8 @@ trait IGameState extends Serializable{
   def activePlayer: Option[IPlayer]
   
   def activeTrick: Option[ITrick]
+  
+  def sanitizeState(player: Option[IPlayer | String | UUID]): IGameState
 }
 
 trait IGameStateFactory {

@@ -1,14 +1,21 @@
 import type { CardInterface } from '@/core/model/Card'
-import type {InjectionKey} from "vue";
-import { Logger } from "tslog";
+import type { InjectionKey } from 'vue'
+import { Logger } from 'tslog'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useEventBus } from '@vueuse/core'
-import { ErrorBus, ErrorEvent, ErrorEventName, GameStateBus, GameStateEvent, GameStateEventName } from '@/core/event-bus'
+import {
+  ErrorBus,
+  ErrorEvent,
+  ErrorEventName,
+  GameStateBus,
+  GameStateEvent,
+  GameStateEventName,
+} from '@/core/event-bus'
 import type { GameStateInterface } from '@/core/model/GameState'
-import {API_PATH, BACKEND_URL} from '@/core/utils/Constants'
+import { API_PATH, BACKEND_URL } from '@/core/utils/Constants'
 
 abstract class BaseApiService {
-  logger = new Logger({ name: "SkullKingLogger" });
+  logger = new Logger({ name: 'SkullKingLogger' })
 
   private readonly baseUrl: string
 
@@ -25,7 +32,7 @@ abstract class BaseApiService {
     })
 
     if (!response.ok) {
-      return Promise.reject(response.body);
+      return Promise.reject(response.body)
     }
 
     return await response.json()
@@ -43,11 +50,11 @@ abstract class BaseApiService {
     })
 
     if (!response.ok) {
-      const body = response.body;
+      const body = response.body
       if (body) {
-        return Promise.reject(await response.text());
+        return Promise.reject(await response.text())
       }
-      return Promise.reject('No response body');
+      return Promise.reject('No response body')
     }
 
     return await response.json()
@@ -58,13 +65,12 @@ abstract class BaseApiService {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-
       },
       body: typeof data === 'undefined' ? '' : JSON.stringify(data),
     })
 
     if (!response.ok) {
-      return Promise.reject(response.body);
+      return Promise.reject(response.body)
     }
 
     return await response.json()
@@ -76,14 +82,14 @@ abstract class BaseApiService {
     })
 
     if (!response.ok) {
-      return Promise.reject(response.body);
+      return Promise.reject(response.body)
     }
 
     return await response.json()
   }
 }
 
-export const API_INJECTION_KEY = Symbol() as InjectionKey<ApiService>;
+export const API_INJECTION_KEY = Symbol() as InjectionKey<ApiService>
 
 type UseLobbyStoreType = ReturnType<typeof useLobbyStore>
 
@@ -91,7 +97,7 @@ export class ApiService extends BaseApiService {
   constructor(
     private lobby?: UseLobbyStoreType | undefined,
     private gameStateBus = useEventBus<GameStateEvent>(GameStateBus),
-    private errorBus = useEventBus<ErrorEvent>(ErrorBus)
+    private errorBus = useEventBus<ErrorEvent>(ErrorBus),
   ) {
     super(BACKEND_URL + API_PATH)
   }
@@ -99,20 +105,28 @@ export class ApiService extends BaseApiService {
   private handleError(e: unknown) {
     // handle different error cases
     if (typeof e === 'string' && e.toLowerCase() === 'invalid uuid') {
-      this.errorBus.emit(new ErrorEvent(ErrorEventName.ValidationError, e));
-      return;
+      this.errorBus.emit(new ErrorEvent(ErrorEventName.ValidationError, e))
+      return
     }
 
-    this.errorBus.emit(new ErrorEvent(ErrorEventName.UnknownError, typeof e === 'string' ? e : undefined));
+    this.errorBus.emit(
+      new ErrorEvent(
+        ErrorEventName.UnknownError,
+        typeof e === 'string' ? e : undefined,
+      ),
+    )
   }
 
-  private handleStateUpdate(event: GameStateEventName,state: GameStateInterface) {
+  private handleStateUpdate(
+    event: GameStateEventName,
+    state: GameStateInterface,
+  ) {
     this.gameStateBus.emit(new GameStateEvent(event, state))
   }
 
   get lobbyUuid(): string | undefined {
     if (!this.lobby) {
-      this.lobby = useLobbyStore();
+      this.lobby = useLobbyStore()
     }
 
     return this.lobby.lobbyUuid
@@ -120,7 +134,7 @@ export class ApiService extends BaseApiService {
 
   get playerUuid(): string | undefined {
     if (!this.lobby) {
-      this.lobby = useLobbyStore();
+      this.lobby = useLobbyStore()
     }
 
     return this.lobby.playerUuid
@@ -128,7 +142,10 @@ export class ApiService extends BaseApiService {
 
   async getStatus() {
     try {
-      const state = await this.post('/status', { lobbyUuid: this.lobbyUuid })
+      const state = await this.post('/status', {
+        lobbyUuid: this.lobbyUuid,
+        playerUuid: this.playerUuid,
+      })
 
       this.handleStateUpdate(GameStateEventName.UpdateState, state)
     } catch (e) {
@@ -145,7 +162,11 @@ export class ApiService extends BaseApiService {
 
   async setPlayerLimit(limit: number) {
     try {
-      const state = await this.post('/set-player-limit', { lobbyUuid: this.lobbyUuid, limit: limit })
+      const state = await this.post('/set-player-limit', {
+        lobbyUuid: this.lobbyUuid,
+        playerUuid: this.playerUuid,
+        limit: limit,
+      })
 
       this.handleStateUpdate(GameStateEventName.SetPlayerLimit, state)
     } catch (e) {
@@ -159,7 +180,7 @@ export class ApiService extends BaseApiService {
       const state = await this.post('/set-player-name', {
         lobbyUuid: this.lobbyUuid,
         playerUuid: this.playerUuid,
-        name: name
+        name: name,
       })
 
       this.handleStateUpdate(GameStateEventName.SetPlayerName, state)
@@ -173,7 +194,7 @@ export class ApiService extends BaseApiService {
       const state = await this.post('/join-lobby', {
         lobbyUuid: this.lobbyUuid,
         playerUuid: this.playerUuid,
-        name: name
+        name: name,
       })
 
       this.handleStateUpdate(GameStateEventName.JoinLobby, state)
@@ -185,7 +206,10 @@ export class ApiService extends BaseApiService {
 
   async startGame() {
     try {
-      const state = await this.post('/start-game', { lobbyUuid: this.lobbyUuid })
+      const state = await this.post('/start-game', {
+        lobbyUuid: this.lobbyUuid,
+        playerUuid: this.playerUuid,
+      })
 
       this.handleStateUpdate(GameStateEventName.StartGame, state)
     } catch (e) {
@@ -198,7 +222,7 @@ export class ApiService extends BaseApiService {
       const state = await this.post('/set-prediction', {
         lobbyUuid: this.lobbyUuid,
         playerUuid: this.playerUuid,
-        prediction: prediction
+        prediction: prediction,
       })
 
       this.handleStateUpdate(GameStateEventName.SetPrediction, state)
@@ -209,7 +233,11 @@ export class ApiService extends BaseApiService {
 
   async playCard(card: CardInterface) {
     try {
-      const state = await this.post('/play-card', { lobbyUuid: this.lobbyUuid, playerUuid: this.playerUuid, card: card })
+      const state = await this.post('/play-card', {
+        lobbyUuid: this.lobbyUuid,
+        playerUuid: this.playerUuid,
+        card: card,
+      })
 
       this.handleStateUpdate(GameStateEventName.PlayCard, state)
     } catch (e) {

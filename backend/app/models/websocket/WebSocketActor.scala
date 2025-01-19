@@ -47,8 +47,15 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
             val lobbyPlayerIds = state.players.map(p => p.id.toString)
             clients
               .filter(c => c._1 != clientId && lobbyPlayerIds.contains(c._1))
-              .foreach(_._2 ! transportProtocol(WebSocketEvent.State,
-                List(UUID.fromString(clientId)), UUID.fromString(clientId), state.toJson).toString)
+              .foreach { case (cId, cRef) =>
+                val sanitizedState = state.sanitizeState(Some(cId))
+                cRef ! transportProtocol(
+                  WebSocketEvent.State,
+                  List(UUID.fromString(cId)),
+                  UUID.fromString(cId),
+                  sanitizedState.toJson
+                ).toString
+              }
           }
           case None =>
     }
@@ -76,6 +83,10 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
       // TODO: Implement error handling if for example [object Object] is sent
       val jsonData = Json.parse(msg)
 
+      val tryPlayerUuid = Try[UUID]((jsonData \ "data" \ "playerUuid").as[UUID]) match
+        case Success(p) => Some(p)
+        case Failure(f) => None
+
       (jsonData \ "event").as[WebSocketEvent.WebSocketEvent] match {
         case WebSocketEvent.State => {
           getLobby(jsonData) match {
@@ -84,7 +95,7 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
                 WebSocketEvent.State,
                 List(UUID.fromString(clientId)),
                 UUID.fromString(clientId),
-                lobby.gameState.toJson
+                lobby.gameState.sanitizeState(tryPlayerUuid).toJson
               ).toString
             }
             case None => out ! Json.obj("error" -> "Lobby not found").toString
@@ -123,7 +134,10 @@ class WebSocketActor(out: ActorRef, clients: mutable.Map[String, ActorRef]) exte
         case WebSocketEvent.SetUuid => {
           val newClientId = (jsonData \ "data" \ "playerUuid").as[UUID].toString
           if (newClientId != clientId) {
-            clients.update(newClientId, clients.remove(clientId).get)
+            clients.remove(clientId) match {
+              case Some(removedId) => clients.update(newClientId, removedId)
+              case None =>
+            }
             clientId = newClientId
             out ! Json.obj("playerId" -> newClientId).toString
           } else {

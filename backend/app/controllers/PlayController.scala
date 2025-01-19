@@ -41,15 +41,25 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
 
   def getStatus() = Action { implicit request: Request[AnyContent] =>
     val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])
+    val playerUuid = Try[UUID](request.body.asJson.get("playerUuid").as[UUID])
+    
+    val player = playerUuid match
+      case Success(p) => Some(p)
+      case Failure(f) => None
 
     lobbyAction(uuid, (lobby: ILobby) => {
-      Ok(lobby.gameState.toJson)
+      Ok(lobby.gameState.sanitizeState(player).toJson)
     })
   }
 
   def setPlayerLimit = Action { implicit request: Request[AnyContent] =>
     val limit = Try[Int](request.body.asJson.get("limit").as[Int])
     val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])
+    val playerUuid = Try[UUID](request.body.asJson.get("playerUuid").as[UUID])
+
+    val player = playerUuid match
+      case Success(p) => Some(p)
+      case Failure(f) => None
 
     lobbyAction(uuid, (lobby: ILobby) => {
       limit match {
@@ -60,7 +70,7 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
         case Some(l) =>
           val nextState = controller.setPlayerLimit(lobby.gameState, l)
           LobbyObject.setLobby(lobby.uuid, lobby.setGameState(nextState))
-          Ok(nextState.toJson)
+          Ok(nextState.sanitizeState(player).toJson)
       }
     })
   }
@@ -81,7 +91,7 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
         case Some(n) => {
           parseUuid(playerUuid, (u: UUID) => {
             val nextState = controller.joinLobby(n, u, lobby)
-            Ok(nextState.toJson)
+            Ok(nextState.sanitizeState(Some(u)).toJson)
           })
         }
       }
@@ -107,7 +117,7 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
               case Some(pred) =>
                 val nextState = controller.setPrediction(lobby.gameState, player, pred)
                 LobbyObject.setLobby(lobby.uuid, lobby.setGameState(nextState))
-                Ok(nextState.toJson)
+                Ok(nextState.sanitizeState(Some(u)).toJson)
             }
         }
       })
@@ -137,7 +147,7 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
                     if (player.id == activePlayer.id) {
                       val nextState = controller.playCard(lobby.gameState, player, c)
                       LobbyObject.setLobby(lobby.uuid, lobby.setGameState(nextState))
-                      Ok(nextState.toJson)
+                      Ok(nextState.sanitizeState(Some(u)).toJson)
                     } else {
                       BadRequest("Not your turn")
                     }
@@ -158,11 +168,16 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
 
   def startGame = Action { implicit request: Request[AnyContent] =>
     val uuid = Try[UUID](request.body.asJson.get("lobbyUuid").as[UUID])
+    val playerUuid = Try[UUID](request.body.asJson.get("playerUuid").as[UUID])
+
+    val player = playerUuid match
+      case Success(p) => Some(p)
+      case Failure(f) => None
 
     lobbyAction(uuid, (lobby: ILobby) => {
       val nextState = controller.startGame(lobby.gameState)
       LobbyObject.setLobby(lobby.uuid, lobby.setGameState(nextState))
-      Ok(nextState.toJson)
+      Ok(nextState.sanitizeState(player).toJson)
     })
   }
 
