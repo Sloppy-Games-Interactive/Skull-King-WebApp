@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useChatStore } from '@/core/stores/chatStore'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { ChatBus, ChatEvent, ChatEventName } from '@/core/event-bus'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { useEventBus } from '@vueuse/core'
@@ -12,6 +12,18 @@ const chat = useChatStore()
 const chatBus = useEventBus<ChatEvent>(ChatBus)
 
 const message = ref('')
+const chatMessagesContainer = ref<HTMLElement | null>(null)
+
+watch(
+  () => chat.messages,
+  async () => {
+    await nextTick()
+    if (chatMessagesContainer.value) {
+      chatMessagesContainer.value.scrollTop = chatMessagesContainer.value.scrollHeight + 1000
+    }
+  },
+  { deep: true }
+)
 
 const sendMessage = () => {
   if (!lobby.me || message.value.trim().length === 0) {
@@ -53,11 +65,11 @@ withDefaults(
     class="chat bg-black/10 p-3 h-full w-full text-start leading-snug"
     :class="fill ? '' : `max-w-[${width}px] max-h-[${height}px]`"
   >
-    <div class="chat-messages-container overflow-y-auto">
+    <div class="chat-messages-container overflow-y-auto" ref="chatMessagesContainer">
       <div class="chat-line" v-for="(entry, idx) of chat.messages" :key="idx">
-      <span class="chat-author" :class="authorColors.get(entry.author.id)"
-      >{{ entry.author.name }}:</span
-      >
+        <span class="chat-author" :class="authorColors.get(entry.author.id)"
+          >{{ entry.author.name }}:</span
+        >
         <span class="chat-message text-white">{{ entry.message }}</span>
       </div>
     </div>
@@ -81,6 +93,13 @@ withDefaults(
 
   font-size: 1.1rem;
   text-shadow: rgba(51, 51, 51, 0.5) 1px 1px 2px;
+
+  grid-template-areas: 'messages' 'input';
+  grid-template-rows: 1fr auto;
+}
+
+.chat-messages-container {
+  grid-area: messages;
 }
 
 .chat-author {
@@ -89,6 +108,10 @@ withDefaults(
 
 .chat-message {
   grid-area: message;
+}
+
+.chat-input {
+  grid-area: input;
 }
 
 .chat-line {

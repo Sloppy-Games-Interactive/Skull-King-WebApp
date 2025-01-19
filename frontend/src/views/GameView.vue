@@ -8,9 +8,10 @@ import { ref } from 'vue'
 import CardList from '@/components/cards/CardList.vue'
 import PredictOverlay from '@/components/PredictOverlay.vue'
 import PlayCardOverlay from '@/components/PlayCardOverlay.vue'
-import PlayerStatusMenu from '@/components/PlayerStatusMenu.vue'
 import PhaseChangeOverlay from '@/components/PhaseChangeOverlay.vue'
 import ScoreView from '@/components/ScoreView.vue'
+import AppButton from '@/components/utils/AppButton.vue'
+import ChatWindow from '@/components/ChatWindow.vue'
 
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
@@ -30,9 +31,7 @@ const showPlayCardOverlay = (card: CardInterface) => {
   playCard.value = card
 }
 
-//todo get sessionstorage
-//gameStore.updateGameState
-//if not working: nextTick?
+const showChat = ref(true)
 </script>
 
 <template>
@@ -81,6 +80,15 @@ const showPlayCardOverlay = (card: CardInterface) => {
           :size="CardSize.small"
           :style="{ transform: `rotate(${getRandomRotationAngle(idx)}deg` }"
         />
+
+        <div class="absolute right-0 top-0 pr-3">
+          <AppButton class="text-xl mb-2" @click.stop.prevent="showChat = !showChat"><fa-icon icon="message" /></AppButton>
+          <Transition name="slide">
+            <div v-if="showChat" class="absolute top-[100%] right-0 w-[100vw] sm:max-w-[45vw] md:max-w-[30vw]">
+              <ChatWindow class="rounded-l max-h-[20rem] bg-black/80" />
+            </div>
+          </Transition>
+        </div>
       </div>
     </div>
     <div class="hand w-full align-end">
@@ -107,6 +115,9 @@ select {
     'ui ui ui'
     'table table table'
     'hand hand hand';
+
+  row-gap: 1rem;
+  grid-template-rows: auto auto minmax(0, 1fr)
 }
 
 .game-view-table {
@@ -121,5 +132,20 @@ select {
 
 .ui {
   grid-area: ui;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  transform: translateX(0);
 }
 </style>

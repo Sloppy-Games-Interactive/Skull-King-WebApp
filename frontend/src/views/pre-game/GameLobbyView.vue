@@ -77,20 +77,18 @@ const copyLobbyIdToClipboard = () => {
     style="background-color: rgba(255, 255, 255, 0.5)"
   >
     <div class="text-center gap-5 _lobby-container h-full w-full p-3">
-      <!--      <h1 class="text-6xl font-bold pt-10">Game Lobby</h1>-->
-
-      <div class="grid place-items-center my-8 _players">
+      <div class="_players grid align-start auto-rows-min gap-3 overflow-y-auto pr-3">
         <PlayerStatusRow
-          v-for="(player, idx) in gameState.players"
+          v-for="player in gameState.players"
           :key="player.id"
           :player="player"
           :show-score="false"
-          class="min-w-[15em] my-5"
+          :show-status="false"
         />
       </div>
 
       <div class="_chat">
-        <ChatWindow fill class="rounded-l" />
+        <ChatWindow fill class="rounded-l min-h-[10rem]" />
       </div>
 
       <div class="_buttons">
@@ -125,6 +123,15 @@ const copyLobbyIdToClipboard = () => {
     'buttons buttons';
   grid-template-rows: minmax(0, 1fr) auto;
   grid-template-columns: auto 1fr;
+
+  @media (max-width: 768px) {
+    grid-template-areas:
+      'players'
+      'chat'
+      'buttons';
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-columns: 1fr;
+  }
 }
 
 ._players {
