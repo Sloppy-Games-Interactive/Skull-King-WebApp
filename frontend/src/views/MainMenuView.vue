@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import router from '@/core/router'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
@@ -8,6 +8,8 @@ import { ButtonSize } from '@/components/utils/enums'
 import { useGameStateStore } from '@/core/stores/gameState'
 import { useChatStore } from '@/core/stores/chatStore'
 import { getGitHubUrl } from '@/components/utils/getGithubUrl'
+import { useAuth } from '@/composables/auth'
+import { useUserStore } from '@/core/stores/userStore'
 
 const lobby = useLobbyStore()
 const gameState = useGameStateStore()
@@ -15,6 +17,7 @@ const chat = useChatStore()
 
 gameState.clear()
 chat.clear()
+useAuth()
 
 const api = inject(API_INJECTION_KEY) as ApiService
 
@@ -28,6 +31,22 @@ const newGame = async (event: MouseEvent) => {
 
 const loggedIn = ref(false)
 const showMenu = ref(false)
+const userStore = useUserStore()
+
+
+function checkLoggedIn() {
+  if (userStore.user) {
+    showMenu.value = true
+    loggedIn.value = true
+  }
+}
+
+watch(() => userStore.user, () => {
+  checkLoggedIn()
+})
+
+checkLoggedIn()
+
 </script>
 
 <template>

@@ -24,6 +24,7 @@ POST     /play-card                  controllers.PlayController.playCard
 GET      /ws                         controllers.WebSocketController.socket
 
 GET      /callback            controllers.OAuthController.callback
+POST      /get-session         controllers.OAuthController.getSession
 
 # Map static resources from the /public folder to the /assets URL path
 #-- skip
