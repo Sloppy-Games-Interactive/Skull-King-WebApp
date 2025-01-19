@@ -41,7 +41,7 @@ const newGame = async (event: MouseEvent) => {
       <AppButton @click.stop.prevent="router.push('/join-lobby')" :size="ButtonSize.LARGE"
       >Join Game</AppButton>
 
-      <AppButton @click.stop.prevent="router.push('/settings')" :size="ButtonSize.LARGE"
+      <AppButton @click.stop.prevent="router.push('/settings')" :size="ButtonSize.LARGE" class="disabled"
         >Settings</AppButton>
     </div>
   </div>

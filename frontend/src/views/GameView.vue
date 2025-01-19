@@ -69,9 +69,9 @@ watch(
         </div>
       </div>
     </div>
-    <div class="game-view-table align-end">
+    <div class="game-view-table">
       <div
-        class="relative h-[300px] md:h-[400px] flex justify-center items-center"
+        class="relative h-100 flex justify-center items-center"
         ref="container"
         :key="(gameState.currentTrick?.stack ?? []).length"
       >
@@ -86,7 +86,7 @@ watch(
             "
           >
             <div class="-rotate-45">
-              <p class="text-4xl">Skull King</p>
+              <p class="text-4xl">SkullKing</p>
               <p>Card Game</p>
             </div>
           </div>
@@ -118,9 +118,9 @@ watch(
           <Transition name="slide">
             <div
               v-if="showChat"
-              class="absolute top-[100%] right-0 w-[100vw] sm:max-w-[45vw] md:max-w-[30vw]"
+              class="absolute top-[100%] right-0 w-[100vw] sm:max-w-[45vw] md:max-w-[30vw] h-[100vh] max-h-[20rem] px-3"
             >
-              <ChatWindow class="rounded-l max-h-[20rem] bg-black/80" />
+              <ChatWindow class="rounded max-h-[20rem] bg-black/80" />
             </div>
           </Transition>
         </div>
@@ -132,7 +132,7 @@ watch(
         :class="{ 'card-list-disabled': lobby.me?.active === false }"
         :cards="lobby.me?.hand?.cards ?? []"
         :on-click="showPlayCardOverlay"
-        :card-size="CardSize.small"
+        :card-size="CardSize.medium"
       />
     </div>
   </div>
@@ -152,7 +152,7 @@ watch(
     'hand hand hand';
 
   row-gap: 1rem;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto 1fr minmax(0, 1fr);
 }
 
 .game-view-table {

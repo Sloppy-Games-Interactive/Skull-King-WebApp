@@ -111,7 +111,7 @@ if (
     :z-index="100000"
   >
     <div class="grid gap-3">
-      <div class="text-7xl text-white p-6 text-center">{{ text }}</div>
+      <div class="text-7xl text-white p-6 text-center break-words overflow-hidden">{{ text }}</div>
 
       <div
         v-if="showScores"

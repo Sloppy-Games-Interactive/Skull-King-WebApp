@@ -33,6 +33,7 @@ const rules = {
       class="w-3/4 mx-auto"
       label="Name"
       :rules="[rules.required]"
+      @keydown.enter.prevent="postPlayerName"
     ></v-text-field>
     <v-container>
       <v-row justify="center">

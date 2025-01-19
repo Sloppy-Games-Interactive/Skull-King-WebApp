@@ -13,17 +13,18 @@ const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore();
 const lobby = useLobbyStore()
 
+const prediction = ref(0)
+
 const isModalOpen = computed(() => {
   return (
     gameState.activePlayer && gameState.phase === Phase.PrepareTricks
   )
 })
 
-const setPrediction = async (prediction: number) => {
-  await api.setPrediction(prediction)
+const setPrediction = async (p: number) => {
+  await api.setPrediction(p)
+  prediction.value = 0
 }
-
-const prediction = ref(0)
 
 const items = computed(() => {
   const round = gameState.round
