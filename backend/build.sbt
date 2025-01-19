@@ -2,6 +2,14 @@ import sbt.Keys.libraryDependencies
 
 val scala3Version = "3.5.1"
 
+val circeVersion = "0.14.10"
+
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)
+
 lazy val root = project
   .in(file("."))
   .settings(
@@ -19,5 +27,14 @@ lazy val root = project
       "com.google.inject" % "guice" % "6.0.0",
       "org.scala-lang.modules" %% "scala-xml" % "2.3.0",
       "com.typesafe.play" %% "play-json" % "2.10.5",
+      "com.softwaremill.sttp.client4" %% "core" % "4.0.0-M24",
+      "com.softwaremill.sttp.client4" %% "upickle" % "4.0.0-M24",
+      "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.11.13",
+      "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.11.13",
+      "com.softwaremill.sttp.client4" %% "circe" % "4.0.0-M24",
+
+
+      "org.polyvariant" %% "sttp-oauth2" % "0.19.2",
+      "org.polyvariant" %% "sttp-oauth2-circe" % "0.19.2"
     )),
   ).enablePlugins(PlayScala)
