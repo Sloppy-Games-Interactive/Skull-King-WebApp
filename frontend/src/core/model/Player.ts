@@ -45,10 +45,11 @@ export class Player implements PlayerInterface {
     score,
     prediction,
     active,
+    profilePic
   }: SerializableJson<PlayerInterface>) {
     this.id = id
     this.name = name
-    this.profilePic = `1.png`
+    this.profilePic = profilePic
     this.hand = new Hand(hand)
     this.score = score
     this.prediction = prediction
