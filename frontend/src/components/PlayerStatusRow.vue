@@ -25,7 +25,7 @@ defineProps<{
     </div>
 
     <div class="_name grid align-center" :class="{'pr-4': !showScore}">
-      <p class="text-3xl text-white text-start text-ellipsis overflow-hidden">
+      <p class="text-3xl text-white text-start overflow-hidden grid">
         {{ player.name }}
       </p>
     </div>
