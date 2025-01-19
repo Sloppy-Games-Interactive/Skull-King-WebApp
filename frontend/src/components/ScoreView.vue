@@ -35,6 +35,7 @@ const lobby = useLobbyStore()
 
     <div
       class="_status-text flex align-center justify-center max-sm:w-full max-sm:h-full max-sm:leading-5 gap-3 p-3 text-white vertical-mid text-center text-3xl bg-white/40 rounded-br-lg md:rounded-bl-lg backdrop-blur-2xl"
+      :class="{'bg-red-400/40': gameState.phase !== Phase.EndGame && !lobby.me?.active, 'bg-green-400/40': gameState.phase !== Phase.EndGame && lobby.me?.active}"
       @click="openModal"
     >
       <fa-icon icon="users" class="text-2xl"/>

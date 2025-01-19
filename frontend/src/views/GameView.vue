@@ -31,7 +31,7 @@ const showPlayCardOverlay = (card: CardInterface) => {
   playCard.value = card
 }
 
-const showChat = ref(true)
+const showChat = ref(false)
 </script>
 
 <template>
@@ -82,9 +82,16 @@ const showChat = ref(true)
         />
 
         <div class="absolute right-0 top-0 pr-3">
-          <AppButton class="text-xl mb-2" @click.stop.prevent="showChat = !showChat"><fa-icon icon="message" /></AppButton>
+          <AppButton
+            class="text-xl mb-2"
+            @click.stop.prevent="showChat = !showChat"
+            ><fa-icon icon="message"
+          /></AppButton>
           <Transition name="slide">
-            <div v-if="showChat" class="absolute top-[100%] right-0 w-[100vw] sm:max-w-[45vw] md:max-w-[30vw]">
+            <div
+              v-if="showChat"
+              class="absolute top-[100%] right-0 w-[100vw] sm:max-w-[45vw] md:max-w-[30vw]"
+            >
               <ChatWindow class="rounded-l max-h-[20rem] bg-black/80" />
             </div>
           </Transition>
@@ -94,6 +101,7 @@ const showChat = ref(true)
     <div class="hand w-full align-end">
       <CardList
         :hover-effects="true"
+        :class="{ 'card-list-disabled': lobby.me?.active === false }"
         :cards="lobby.me?.hand?.cards ?? []"
         :on-click="showPlayCardOverlay"
         :card-size="CardSize.small"
@@ -103,9 +111,8 @@ const showChat = ref(true)
 </template>
 
 <style scoped lang="scss">
-select {
-  color: black;
-  width: auto;
+.card-list-disabled {
+  filter: grayscale(0.7) brightness(0.9) opacity(0.7);
 }
 
 .game-view-container {
@@ -117,7 +124,7 @@ select {
     'hand hand hand';
 
   row-gap: 1rem;
-  grid-template-rows: auto auto minmax(0, 1fr)
+  grid-template-rows: auto auto minmax(0, 1fr);
 }
 
 .game-view-table {

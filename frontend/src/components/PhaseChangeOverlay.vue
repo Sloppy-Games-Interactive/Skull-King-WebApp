@@ -26,7 +26,7 @@ function showLastTrickWinner(player: PlayerInterface) {
     setTimeout(() => {
       open.value = false
       resolve()
-    }, 5000)
+    }, 3000)
   })
 }
 

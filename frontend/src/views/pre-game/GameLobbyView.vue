@@ -11,6 +11,7 @@ import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 import { useChatStore } from '@/core/stores/chatStore'
 import { ChatBus, ChatEvent, ChatEventName } from '@/core/event-bus'
 import ChatWindow from '@/components/ChatWindow.vue'
+import { FontAwesomeIcon as FaIcon } from '@fortawesome/vue-fontawesome'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore()
@@ -55,7 +56,7 @@ const startGame = async () => {
   await api.startGame()
 }
 
-const copyBtnText = ref('copy uuid')
+const copyBtnText = ref('Copy Join Code')
 const { text, copy, copied, isSupported } = useClipboard({
   source: lobby.lobbyUuid,
 })
@@ -63,10 +64,10 @@ const { text, copy, copied, isSupported } = useClipboard({
 const copyLobbyIdToClipboard = () => {
   copy(lobby.lobbyUuid)
 
-  copyBtnText.value = 'copied'
+  copyBtnText.value = 'Copied!'
 
   setTimeout(() => {
-    copyBtnText.value = 'copy uuid'
+    copyBtnText.value = 'Copy Join Code'
   }, 2000)
 }
 </script>
@@ -84,6 +85,7 @@ const copyLobbyIdToClipboard = () => {
           :player="player"
           :show-score="false"
           :show-status="false"
+          class="min-w-60"
         />
       </div>
 
@@ -92,10 +94,12 @@ const copyLobbyIdToClipboard = () => {
       </div>
 
       <div class="_buttons">
-        <div class="grid grid-flow-col align-center justify-center gap-10 pb-2">
-          <AppButton @click="copyLobbyIdToClipboard">
-            {{ copyBtnText }}
-          </AppButton>
+        <div class="flex flex-wrap align-center justify-center gap-x-10 gap-y-3 pb-2">
+          <div class="absolute top-0 right-0 p-1">
+            <AppButton @click="copyLobbyIdToClipboard" class="text-lg" v-tooltip:bottom="copyBtnText">
+              <fa-icon icon="link" />
+            </AppButton>
+          </div>
           <AppButton
             v-if="lobby.isHost"
             :disabled="!hasEnoughPlayers"
@@ -105,7 +109,7 @@ const copyLobbyIdToClipboard = () => {
           >
 
           <div v-else>
-            <p class="text-2xl font-semibold px-3">
+            <p class="text-3xl font-semibold px-3">
               Waiting for host to start the game
             </p>
           </div>

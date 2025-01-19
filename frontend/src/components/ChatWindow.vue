@@ -14,14 +14,18 @@ const chatBus = useEventBus<ChatEvent>(ChatBus)
 const message = ref('')
 const chatMessagesContainer = ref<HTMLElement | null>(null)
 
+async function scrollDown() {
+  await nextTick()
+  if (chatMessagesContainer.value) {
+    chatMessagesContainer.value.scrollTop = chatMessagesContainer.value.scrollHeight
+  }
+}
+
+scrollDown()
+
 watch(
   () => chat.messages,
-  async () => {
-    await nextTick()
-    if (chatMessagesContainer.value) {
-      chatMessagesContainer.value.scrollTop = chatMessagesContainer.value.scrollHeight + 1000
-    }
-  },
+  scrollDown,
   { deep: true }
 )
 

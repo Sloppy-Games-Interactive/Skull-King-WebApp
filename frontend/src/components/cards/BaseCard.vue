@@ -20,6 +20,7 @@ const props = defineProps<{
   subtext?: string
   cardWidth?: number
   cardHeight?: number
+  noTexture?: boolean
 }>()
 
 const suitClass = computed<string>(() => {
@@ -47,7 +48,7 @@ const suitClass = computed<string>(() => {
   }
 })
 
-const classes = computed(() => props.cardType + ' ' + suitClass.value)
+const classes = computed(() => props.cardType + ' ' + suitClass.value + (props.noTexture ? ' no-texture' : ''))
 
 const $parent = useParentElement()
 
@@ -127,6 +128,14 @@ function isNonEmptyString(s: unknown): s is string {
   &.light {
     &:before {
       opacity: 0.1;
+    }
+  }
+}
+
+.no-texture {
+  .textured, &.textured {
+    &:before {
+      display: none !important;
     }
   }
 }
