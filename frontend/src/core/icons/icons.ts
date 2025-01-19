@@ -1,21 +1,22 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
-
-
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons/faUserSecret'
-import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
-import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers'
-import { faMessage } from '@fortawesome/free-solid-svg-icons/faMessage'
-import { faLink } from '@fortawesome/free-solid-svg-icons/faLink'
-import { faQrcode } from '@fortawesome/free-solid-svg-icons/faQrcode'
-// import { ICON_NAME } from '@fortawesome/free-regular-svg-icons'
+import {
+  faBars,
+  faChevronLeft,
+  faLink,
+  faMessage,
+  faQrcode,
+  faUsers,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 export function initFontAwesomeLibrary() {
-  library.add(faUserSecret)
+  library.add(faUser)
   library.add(faBars)
   library.add(faUsers)
   library.add(faMessage)
   library.add(faLink)
   library.add(faQrcode)
-  // library.add(ICON_NAME)
-  // ...
+  library.add(faChevronLeft)
+  library.add(faGithub)
 }

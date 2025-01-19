@@ -13,6 +13,7 @@ import {
 } from '@/core/event-bus'
 import type { GameStateInterface } from '@/core/model/GameState'
 import { API_PATH, BACKEND_URL } from '@/core/utils/Constants'
+import type { User } from '@/core/model/User'
 
 abstract class BaseApiService {
   logger = new Logger({ name: 'SkullKingLogger' })
@@ -242,6 +243,18 @@ export class ApiService extends BaseApiService {
       this.handleStateUpdate(GameStateEventName.PlayCard, state)
     } catch (e) {
       this.handleError(e)
+    }
+  }
+
+  async getUser(sessionUuid: string): Promise<User> {
+    try {
+      const user = await this.post('/get-session',
+        { sessionUuid }
+      )
+      return user
+    } catch (e) {
+      this.handleError(e)
+      return Promise.reject()
     }
   }
 }
