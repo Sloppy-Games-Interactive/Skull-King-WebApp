@@ -8,6 +8,7 @@ import PlayerStatusRow from '@/components/PlayerStatusRow.vue'
 import AppButton from '@/components/utils/AppButton.vue'
 import { ButtonSize } from '@/components/utils/enums'
 import { FRONTEND_URL } from '@/core/utils/Constants'
+import { Phase } from '@/core/model/GameState'
 
 const isModalOpen = ref(false)
 
@@ -38,14 +39,15 @@ const lobby = useLobbyStore()
     >
       <fa-icon icon="users" class="text-2xl"/>
 
-      <template v-if="lobby.me?.active"> It's your turn! </template>
+      <template v-if="gameState.phase === Phase.EndGame">Game is over</template>
+      <template v-else-if="lobby.me?.active"> It's your turn! </template>
       <template v-else>
         {{ gameState.activePlayer?.name }} is playing a card.
       </template>
     </div>
 
     <div class="_me pl-3 hidden-sm-and-down" v-if="lobby.me">
-      <PlayerStatusRow :player="lobby.me" :show-score="true" />
+      <PlayerStatusRow :player="lobby.me" :show-score="true" :show-status="true" />
     </div>
   </div>
 
@@ -68,14 +70,7 @@ const lobby = useLobbyStore()
                   .length + (player.prediction ?? 0)
               "
             >
-              <PlayerStatusRow :player="player" :show-score="true" />
-              <p class="text-2xl text-white mt-n5 mb-2 ml-2 text-center">
-                Prediction: {{ player.prediction }} | Won tricks:
-                {{
-                  gameState.tricks.filter(t => t.winner?.id === player.id)
-                    .length
-                }}
-              </p>
+              <PlayerStatusRow :player="player" :show-score="true" :show-status="true" />
             </template>
           </div>
         </div>
