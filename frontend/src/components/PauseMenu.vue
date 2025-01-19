@@ -22,7 +22,7 @@ function leave() {
 </script>
 
 <template>
-  <AppButton :size="ButtonSize.SMALL" @click="openModal">
+  <AppButton :size="ButtonSize.MEDIUM" @click="openModal" icon-button>
     <fa-icon icon="bars" />
   </AppButton>
 

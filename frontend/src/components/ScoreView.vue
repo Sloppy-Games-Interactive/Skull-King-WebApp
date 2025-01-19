@@ -28,7 +28,7 @@ const lobby = useLobbyStore()
     class="_grid-container md:grid md:gap-5 md:gap-y-7 flex-column align-start"
   >
     <div class="p-3 _menu hidden-sm-and-down">
-      <AppButton :size="ButtonSize.SMALL" @click="openModal"
+      <AppButton :size="ButtonSize.MEDIUM" @click="openModal" icon-button
         ><fa-icon icon="users" class="text-2xl"
       /></AppButton>
     </div>

@@ -15,7 +15,12 @@ withDefaults(
 
 <template>
   <button
-    :class="`wood-btn text-${size}` + (iconButton ? ' flex align-center py-2 px-3 justify-center' : '')"
+    class="wood-btn"
+    :class="[
+      `text-${size}`,
+      iconButton ? 'flex align-center justify-center' : '',
+      { 'py-2 px-3': iconButton && size === ButtonSize.SMALL, 'py-3 px-4': iconButton && size === ButtonSize.MEDIUM, 'py-4 px-5': iconButton && size === ButtonSize.LARGE },
+    ]"
   >
     <slot></slot>
   </button>

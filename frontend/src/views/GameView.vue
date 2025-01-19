@@ -109,6 +109,7 @@ watch(
           <AppButton
             class="text-xl mb-2 relative"
             @click.stop.prevent="openChat"
+            icon-button
             ><span
               v-if="unreadMessages"
               class="absolute top-[-0.25rem] left-[-0.25rem] p-2 rounded-full bg-yellow-400"
