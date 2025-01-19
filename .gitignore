@@ -40,3 +40,4 @@ backend/logs/
 
 frontend/.env
 frontend/.env.production
+backend/.env

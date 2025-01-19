@@ -15,18 +15,16 @@ import javax.inject.Inject
 
 class OAuthController @Inject() (val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController {
 
-  private val clientId = "your-github-client-id"
-  private val clientSecret = "your-github-client-secret"
-  private val redirectUri = "http://localhost:9000/callback"
+  private val clientId = sys.env("CLIENT_ID")
+  private val clientSecret = sys.env("CLIENT_SECRET")
+  private val redirectUri = sys.env("REDIRECT_URI")
 
   def callback = Action.async { implicit request =>
     val code = request.getQueryString("code").getOrElse("")
     val state = request.getQueryString("state").getOrElse("")
 
-    val authCode = "SplxlOBeZQQYbYS6WxSbIA"
-    val clientId = "myClient123"
-    val clientSecret = "s3cret"
-    case class MyTokenResponse(access_token: String, scope: String, token_type: String, refresh_token: Option[String])
+    val authCode = code
+    case class MyTokenResponse(access_token: Option[String], scope: Option[String], token_type: String, refresh_token: Option[String])
     implicit val tokenResponseDecoder: Decoder[MyTokenResponse] = deriveDecoder[MyTokenResponse]
     val backend = DefaultSyncBackend()
 
@@ -37,6 +35,10 @@ class OAuthController @Inject() (val controllerComponents: ControllerComponents)
       .header("accept", "application/json")
     val authResponse = tokenRequest.response(asJson[MyTokenResponse]).send(backend)
     val accessToken = authResponse.body.map(_.access_token)
-    Future.successful(Ok(accessToken.toString))
+    Future.successful(Redirect("https://skullking.it-heimnet.de"))
+  }
+
+  def getUser = Action {
+    Ok("Hello")
   }
 }
