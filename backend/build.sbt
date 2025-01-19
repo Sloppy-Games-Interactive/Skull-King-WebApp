@@ -19,6 +19,14 @@ lazy val root = project
       "com.google.inject" % "guice" % "6.0.0",
       "org.scala-lang.modules" %% "scala-xml" % "2.3.0",
       "com.typesafe.play" %% "play-json" % "2.10.5",
-      "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
+      "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test,
+      "org.playframework.silhouette" %% "play-silhouette" % "10.0.1",
+      "org.playframework.silhouette" %% "play-silhouette-cas" % "10.0.1",
+      "org.playframework.silhouette" %% "play-silhouette-crypto-jca" % "10.0.1",
+      "org.playframework.silhouette" %% "play-silhouette-password-argon2" % "10.0.1",
+      "org.playframework.silhouette" %% "play-silhouette-password-bcrypt" % "10.0.1",
+      "org.playframework.silhouette" %% "play-silhouette-persistence" % "10.0.1",
+      "org.playframework.silhouette" %% "play-silhouette-totp" % "10.0.1",
+      "org.playframework.silhouette" %% "play-silhouette-testkit" % "10.0.1" % Test,
     )),
   ).enablePlugins(PlayScala)
