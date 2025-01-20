@@ -33,7 +33,7 @@ defineProps<{
     <div class="_status" v-if="showStatus">
       <p class="text-1xl text-white">
         Prediction: {{ player.prediction }} | Won tricks:
-        {{ gameState.tricks.filter(t => t.winner?.id === player.id).length }}
+        {{ gameState.tricks.slice(1).filter(t => t.winner?.id === player.id).length }}
       </p>
     </div>
 

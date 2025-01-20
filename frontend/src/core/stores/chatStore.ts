@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { ChatMessage, type ChatMessageInterface } from '@/core/model/Chat'
 import { useSessionStorage } from '@vueuse/core'
 
@@ -16,6 +16,11 @@ export const useChatStore = defineStore('chat', () => {
   })
 
   const messages = reactive<ChatMessage[]>(sessionStorage.value ?? [])
+  const currentMessage = ref('')
+
+  const setCurrentMessage = (msg: string) => {
+    currentMessage.value = msg
+  }
 
   const addMessage = (message: ChatMessageInterface) => {
     messages.push(message)
@@ -31,5 +36,8 @@ export const useChatStore = defineStore('chat', () => {
     messages,
     addMessage,
     clear,
+
+    currentMessage,
+    setCurrentMessage,
   }
 })
