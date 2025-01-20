@@ -11,8 +11,15 @@ const lobby = useLobbyStore()
 const chat = useChatStore()
 const chatBus = useEventBus<ChatEvent>(ChatBus)
 
-const message = ref('')
+const message = ref(chat.currentMessage)
 const chatMessagesContainer = ref<HTMLElement | null>(null)
+
+watch(
+  () => message.value,
+  (newMessage) => {
+    chat.setCurrentMessage(newMessage)
+  },
+)
 
 async function scrollDown() {
   await nextTick()

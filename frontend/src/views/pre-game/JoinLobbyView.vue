@@ -24,6 +24,10 @@ const { query } = route
 if (query.uuid) {
   lobbyIdInput.value = query.uuid as string
 }
+
+const rules = {
+  required: (value: string) => !!value || 'Field is required',
+}
 </script>
 
 <template>
@@ -36,6 +40,7 @@ if (query.uuid) {
       v-model="lobbyIdInput"
       class="w-3/4 mx-auto"
       label="Lobby join code"
+      :rules="[rules.required]"
       @keydown.enter.prevent="join"
     ></v-text-field>
     <v-container>

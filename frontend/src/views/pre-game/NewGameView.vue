@@ -8,6 +8,18 @@ const api = inject(API_INJECTION_KEY) as ApiService
 
 const playerLimitInput = ref('2')
 const postPlayerLimit = async () => {
+  if (!playerLimitInput.value.trim()) {
+    return
+  }
+
+  if (Number.parseInt(playerLimitInput.value) > 10) {
+    return
+  }
+
+  if (Number.parseInt(playerLimitInput.value) < 2) {
+    return
+  }
+
   await api.setPlayerLimit(Number.parseInt(playerLimitInput.value))
   await router.push('/join-game')
 }

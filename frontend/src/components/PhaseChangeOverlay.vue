@@ -121,7 +121,7 @@ if (
           <PlayerStatusRow
             :player="player"
             :show-score="true"
-            :show-status="gameWinners === null || gameWinners.length === 0"
+            :show-status="typeof player.prediction === 'number' && (gameWinners === null || gameWinners.length === 0)"
           />
         </template>
       </div>
