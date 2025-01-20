@@ -55,7 +55,7 @@ export const useLobbyStore = defineStore('lobby', () => {
 
   const isHost = computed<boolean>(() => {
     return (
-      hostPlayer.value?.id === playerUuid.value &&
+      gameState.players[0]?.id === playerUuid.value &&
       typeof playerUuid.value !== 'undefined'
     )
   })
