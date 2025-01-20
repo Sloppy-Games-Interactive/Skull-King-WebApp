@@ -3,21 +3,23 @@
 }
 
 .bg-settings {
-  background-image: url('/images/background/settings.jpeg');
+  background-image: url('/images/background/settings.webp');
 }
 
 .bg-pre-game {
-  background-image: url('/images/background/pre_game.jpeg');
+  background-image: url('/images/background/pre_game.webp');
 }
 
 .bg-tavern {
-  background-image: url('/images/background/tavern.jpeg');
+  background-image: url('/images/background/tavern.webp');
 }
 
 .bg-town {
-  background-image: url('/images/background/pirate_town.jpeg');
+  //background-image: url('/images/background/pirate_town.webp');
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)),
+    url('/images/background/pirate_town.webp');
 
-  background-position-x: -120px;
+  background-position-x: 0, -120px;
 
   @media (screen(sm)) {
     background-position-x: 0;

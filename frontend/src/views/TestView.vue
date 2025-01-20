@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import Card from '@/components/cards/Card.vue'
-import { CardSize, Suit } from '@/core/model/Card'
-import {SpecialCard} from '@/core/model/Card'
+import LoginBoxView from '@/components/LoginBoxView.vue'
 
-const c = new SpecialCard({suit: Suit.Pirate})
 </script>
 
 <template>
   <div style="display: flex">
-    <Card :card="null" :size="CardSize.medium"></Card>
-    <Card :card="c" :size="CardSize.medium"></Card>
+    <LoginBoxView />
   </div>
 </template>
 

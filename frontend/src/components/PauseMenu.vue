@@ -22,7 +22,7 @@ function leave() {
 </script>
 
 <template>
-  <AppButton :size="ButtonSize.SMALL" @click="openModal">
+  <AppButton :size="ButtonSize.MEDIUM" @click="openModal" icon-button>
     <fa-icon icon="bars" />
   </AppButton>
 
@@ -49,8 +49,6 @@ function leave() {
 </template>
 
 <style scoped lang="scss">
-@use 'src/assets/buttons';
-
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.3s ease;

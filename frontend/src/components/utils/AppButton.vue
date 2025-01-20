@@ -3,20 +3,34 @@ import { ButtonSize } from '@/components/utils/enums'
 
 withDefaults(
   defineProps<{
-    size?: ButtonSize;
+    size?: ButtonSize
+    iconButton?: boolean
+    tag?: 'button' | 'a'
   }>(),
   {
     size: ButtonSize.MEDIUM,
+    iconButton: false,
+    tag: 'button',
   },
-);
+)
 </script>
 
 <template>
-<button :class="`wood-btn text-${size}`">
-  <slot></slot>
-</button>
+  <component
+    :is="tag"
+    class="wood-btn"
+    :class="[
+      `text-${size}`,
+      iconButton ? 'flex align-center justify-center' : '',
+      {
+        'py-2 px-3': iconButton && size === ButtonSize.SMALL,
+        'py-3 px-4': iconButton && size === ButtonSize.MEDIUM,
+        'py-4 px-5': iconButton && size === ButtonSize.LARGE,
+      },
+    ]"
+  >
+    <slot></slot>
+  </component>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

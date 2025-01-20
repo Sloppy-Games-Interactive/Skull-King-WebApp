@@ -1,4 +1,3 @@
-import { useGameStateStore } from '@/core/stores/gameState'
 import { useLobbyStore } from '@/core/stores/lobbyStore'
 import { inject, ref, watch } from 'vue'
 import { GameState } from '@/core/model/GameState'
@@ -6,13 +5,21 @@ import { useEventBus, useOnline, useWebSocket } from '@vueuse/core'
 import type { JsonValue } from 'type-fest'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import { useChatStore } from '@/core/stores/chatStore'
-import { ChatBus, type ChatEvent, ChatEventName } from '@/core/event-bus'
+import {
+  ChatBus,
+  type ChatEvent,
+  ChatEventName,
+  GameStateBus,
+  GameStateEvent,
+  GameStateEventName,
+} from '@/core/event-bus'
 import { ChatMessage } from '@/core/model/Chat'
 
 export function useWebsocketHandler() {
-  const gameState = useGameStateStore()
   const lobby = useLobbyStore()
   const chat = useChatStore()
+
+  const stateBus = useEventBus<GameStateEvent>(GameStateBus)
 
   const initialPlayerUuid = lobby.playerUuid
 
@@ -124,7 +131,12 @@ export function useWebsocketHandler() {
         lobby.setPlayerUuid(parsedData.data.playerId)
         break
       case WebSocketEvent.STATE:
-        gameState.updateGameState(new GameState(parsedData.data))
+        stateBus.emit(
+          new GameStateEvent(
+            GameStateEventName.UpdateState,
+            new GameState(parsedData.data),
+          ),
+        )
         break
       case WebSocketEvent.Message:
         console.log('message:', parsedData.data)
