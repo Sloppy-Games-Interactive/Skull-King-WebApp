@@ -16,7 +16,7 @@ case class GameState(
   round: Int = 0,
   tricks: List[ITrick] = List(),
   deck: IDeck = summon[IDeck],
-  roundLimit: Int = 10,
+  roundLimit: Int = 5,
   lastTrickWinner: Option[IPlayer] = None
 ) extends IGameState {
   def handleEvent(event: GameStateEvent): IGameState = event match {
