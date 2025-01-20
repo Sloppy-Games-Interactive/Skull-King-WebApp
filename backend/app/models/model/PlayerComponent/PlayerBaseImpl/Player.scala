@@ -10,7 +10,7 @@ import java.util.UUID
 case class Player(
   id: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000"),
   name: String,
-  profilePic: String = s"${Random.nextInt(9) + 1}.webp",
+  profilePic: String = s"${Random.nextInt(38) + 1}.webp",
   // maybe the server should generate the UUID and send it to the client not the other way around
   hand: IHand = Hand(),
   score: Int = 0,
