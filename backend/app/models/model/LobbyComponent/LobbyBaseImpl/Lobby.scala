@@ -75,7 +75,7 @@ case class Lobby(
     this.copy(started = true)
   }
 
-  private def setPlayerLimit(n: Int): ILobby = this.copy(playerLimit = n)
+  def setPlayerLimit(limit: Int): ILobby = this.copy(playerLimit = limit)
   
   def setGameState (state: IGameState): ILobby = this.copy(gameState = state)
 }
