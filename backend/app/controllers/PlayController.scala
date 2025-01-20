@@ -69,7 +69,7 @@ class PlayController @Inject()(val controllerComponents: ControllerComponents) e
         case None => BadRequest("Invalid limit")
         case Some(l) =>
           val nextState = controller.setPlayerLimit(lobby.gameState, l)
-          LobbyObject.setLobby(lobby.uuid, lobby.setGameState(nextState))
+          LobbyObject.setLobby(lobby.uuid, lobby.setGameState(nextState).setPlayerLimit(l))
           Ok(nextState.sanitizeState(player).toJson)
       }
     })

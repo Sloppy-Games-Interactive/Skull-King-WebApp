@@ -18,5 +18,6 @@ trait ILobby {
   def leaveLobby(player: IPlayer): Boolean
   def startGame: Unit
   def setGameState(state: IGameState): ILobby
+  def setPlayerLimit(limit: Int): ILobby
 }
 
