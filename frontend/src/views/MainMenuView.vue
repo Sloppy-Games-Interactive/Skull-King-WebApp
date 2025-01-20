@@ -51,6 +51,9 @@ checkLoggedIn()
 
 <template>
   <div class="text-center grid gap-5 px-5 justify-center">
+    <div v-if="userStore.user" class="absolute top-0 right-0 p-3 text-white text-2xl">
+      Hello <span class="overflow-hidden text-ellipsis">{{ userStore.user?.name }}</span>
+    </div>
     <h1
       class="md:text-9xl sm:text-8xl text-7xl text-center text-white drop-shadow pb-10 title"
     >
@@ -98,15 +101,15 @@ checkLoggedIn()
           :href="getGitHubUrl('/')"
           :size="ButtonSize.LARGE"
           key="github"
-          class="flex align-center gap-3"
-          ><fa-icon :icon="['fab', 'github']" />Sign up with GitHub</AppButton
+          class="flex align-center gap-3 -ml-6 justify-center"
+          ><fa-icon :icon="['fab', 'github']" />Sign up</AppButton
         >
         <AppButton
           @click.stop.prevent="showMenu = true"
           :size="ButtonSize.LARGE"
           key="guest"
-          class="flex align-center gap-3"
-          ><fa-icon :icon="['fas', 'user']" />Continue as Guest</AppButton
+          class="flex align-center gap-3 -ml-6 justify-center"
+          ><fa-icon :icon="['fas', 'user']" />Guest</AppButton
         >
       </template>
     </div>

@@ -22,8 +22,12 @@ export function useAuth() {
       return
     }
 
-    const user = await api.getUser(sessionUuid.value)
-    userStore.setUser(new User(user))
+    try {
+      const user = await api.getUser(sessionUuid.value)
+      userStore.setUser(new User(user))
+    } catch (e) {
+      return
+    }
   }
   getUser()
 }

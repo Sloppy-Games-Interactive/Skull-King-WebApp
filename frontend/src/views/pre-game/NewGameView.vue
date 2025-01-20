@@ -6,7 +6,7 @@ import AppButton from '@/components/utils/AppButton.vue'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 
-const playerLimitInput = ref(2)
+const playerLimitInput = ref('2')
 const postPlayerLimit = async () => {
   await api.setPlayerLimit(Number.parseInt(playerLimitInput.value))
   await router.push('/join-game')

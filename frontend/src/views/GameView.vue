@@ -13,6 +13,7 @@ import ScoreView from '@/components/ScoreView.vue'
 import AppButton from '@/components/utils/AppButton.vue'
 import ChatWindow from '@/components/ChatWindow.vue'
 import { useChatStore } from '@/core/stores/chatStore'
+import router from '@/core/router'
 
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
@@ -50,6 +51,10 @@ watch(
   },
   { deep: true },
 )
+
+if (!lobby.lobbyUuid) {
+  router.push('/')
+}
 </script>
 
 <template>
@@ -121,7 +126,7 @@ watch(
               v-if="showChat"
               class="absolute top-[100%] right-0 w-[100vw] sm:max-w-[45vw] md:max-w-[30vw] h-[100vh] max-h-[20rem] px-3"
             >
-              <ChatWindow class="rounded max-h-[20rem] bg-black/80" />
+              <ChatWindow class="rounded max-h-[20rem] bg-black/80 backdrop-blur" />
             </div>
           </Transition>
         </div>

@@ -18,11 +18,6 @@ const api = inject(API_INJECTION_KEY) as ApiService
 const gameState = useGameStateStore()
 const lobby = useLobbyStore()
 
-const playerLimitInput = ref(2)
-const postPlayerLimit = async () => {
-  await api.setPlayerLimit(playerLimitInput.value)
-}
-
 // TODO implement leave lobby
 // TODO add lobby settings
 
@@ -80,6 +75,10 @@ const generateQrCode = () => {
   }
   showQrCode.value = true
   qrCode.value = useQRCode(joinLink.value)
+}
+
+if (!lobby.lobbyUuid) {
+  router.push('/')
 }
 </script>
 

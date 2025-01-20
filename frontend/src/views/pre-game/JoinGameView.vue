@@ -3,6 +3,7 @@ import { inject, ref } from 'vue'
 import { API_INJECTION_KEY, ApiService } from '@/core/rest/api'
 import router from '@/core/router'
 import AppButton from '@/components/utils/AppButton.vue'
+import { useLobbyStore } from '@/core/stores/lobbyStore'
 
 const api = inject(API_INJECTION_KEY) as ApiService
 
@@ -12,13 +13,21 @@ const postPlayerName = () => {
     return
   }
 
-  api.joinLobby(playerNameInput.value).then(() => {
-    router.push('/game-lobby')
-  }).catch(() => {})
+  api
+    .joinLobby(playerNameInput.value)
+    .then(() => {
+      router.push('/game-lobby')
+    })
+    .catch(() => {})
 }
 
 const rules = {
-  required: (value: any) => !!value || 'Field is required',
+  required: (value: unknown) => !!value || 'Field is required',
+}
+
+const lobby = useLobbyStore()
+if (!lobby.lobbyUuid) {
+  router.push('/')
 }
 </script>
 
@@ -38,24 +47,15 @@ const rules = {
     <v-container>
       <v-row justify="center">
         <v-col cols="auto">
-          <AppButton
-            @click.stop.prevent="postPlayerName"
-          >
-            Next
-          </AppButton>
+          <AppButton @click.stop.prevent="postPlayerName"> Next </AppButton>
         </v-col>
 
         <v-col cols="auto">
-          <AppButton
-            @click.stop.prevent="router.push('/')"
-          >
-            Cancel
-        </AppButton>
+          <AppButton @click.stop.prevent="router.push('/')"> Cancel </AppButton>
         </v-col>
       </v-row>
     </v-container>
   </v-card>
 </template>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

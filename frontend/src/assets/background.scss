@@ -15,9 +15,11 @@
 }
 
 .bg-town {
-  background-image: url('/images/background/pirate_town.webp');
+  //background-image: url('/images/background/pirate_town.webp');
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)),
+    url('/images/background/pirate_town.webp');
 
-  background-position-x: -120px;
+  background-position-x: 0, -120px;
 
   @media (screen(sm)) {
     background-position-x: 0;
